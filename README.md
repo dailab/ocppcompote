@@ -23,7 +23,7 @@ OCPP-1.6J and OCPP2.0.1 Basic Functionality.
 1. Navigate to the desired destination directory.
 2. Clone the repository:
 ```bash
-git clone https://github.com/dailab/OCPP-Compote.git
+git clone https://github.com/dailab/ocppcompote.git
 ```
 ###  Dependencies and Requirements
 Please see the requirements.txt file. The following packages that are crucial for the project:
