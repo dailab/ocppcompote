@@ -1,0 +1,24 @@
+{
+  "schema": {
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "connectorId": {
+        "type": "integer"
+      },
+      "chargingProfilePurpose": {
+        "type": "string",
+        "additionalProperties": false,
+        "enum": [
+          "ChargePointMaxProfile",
+          "TxDefaultProfile",
+          "TxProfile"
+        ]
+      },
+      "stackLevel": {
+        "type": "integer"
+      }
+    }
+  }
+}

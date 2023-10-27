@@ -1,0 +1,10 @@
+{
+  "schema": {
+    "properties": {
+      "transactionId": {
+        "type": "integer",
+        "required": true
+      }
+    }
+  }
+}

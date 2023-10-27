@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+<link href="static/dashboard.css" rel="stylesheet">
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block content %}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h1 class="h4">Dashboard</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <a href="/">
+                <button class="btn btn-sm btn-outline-secondary">Refresh</button>
+            </a>
+        </div>
+    </div>
+    <div>
+        {% if contexts.0 is defined %}
+        <div class="alert alert-success" role="alert">
+            Charging Stations successfully loaded at {{ current_time }}
+        </div>
+        <div class="card-deck">
+            <div class="card">
+                <div class="card-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="feather zap-lightning">
+                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                              stroke-width="2" d="M13 2L3 14h9l-1 8l10-12h-9l1-8z"/>
+                    </svg>
+                    <a href="/chargingstations">Charging Station Summary</a></div>
+                <div class="card-body">
+                    <table class="table table-sm table-borderless">
+                        <tbody>
+                        <tr>
+                            <th scope="row"><img class="mr-2" src="/static/img/chargingstation.svg" height="14" width="14">Charging
+                                Stations
+                            </th>
+                            <td>{{ contexts|length }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <hr>
+                    <pre class="mermaid text-center">
+                        graph TB
+                        {% for key in contexts %}
+                            CSMS --> CS_{{key}}
+                            {%for connector in contexts[key].connectors%}
+                                CS_{{key}} --> CS_{{key}}_Connector_{{connector}}[Con_{{connector}}]
+                            {% endfor %}
+                            click CS_{{key}} "/chargingstations/{{key}}"
+                        {% endfor %}
+                        ;
+                    </pre>
+                    <script type="module">
+                        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@9/dist/mermaid.esm.min.mjs';
+                        mermaid.initialize({startOnLoad: true});
+                    </script>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="feather feather-tool">
+                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                    </svg>&nbsp;
+                    <a href="/settings">System Stats</a></div>
+                <div class="card-body">
+                    <table class="table table-sm table-borderless">
+                        <tbody>
+                        <tr>
+                            <th scope="row">
+                                <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" width="12" height="12"
+                                     viewBox="0 0 512 512">
+                                    <path fill="currentColor"
+                                          d="M186 32c0-17.7 14.3-32 32-32h32c17.7 0 32 14.3 32 32v140.9l122-70.4c15.3-8.8 34.9-3.6 43.7 11.7l16 27.7c8.8 15.3 3.6 34.9-11.7 43.7L330 256l122 70.4c15.3 8.8 20.5 28.4 11.7 43.7l-16 27.7c-8.8 15.3-28.4 20.6-43.7 11.7l-122-70.4V480c0 17.7-14.3 32-32 32h-32c-17.7 0-32-14.3-32-32V339.1L64 409.6c-15.3 8.8-34.9 3.6-43.7-11.7l-16-27.7C-4.5 354.8.7 335.3 16 326.4L138 256L16 185.6C.7 176.7-4.5 157.2 4.3 141.9l16-27.7c8.8-15.4 28.4-20.6 43.7-11.8l122 70.4V32z"/>
+                                </svg>
+                                System Start
+                            </th>
+                            <td>{{ data.startup }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="card-columns">
+            {% for key in contexts %}
+            <div class="card">
+                <div class="card-header">
+                    {% if contexts[key].liveness >= 0%}
+                    <div class="spinner-grow text-success spinner-grow-sm" role="status">
+                        <span class="visually-hidden"></span>
+                    </div>
+                    {% else %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                         class="bi bi-exclamation-circle-fill text-danger" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"></path>
+                    </svg>
+                    {% endif %}
+                    <a href="/chargingstations/{{key}}">Charging Station {{key}}: {{contexts[key].id}}</a>
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm table-borderless">
+                        <tbody>
+                        <tr>
+                            <th scope="row">
+                                <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                     viewBox="0 0 24 24">
+                                    <path fill="currentColor"
+                                          d="M21.4 7.5c.8.8.8 2.1 0 2.8l-2.8 2.8l-7.8-7.8l2.8-2.8c.8-.8 2.1-.8 2.8 0l1.8 1.8l3-3l1.4 1.4l-3 3l1.8 1.8m-5.8 5.8l-1.4-1.4l-2.8 2.8l-2.1-2.1l2.8-2.8l-1.4-1.4l-2.8 2.8l-1.5-1.4l-2.8 2.8c-.8.8-.8 2.1 0 2.8l1.8 1.8l-4 4l1.4 1.4l4-4l1.8 1.8c.8.8 2.1.8 2.8 0l2.8-2.8l-1.4-1.4l2.8-2.9Z"/>
+                                </svg>
+                                Connectors
+                            </th>
+                            <td>{{ contexts[key].connectors|length }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                     viewBox="0 0 36 36">
+                                    <path fill="currentColor"
+                                          d="M33.49 26.28a1 1 0 0 0-1.2-.7l-2.49.67a14.23 14.23 0 0 0 2.4-6.75a14.48 14.48 0 0 0-4.83-12.15a1 1 0 0 0-1.37.09a1 1 0 0 0 .09 1.41a12.45 12.45 0 0 1 4.16 10.46a12.19 12.19 0 0 1-2 5.74L28 22.54a1 1 0 1 0-1.95.16l.5 6.44l6.25-1.66a1 1 0 0 0 .69-1.2Z"
+                                          class="clr-i-outline clr-i-outline-path-1"/>
+                                    <path fill="currentColor"
+                                          d="M4.31 17.08a1.06 1.06 0 0 0 .44.16a1 1 0 0 0 1.12-.85A12.21 12.21 0 0 1 18.69 5.84l-2.24 1.53a1 1 0 0 0 .47 1.79a1 1 0 0 0 .64-.16l5.33-3.66L18.33.76a1 1 0 1 0-1.39 1.38l1.7 1.7A14.2 14.2 0 0 0 3.89 16.12a1 1 0 0 0 .42.96Z"
+                                          class="clr-i-outline clr-i-outline-path-2"/>
+                                    <path fill="currentColor"
+                                          d="M21.73 29.93a12 12 0 0 1-4.84.51a12.3 12.3 0 0 1-9.57-6.3l2.49.93a1 1 0 0 0 .69-1.84l-4.59-1.7L4.44 21l-1.11 6.35a1 1 0 0 0 .79 1.13h.17a1 1 0 0 0 1-.81l.42-2.4a14.3 14.3 0 0 0 11 7.14a13.91 13.91 0 0 0 5.63-.6a1 1 0 0 0-.6-1.9Z"
+                                          class="clr-i-outline clr-i-outline-path-3"/>
+                                    <path fill="currentColor"
+                                          d="M22 13h-8a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1Zm-1 8h-6v-6h6Z"
+                                          class="clr-i-outline clr-i-outline-path-4"/>
+                                    <path fill="none" d="M0 0h36v36H0z"/>
+                                </svg>
+                                Processing
+                            </th>
+                            <td colspan="2">
+                                <table class="table table-sm table-borderless">
+                                    <tbody>
+                                    <tr>
+                                        <th scope="col">Last</th>
+                                        <td>{{ contexts[key].stats.processing.out.last_message }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="col">In</th>
+                                        <td>{{ contexts[key].stats.processing.in.total }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="col">Out</th>
+                                        <td>{{ contexts[key].stats.processing.out.total }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <p class="card-text">{% if contexts[key].liveness >= 0%}
+                        <small class="text-muted">Live (expires in {{ (contexts[key].liveness|round(1)|string)
+                            }}s)</small>
+                        {% else %}
+                        <small class="text-muted">Stale {{ (contexts[key].liveness|round(1)|string) }}s ago</small>
+                        {% endif %}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% else %}
+        <div class="alert alert-danger" role="alert">
+            Charging Stations failed to load. Is at least one CS connected?
+        </div>
+        <div class="card-deck">
+            <div class="card">
+                <div class="card-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="feather zap-lightning">
+                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                              stroke-width="2" d="M13 2L3 14h9l-1 8l10-12h-9l1-8z"/>
+                    </svg>
+                    <a href="/chargingstations">Charging Station Summary</a></div>
+                <div class="card-body">
+                    <p class="card-text">Charging Stations: {{contexts|length}}</p>
+                    <a href="/chargingstations" class="btn btn-primary">Go to Charging Stations</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="feather feather-tool">
+                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                    </svg>&nbsp;
+                    <a href="/settings">System Stats</a></div>
+                <div class="card-body">
+                    <p>System Start: {{ data.startup }}</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <hr>
+</main>
+{% endblock %}

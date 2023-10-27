@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+<link href="static/dashboard.css" rel="stylesheet">
+{% block title %}
+Settings
+{% endblock %}
+
+{% block content %}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h1 class="h4">Settings</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <a href="/settings">
+                <button class="btn btn-sm btn-outline-secondary">Refresh</button>
+            </a>
+        </div>
+    </div>
+    <div>
+        {% if config is defined %}
+        <div class="alert alert-success" role="alert">
+            Settings successfully loaded at {{ current_time }}
+        </div>
+        <hr>
+        <div class="card">
+            <div class="card-header">
+                <b>CSMS Server Settings</b>
+            </div>
+            <div class="card-body">
+                <p class="card-title"><b>OCPP Websocket Settings</b></p><br>
+                <form>
+                    <div class="form-group row">
+                        <label for="inputId" class="col-sm-2 col-form-label">IP</label>
+                        <div class="col-sm-10">
+                            <input type="id" class="form-control" id="inputIp" placeholder="IP"
+                                   value="{{ config.wshandler_config.ip}}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputName" class="col-sm-2 col-form-label">Port</label>
+                        <div class="col-sm-10">
+                            <input type="name" class="form-control" id="inputPort" placeholder="Port"
+                                   value="{{ config.wshandler_config.port }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputName" class="col-sm-2 col-form-label">Supported OCPP Versions</label>
+                        <div class="col-sm-10">
+                            <input type="name" class="form-control" id="inputOcpp" placeholder="OCPP Versions"
+                                   value="{{ config.wshandler_config.ocpp_versions }}">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <hr>
+            <div class="card-body">
+                <p class="card-title"><b>Webservice Settings</b></p><br>
+                <form>
+                    <div class="form-group row">
+                        <label for="inputId" class="col-sm-2 col-form-label">IP</label>
+                        <div class="col-sm-10">
+                            <input type="id" class="form-control" id="inputHost" placeholder="IP"
+                                   value="{{ config.webservice_config.host}}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputName" class="col-sm-2 col-form-label">Port</label>
+                        <div class="col-sm-10">
+                            <input type="name" class="form-control" id="inputWebPort" placeholder="Port"
+                                   value="{{ config.webservice_config.port }}">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <hr>
+            <div class="card-body">
+                <p class="card-title"><b>Default Charging Station Settings</b></p><br>
+                <form>
+                    <div class="form-group row">
+                        <label for="inputInterval" class="col-sm-2 col-form-label">Heartbeat Interval</label>
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                <input type="name" class="form-control" id="inputInterval" placeholder="Interval"
+                                       value="{{ config.cp_defaults.interval}}">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="validationTooltipUsernamePrepend">Seconds</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputAuth" class="col-sm-2 col-form-label">Authorization (Debug)</label>
+                        <div class="col-sm-10">
+                            <input type="name" class="form-control" id="inputAuth" placeholder="Auth"
+                                   value="{{ config.cp_defaults.auth }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputTrans" class="col-sm-2 col-form-label">Transaction Validity</label>
+                        <div class="col-sm-10">
+                            <input type="name" class="form-control" id="inputTrans" placeholder="OCPP Versions"
+                                   value="{{ config.cp_defaults.transaction_max_time_delta }}">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer">
+            </div>
+        </div>
+        <hr>
+
+        {% else %}
+        <div class="alert alert-danger" role="alert">
+            Settings failed to load.
+        </div>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

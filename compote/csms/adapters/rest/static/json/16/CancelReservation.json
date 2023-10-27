@@ -1,0 +1,10 @@
+{
+  "schema": {
+    "properties": {
+      "reservationId": {
+        "type": "integer",
+        "required": true
+      }
+    }
+  }
+}

@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+
+
+<link href="/static/dashboard.css" rel="stylesheet">
+{% block title %}
+Message Editor View
+{% endblock %}
+
+{% block content %}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h1 class="h4">OCPP v16 Message Editor for: Charging Station {{key}}: {{context.id}}</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+
+            <a href="/chargingstations/{{key}}/analytics">
+            <button type="button" class="btn btn-primary btn-sm mr-1">Analytics</button>
+            </a>
+
+            <a href="/chargingstations/{{key}}/error_viewer">
+            <button type="button" class="btn btn-primary btn-sm mr-1">Errors</button>
+            </a>
+
+            <div class="btn-group mr-1">
+                <a href="/chargingstations/{{key}}">
+                <button type="button" class="btn btn-success btn-sm active">View</button>
+                    </a>
+            </div>
+            <div class="btn-group">
+                <a href="/chargingstations" class="btn btn-sm btn-outline-secondary active">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
+                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M5 19h14a2 2 0 0 0 1.84-2.75L13.74 4a2 2 0 0 0-3.5 0l-7.1 12.25A2 2 0 0 0 4.89 19"/>
+                    </svg>
+                </a>
+                <a href="/chargingstations/{{key}}/message_editor" class="btn btn-sm btn-outline-secondary">Refresh</a>
+            </div>
+
+        </div>
+    </div>
+
+    <div>
+        {% if context is defined %}
+        <div class="alert alert-success" role="alert">
+            Charging Station {{key}} successfully loaded at {{ current_time }}
+        </div>
+
+        <!-- Bootstrap JS -->
+
+        <script>
+            // @formatter:off
+            window.filenames = {{ filenames|tojson|safe }};
+            // @formatter:on
+        </script>
+
+        <script>
+            function openLink() {
+                var selectBox = document.getElementById("select-website");
+                var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+
+                open(selectedValue);
+            }
+        </script>
+
+        <div class="card mt-3">
+            <div class="card-body">
+                <h5>Select Message</h5>
+                <div class="row">
+                    <div class="col-md-5">
+                        <form id="form" class="form-vertical"></form>
+                                                <button id="toggle-button" class="btn btn-primary">View JSON</button>
+                    </div>
+                    <div class="col-md-7">
+<!--                        toggle button could be part of jsonform in formfromjson2.js: var formObject -->
+                        <h5>Message Form</h5>
+                        <hr>
+                        <div id="result" class="well">(please wait)</div>
+                        <hr>
+                        <div id="table-container" style="display: none;">
+                            <div style="max-height: 310px; overflow-y: auto;">
+                                <table id="input-output-table" class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Selected</th>
+                                        <th>Sent</th>
+                                        <th>Response</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                let isVisible = false;
+                $('#toggle-button').on('click', function () {
+                    isVisible = !isVisible;
+                    console.log('is clicked');
+                    if (isVisible) {
+                        $('.ace_editor.ace-twilight.ace_dark').css('visibility', 'visible');
+                        $('#toggle-button').text('Hide JSON');
+                    } else {
+                        $('.ace_editor.ace-twilight.ace_dark').css('visibility', 'hidden');
+                        $('#toggle-button').text('View JSON');
+                    }
+                });
+            });
+        </script>
+        <script src="../../static/deps/jquery.min.js"></script>
+        <script src="../../static/deps/underscore.js"></script>
+        <script src="../../static/deps/opt/jsv.js"></script>
+        <script src="../../static/deps/opt/jquery-ui.js"></script>
+        <script src="../../static/deps/opt/bootstrap-dropdown.js"></script>
+        <script src="../../static/deps/opt/bootstrap-wysihtml5.js"></script>
+        <script src="../../static/deps/opt/spectrum.js"></script>
+        <script src="../../static/deps/opt/ace/ace.js"></script>
+        <script src="../../static/deps/opt/ace/mode-json.js"></script>
+        <script src="../../static/deps/opt/ace/mode-html.js"></script>
+        <script src="../../static/deps/opt/ace/mode-css.js"></script>
+        <script src="../../static/deps/opt/ace/mode-javascript.js"></script>
+        <script src="../../static/deps/opt/ace/mode-less.js"></script>
+        <script src="../../static/deps/opt/ace/mode-markdown.js"></script>
+        <script src="../../static/deps/opt/jquery.transloadit2.js"></script>
+        <script src="../../static/lib/jsonform.js"></script>
+        <script src="../../static/js/message_form_v16.js"></script>
+
+
+                {% else %}
+                <div class="alert alert-danger" role="alert">
+                    Charging Station failed to load.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

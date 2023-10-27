@@ -1,0 +1,109 @@
+{
+  "schema": {
+    "properties": {
+      "connectorId": {
+        "type": "integer",
+        "required": true
+      },
+      "csChargingProfiles": {
+        "type": "object",
+        "properties": {
+          "chargingProfileId": {
+            "type": "integer",
+            "required": true
+          },
+          "transactionId": {
+            "type": "integer"
+          },
+          "stackLevel": {
+            "type": "integer",
+            "required": true
+          },
+          "chargingProfilePurpose": {
+            "type": "string",
+            "additionalProperties": false,
+            "enum": [
+              "ChargePointMaxProfile",
+              "TxDefaultProfile",
+              "TxProfile"
+            ],
+            "required": true
+          },
+          "chargingProfileKind": {
+            "type": "string",
+            "additionalProperties": false,
+            "enum": [
+              "Absolute",
+              "Recurring",
+              "Relative"
+            ],
+            "required": true
+          },
+          "recurrencyKind": {
+            "type": "string",
+            "additionalProperties": false,
+            "enum": [
+              "Daily",
+              "Weekly"
+            ]
+          },
+          "validFrom": {
+            "type": "datetime-local",
+            "format": "datetime-local"
+          },
+          "validTo": {
+            "type": "datetime-local",
+            "format": "datetime-local"
+          },
+          "chargingSchedule": {
+            "type": "object",
+            "properties": {
+              "duration": {
+                "type": "integer",
+                "required": true
+              },
+              "startSchedule": {
+                "type": "datetime-local",
+                "format": "datetime-local"
+              },
+              "chargingRateUnit": {
+                "type": "string",
+                "additionalProperties": false,
+                "enum": [
+                  "A",
+                  "W"
+                ],
+                "required": true
+              },
+              "chargingSchedulePeriod": {
+                "type": "array",
+                "required": true,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "startPeriod": {
+                      "type": "integer",
+                      "required": true
+                    },
+                    "limit": {
+                      "type": "number",
+                      "multipleOf": 0.1,
+                      "required": true
+                    },
+                    "numberPhases": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              },
+              "minChargingRate": {
+                "type": "number",
+                "multipleOf": 0.1
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+aiohttp>=3.8.3
+aiohttp-jinja2>=1.5.1
+aiohttp-cors>=0.7.0
+ocpp>=0.20.0
+python-dateutil>=1.16.0
+websockets>=10.4
+requests>=2.28.2
+numpy>=1.24.1
+greenlet>=2.0.1

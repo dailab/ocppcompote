@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+<link href="/static/dashboard.css" rel="stylesheet">
+{% block title %}
+Charging Station Error Viewer
+{% endblock %}
+
+{% block content %}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h1 class="h4">Errors: Charging Station {{key}}: {{context.id}}</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+
+            <a href="/chargingstations/{{key}}/analytics">
+                <button type="button" class="btn btn-primary btn-sm mr-1">Analytics</button>
+            </a>
+
+            {% if context is defined %}
+            {% if context.ocpp_version == "1.6"%}
+            <a href="/chargingstations/{{key}}/message_editor_v16">
+                <button type="button" class="btn btn-primary btn-sm mr-1">Message Editor</button>
+            </a>
+            {% elif context.ocpp_version == "2.0"%}
+            <a href="/chargingstations/{{key}}/message_editor_v20">
+                <button type="button" class="btn btn-primary btn-sm mr-1">Message Editor</button>
+            </a>
+            {% elif context.ocpp_version == "2.0.1"%}
+            <a href="/chargingstations/{{key}}/message_editor_v20">
+                <button type="button" class="btn btn-primary btn-sm mr-1">Message Editor</button>
+            </a>
+            {% endif %}
+            {% endif %}
+
+            <div class="btn-group mr-1">
+                <a href="/chargingstations/{{key}}">
+                    <button type="button" class="btn btn-success btn-sm active">View</button>
+                </a>
+            </div>
+            <div class="btn-group">
+                <a href="/chargingstations" class="btn btn-sm btn-outline-secondary active">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
+                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M5 19h14a2 2 0 0 0 1.84-2.75L13.74 4a2 2 0 0 0-3.5 0l-7.1 12.25A2 2 0 0 0 4.89 19"/>
+                    </svg>
+                </a>
+                <a href="/chargingstations/{{key}}/error_viewer" class="btn btn-sm btn-outline-secondary">Refresh</a>
+            </div>
+        </div>
+    </div>
+    <div>
+        {% if context is defined %}
+        <div class="alert alert-success" role="alert">
+            Charging Station {{key}} successfully loaded at {{ current_time }}
+        </div>
+
+        <div class="card mt-3">
+        </div>
+
+
+        <div class="card mt-3">
+            <div class="card-header">
+                Processing Error View (total: {{ context.stats.processing.errors.total }})
+            </div>
+
+            {% if context.stats.processing.errors.total > 0 %}
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th> Timestamp</th>
+                        <th> Error</th>
+                        <th> Message</th>
+                        <th> Args</th>
+                    </tr>
+                    </thead>
+                    {% for key, value in context.stats.processing.errors.messages.items() %}
+                    {% for item in value %}
+                    <tr>
+                        <td> {{ item.error_time }}</td>
+                        <td> {{ item.error }}</td>
+                        <td> {{ key }}</td>
+                        <td> {{ item.args }}</td>
+                    </tr>
+                    {% endfor %}
+                    {% endfor %}
+                </table>
+            </div>
+            <hr>
+            {% endif%}
+
+            <div class="card-body">
+                <h7>Message Processing Trace</h7>
+                <pre class="mermaid text-center">
+                        gantt
+                            dateFormat  YYYY-MM-DD-HH-mm-ss
+                            axisFormat %Y-%M-%d-%H:%M:%S
+                            section CSMS
+                            {% for key in context.stats.processing.delta.last_messages %}
+                                {{key.fun_name}}    :{{key.time_start}}, 1s
+                            {% endfor %}
+                      </pre>
+                <hr>
+                <ol type="1">
+                    {% for key in context.stats.processing.delta.last_messages %}
+                    <li>{{key.time_start}}-{{key.time_stop}}: CSMS: {{key.fun_name}}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                OCPP Error View (total: {{ context.stats.ocpp.errors.total }})
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th> Timestamp</th>
+                        <th> Error</th>
+                        <th> Message</th>
+                        <th> Args</th>
+                    </tr>
+                    </thead>
+                    {% for key, value in context.stats.ocpp.errors.messages.items() %}
+                    {% for item in value %}
+                    <tr>
+                        <td> {{ item.error_time }}</td>
+                        <td> {{ item.error }}</td>
+                        <td> {{ key }}</td>
+                        <td> {{ item.args }}</td>
+                    </tr>
+                    {% endfor %}
+                    {% endfor %}
+                </table>
+            </div>
+            <hr>
+            <div class="card-body">
+                <h7>OCPP Message Exchange Trace</h7>
+                <hr>
+                <pre class="mermaid text-center">
+                        sequenceDiagram
+                            autonumber
+                          {% for key in context.stats.ocpp.all.last_messages %}
+                            {% if key.type == "req"%}
+                                {% if key.fun_name.startswith('on') %}
+                                    CS_{{context.id}} ->> CSMS: {{key.fun_name}}.{{key.type}}({{key.args}})
+                                {% else %}
+                                    CSMS ->> CS_{{context.id}}: {{key.fun_name}}.{{key.type}}({{key.args}})
+                                {% endif %}
+                            {% else %}
+                                {% if key.fun_name.startswith('send') %}
+                                    CS_{{context.id}} ->> CSMS: {{key.fun_name}}.{{key.type}}({{key.args}})
+                                {% else %}
+                                    CSMS ->> CS_{{context.id}}: {{key.fun_name}}.{{key.type}}({{key.args}})
+                                {% endif %}
+                            {% endif %}
+                          {% endfor %}
+                      </pre>
+                <hr>
+                <ol type="1">
+                    {% for key in context.stats.ocpp.all.last_messages %}
+                    <li>
+                        {{key.time_start}}:
+                        {% if key.type == "req"%}
+                        {% if key.fun_name.startswith('on') %}
+                        CS_{{context.id}} -> CSMS: {{key.fun_name}}.{{key.type}}({{key.args}})
+                        {% else %}
+                        CSMS -> CS_{{context.id}}: {{key.fun_name}}.{{key.type}}({{key.args}})
+                        {% endif %}
+                        {% else %}
+                        {% if key.fun_name.startswith('send') %}
+                        CS_{{context.id}} -> CSMS: {{key.fun_name}}.{{key.type}}({{key.args}})
+                        {% else %}
+                        CSMS -> CS_{{context.id}}: {{key.fun_name}}.{{key.type}}({{key.args}})
+                        {% endif %}
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+        <hr>
+        {% else %}
+        <div class="alert alert-danger" role="alert">
+            Charging Station failed to load.
+        </div>
+        {% endif %}
+    </div>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@9/dist/mermaid.esm.min.mjs';
+
+        mermaid.initialize({startOnLoad: true});
+    </script>
+</main>
+{% endblock %}

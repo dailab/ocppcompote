@@ -1,0 +1,29 @@
+{
+  "csChargingProfile":
+  {
+      "chargingProfileId": 123,
+      "chargingProfileKind": "Absolute",
+      "chargingProfilePurpose": "TxDefaultProfile",
+      "chargingSchedule": {
+          "chargingRateUnit": "W",
+          "chargingSchedulePeriod": [
+              {
+                 "limit": 11000.0,
+                 "startPeriod": 0
+              },
+              {
+                 "limit": 9000.0,
+                 "startPeriod": 780
+              },
+              {
+                 "limit": 4500.0,
+                 "startPeriod": 1680
+              }
+          ]
+      },
+      "stackLevel": 0,
+      "validFrom": "2023–01–01T00:00:00+00:00",
+      "validTo": "2023–02–01T00:00:00+00:00"
+  }
+}
+

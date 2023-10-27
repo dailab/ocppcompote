@@ -1,0 +1,16 @@
+{
+  "schema": {
+    "properties": {
+      "key": {
+        "type": "string",
+        "maxLength": 50,
+        "required": true
+      },
+      "value": {
+        "type": "string",
+        "maxLength": 500,
+        "required": true
+      }
+    }
+  }
+}

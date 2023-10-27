@@ -1,0 +1,23 @@
+{
+  "schema": {
+    "properties": {
+      "requestedMessage": {
+        "type": "string",
+        "additionalProperties": false,
+        "enum": [
+          "BootNotification",
+          "LogStatusNotification",
+          "FirmwareStatusNotification",
+          "Heartbeat",
+          "MeterValues",
+          "SignChargePointCertificate",
+          "StatusNotification"
+        ],
+        "required": true
+      },
+      "connectorId": {
+        "type": "integer"
+      }
+    }
+  }
+}

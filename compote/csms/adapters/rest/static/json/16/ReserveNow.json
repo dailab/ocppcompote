@@ -1,0 +1,28 @@
+{
+  "schema": {
+    "properties": {
+      "connectorId": {
+        "type": "integer",
+        "required": true
+      },
+      "expiryDate": {
+        "type": "string",
+        "format": "date-time",
+        "required": true
+      },
+      "idTag": {
+        "type": "string",
+        "maxLength": 20,
+        "required": true
+      },
+      "parentIdTag": {
+        "type": "string",
+        "maxLength": 20
+      },
+      "reservationId": {
+        "type": "integer",
+        "required": true
+      }
+    }
+  }
+}

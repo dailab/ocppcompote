@@ -1,0 +1,18 @@
+{
+  "schema": {
+    "properties": {
+      "vendorId": {
+        "type": "string",
+        "maxLength": 255,
+        "required": true
+      },
+      "messageId": {
+        "type": "string",
+        "maxLength": 50
+      },
+      "data": {
+        "type": "string"
+      }
+    }
+  }
+}

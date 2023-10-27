@@ -1,0 +1,675 @@
+{% extends "base.html" %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+<link href="/static/dashboard.css" rel="stylesheet">
+{% block title %}
+Charging Station View
+{% endblock %}
+
+{% block content %}
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h1 class="h4">Analytics: Charging Station {{key}}: {{context.id}}</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+
+
+            <a href="/chargingstations/{{key}}/error_viewer">
+            <button type="button" class="btn btn-primary btn-sm mr-1">Errors</button>
+            </a>
+
+            {% if context is defined %}
+            {% if context.ocpp_version == "1.6"%}
+            <a href="/chargingstations/{{key}}/message_editor_v16">
+                <button type="button" class="btn btn-primary btn-sm mr-1">Message Editor</button>
+            </a>
+            {% elif context.ocpp_version == "2.0"%}
+            <a href="/chargingstations/{{key}}/message_editor_v20">
+                <button type="button" class="btn btn-primary btn-sm mr-1">Message Editor</button>
+            </a>
+            {% elif context.ocpp_version == "2.0.1"%}
+            <a href="/chargingstations/{{key}}/message_editor_v20">
+                <button type="button" class="btn btn-primary btn-sm mr-1">Message Editor</button>
+            </a>
+            {% endif %}
+            {% endif %}
+
+            <div class="btn-group mr-1">
+                <a href="/chargingstations/{{key}}">
+                <button type="button" class="btn btn-success btn-sm active">View</button>
+                    </a>
+            </div>
+
+            <div class="btn-group">
+                <a href="/chargingstations" class="btn btn-sm btn-outline-secondary active">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
+                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M5 19h14a2 2 0 0 0 1.84-2.75L13.74 4a2 2 0 0 0-3.5 0l-7.1 12.25A2 2 0 0 0 4.89 19"/>
+                    </svg>
+                </a>
+                <a href="/chargingstations/{{key}}/analytics" class="btn btn-sm btn-outline-secondary">Refresh</a>
+            </div>
+        </div>
+    </div>
+    <div>
+        {% if context is defined %}
+        <div class="alert alert-success" role="alert">
+            Charging Station {{key}} successfully loaded at {{ current_time }}
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h5>Processing In</h5>
+                <div class=""><pre class="mermaid text-break">
+                          %%{init: {'font-size':'10px'}}%%
+                          pie title
+                            {% for key in context.stats.processing.in.messages %}
+                                "{{key}}" : {{context.stats.processing.in.messages[key]}}
+                            {% endfor %}
+                      </pre>
+                </div>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-body">
+                <h5>Processing Out</h5>
+                <pre class="mermaid text-center">
+                          pie
+                            {% for key in context.stats.processing.out.messages %}
+                                "{{key}}" : {{context.stats.processing.out.messages[key]}}
+                            {% endfor %}
+                      </pre>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-body">
+                <h5>Message Processing Times</h5>
+                <pre class="mermaid text-center">
+                        gantt
+                            dateFormat  YYYY-MM-DD-HH-mm-ss
+                            axisFormat %Y-%M-%d-%H:%M:%S
+                            section CSMS
+                            {% for key in context.stats.processing.delta.last_messages %}
+                                {{key.fun_name}}    :{{key.time_start}}, 1s
+                            {% endfor %}
+                      </pre>
+                <hr>
+                <ol type="1">
+                    {% for key in context.stats.processing.delta.last_messages %}
+                    <li>{{key.time_start}}-{{key.time_stop}}: {{key.fun_name}} (duration: {{key.duration}})</li>
+                     {% endfor %}
+                </ol>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-body">
+                <h5>OCPP Message Exchange</h5>
+                <pre class="mermaid text-center">
+                        sequenceDiagram
+                            autonumber
+                          {% for key in context.stats.ocpp.all.last_messages %}
+                            {% if key.type == "req"%}
+                                {% if key.fun_name.startswith('on') %}
+                                    CS_{{context.id}} ->> CSMS: {{key.fun_name}}.{{key.type}}({{key.args}})
+                                {% else %}
+                                    CSMS ->> CS_{{context.id}}: {{key.fun_name}}.{{key.type}}({{key.args}})
+                                {% endif %}
+                            {% else %}
+                                {% if key.fun_name.startswith('send') %}
+                                    CS_{{context.id}} ->> CSMS: {{key.fun_name}}.{{key.type}}({{key.args}})
+                                {% else %}
+                                    CSMS ->> CS_{{context.id}}: {{key.fun_name}}.{{key.type}}({{key.args}})
+                                {% endif %}
+                            {% endif %}
+                          {% endfor %}
+                      </pre>
+                <hr>
+                    <ol type="1">
+                    {% for key in context.stats.ocpp.all.last_messages %}
+                    <li>
+                        {{key.time_start}}:
+                            {% if key.type == "req"%}
+                                {% if key.fun_name.startswith('on') %}
+                                    CS_{{context.id}} -> CSMS: {{key.fun_name}}.{{key.type}}({{key.args}})
+                                {% else %}
+                                    CSMS -> CS_{{context.id}}: {{key.fun_name}}.{{key.type}}({{key.args}})
+                                {% endif %}
+                            {% else %}
+                                {% if key.fun_name.startswith('send') %}
+                                    CS_{{context.id}} -> CSMS: {{key.fun_name}}.{{key.type}}({{key.args}})
+                                {% else %}
+                                    CSMS -> CS_{{context.id}}: {{key.fun_name}}.{{key.type}}({{key.args}})
+                                {% endif %}
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+        <hr>
+        <div class="card-deck pb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5>Messages processed in</h5>
+                    <canvas id="messages_in"></canvas>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                <h5>Messages processed out</h5>
+                <canvas id="messages_out"></canvas>
+                </div>
+            </div>
+         </div>
+        <div class="card-deck pb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5>Message processing time</h5>
+                    <canvas id="messages_delta"></canvas>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5>OCPP processing time</h5>
+                    <canvas id="ocpp_delta"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="card-deck pb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5>OCPP processed in</h5>
+                    <canvas id="ocpp_in"></canvas>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                <h5>OCPP processed out</h5>
+                <canvas id="ocpp_out"></canvas>
+                </div>
+            </div>
+         </div>
+        <div class="card-deck pb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5>OCPP Delta raw</h5>
+                    <div id="ocpp_delta_raw"></div>
+                </div>
+            </div>
+            <div class="card">
+                    <div class="card-body">
+                    <h5>Messages Delta raw</h5>
+                    <div id="messages_delta_raw"></div>
+                </div>
+            </div>
+         </div>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-autocolors"></script>
+        <script src="https://cdn.plot.ly/plotly-2.18.0.min.js"></script>
+
+        <script>
+          const autocolors = window['chartjs-plugin-autocolors'];
+          const messages = JSON.parse({{messages | tojson}});
+
+          var messages_in = messages["messages_in"];
+
+          const chart1 = new Chart(document.getElementById('messages_in'), {
+            type: 'bar',
+            data: {
+              labels: Object.keys(messages_in),
+              datasets: [{
+                label: '# of processed messages',
+                data: Object.values(messages_in),
+                borderWidth: 1
+              }]
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              },
+                plugins: {
+                    autocolors: {
+                        enabled: true,
+                        mode: 'data'
+                    },
+                    legend: {
+                    display: false
+                    },
+                }
+            },
+              plugins: [
+                  autocolors
+              ]
+          });
+
+          var messages_out = messages["messages_out"]
+          const chart2 = new Chart(document.getElementById('messages_out'), {
+            type: 'bar',
+            data: {
+              labels: Object.keys(messages_out),
+              datasets: [{
+                label: '# of processed messages',
+                data: Object.values(messages_out),
+                borderWidth: 1
+              }]
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              },
+                plugins: {
+                    autocolors: {
+                        enabled: true,
+                        mode: 'data'
+                    },
+                    legend: {
+                    display: false
+                    },
+                }
+            },
+              plugins: [
+                  autocolors
+              ]
+          });
+          var messages_delta = messages["messages_delta"]
+          const chart3 = new Chart(document.getElementById('messages_delta'), {
+            type: 'bar',
+            data: {
+              labels: Object.keys(messages_delta),
+              datasets: [{
+                label: 'avg message processing time',
+                data: Object.values(messages_delta),
+                borderWidth: 1
+              }]
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              },
+                plugins: {
+                    autocolors: {
+                        enabled: true,
+                        mode: 'data'
+                    },
+                    legend: {
+                    display: false
+                    },
+                }
+            },
+              plugins: [
+                  autocolors
+              ]
+          });
+          var ocpp_delta = messages["ocpp_delta"]
+          const chart4 = new Chart(document.getElementById('ocpp_delta'), {
+            type: 'bar',
+            data: {
+              labels: Object.keys(ocpp_delta),
+              datasets: [{
+                label: 'avg ocpp processing time',
+                data: Object.values(ocpp_delta),
+                borderWidth: 1
+              }]
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              },
+                plugins: {
+                    autocolors: {
+                        enabled: true,
+                        mode: 'data'
+                    },
+                    legend: {
+                    display: false
+                    },
+                }
+            },
+              plugins: [
+                  autocolors
+              ]
+          });
+          var ocpp_in = messages["ocpp_in"]
+          const chart5 = new Chart(document.getElementById('ocpp_in'), {
+            type: 'bar',
+            data: {
+              labels: Object.keys(ocpp_in),
+              datasets: [{
+                label: '# of processed messages',
+                data: Object.values(ocpp_in),
+                borderWidth: 1
+              }]
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              },
+                plugins: {
+                    autocolors: {
+                        enabled: true,
+                        mode: 'data'
+                    },
+                    legend: {
+                    display: false
+                    },
+                }
+            },
+              plugins: [
+                  autocolors
+              ]
+          });
+          var ocpp_out = messages["ocpp_out"]
+          const chart6 = new Chart(document.getElementById('ocpp_out'), {
+            type: 'bar',
+            data: {
+              labels: Object.keys(ocpp_out),
+              datasets: [{
+                label: '# of processed messages',
+                data: Object.values(ocpp_out),
+                borderWidth: 1
+              }]
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              },
+                plugins: {
+                    autocolors: {
+                        enabled: true,
+                        mode: 'data'
+                    },
+                    legend: {
+                    display: false
+                    },
+                }
+            },
+              plugins: [
+                  autocolors
+              ]
+          });
+          var ocpp_delta_raw = messages["ocpp_delta_raw"];
+          var messages_delta_raw = messages["messages_delta_raw"];
+
+          function makeTrace (key, value) {
+                var trace;
+                trace = {
+                    y: value,
+                    name: key,
+                    type: 'box'
+                };
+                return trace;
+            };
+
+          function createData(value_dict) {
+              ys = [];
+                var count = 0;
+                for (const [key, value] of Object.entries(value_dict)) {
+                    ys[count++] = makeTrace(key, value);
+            };
+                return ys;
+          }
+
+        Plotly.newPlot('ocpp_delta_raw', createData(ocpp_delta_raw));
+        Plotly.newPlot('messages_delta_raw', createData(messages_delta_raw));
+        </script>
+                <div class="card mt-3">
+            <div class="card-header" data-bs-toggle="collapse" data-bs-target="#rawdata">
+                Raw Data
+            </div>
+            <div class="card-body collapse scrollable-card-body" id="rawdata" class="collapse">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Field</th>
+                    <th> Value</th>
+                </tr>
+                </thead>
+                <tr>
+                    <td>Internal ID</td>
+                    <td>{{key}}</td>
+                </tr>
+                <tr>
+                    <td>Name</td>
+                    <td>{{context.id}}</td>
+                </tr>
+                <tr>
+                    <td>OCPP Version</td>
+                    <td>{{context.ocpp_version}}</td>
+                </tr>
+                <tr>
+                    <td>Charge Point Vendor</td>
+                    <td>{{context.charge_point_vendor}}</td>
+                </tr>
+                <tr>
+                    <td>Charge Point Model</td>
+                    <td>{{context.charge_point_model}}</td>
+                </tr>
+                <tr>
+                    <td>Liveness</td>
+                    <td>
+                        {% if context.liveness >= 0%}
+                        <div class="spinner-grow text-success spinner-grow-sm" role="status">
+                            <span class="visually-hidden"></span>
+                        </div>
+                        live (next update expected in {{ (context.liveness|round(1)|string) }}s)
+                        {% else %}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor"
+                             class="bi bi-exclamation-circle-fill text-danger" viewBox="0 0 16 16">
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"></path>
+                        </svg>
+                        stale {{ (context.liveness|round(1)|string) }}s ago
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>First Seen</td>
+                    <td>{{context.seen}}</td>
+                </tr>
+                <tr>
+                    <td>Last Seen</td>
+                    <td>{{context.stats.processing.in.time_last_message}}</td>
+                </tr>
+                <tr>
+                    <td>Registration Status</td>
+                    <td>{{context.registration_status}}</td>
+                </tr>
+                <tr>
+                    <td>Authorized</td>
+                    <td>{{context.auth}}</td>
+                </tr>
+                <tr>
+                    <td>Resets</td>
+                    <td>{{context.resets|length}}</td>
+                </tr>
+                <tr>
+                    <td>Connectors</td>
+                    <td>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>ConnectorId</th>
+                                    <th> Values</th>
+                                </tr>
+                                </thead>
+
+                                {% for connector in context.connectors %}
+                                <tr>
+                                    <td>{{loop.index0}}</td>
+                                    <td>
+                                        <ul>
+                                            {% for item in context.connectors[connector] %}
+                                            <li>{{item}}:
+                                                <ul>
+                                                {%for items in context.connectors[connector][item]%}
+                                                    <li>
+                                                        {{items}}
+                                                    </li>
+                                                {%endfor %}
+                                                    </ul>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Diagnostic Status Notifications</td>
+                    <td>
+                        <ul>
+                            {% for item in context.diagnostic_status_notifications %}
+                            <li>{{item}}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Firmware Status Notifications</td>
+                    <td>
+                        <ul>
+                            {% for item in context.firmware_status_notifications %}
+                            <li>{{item}}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td>OCPP All</td>
+                    <td>
+                        <ul>
+                            {% for key in context.stats.ocpp.all %}
+                            <li>{{key}} : {{context.stats.ocpp.all[key]}}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td>OCPP In</td>
+                    <td>
+                        <ul>
+                            {% for key in context.stats.ocpp.in %}
+                            <li>{{key}} : {{context.stats.ocpp.in[key]}}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td>OCPP Out</td>
+                    <td>
+                        <ul>
+                            {% for key in context.stats.ocpp.out %}
+                            <li>{{key}} : {{context.stats.ocpp.out[key]}}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td>OCPP Delta</td>
+                    <td>
+                        <ul>
+                            {% for key in context.stats.ocpp.delta %}
+                            <li>{{key}} : {{context.stats.ocpp.delta[key]}}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                 <tr>
+                    <td>OCPP Errors</td>
+                    <td>
+                        <ul>
+                            {% for key in context.stats.ocpp.errors %}
+                            <li>{{key}} : {{context.stats.ocpp.errors[key]}}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Processing In</td>
+                    <td>
+                        <ul>
+                            {% for key in context.stats.processing.in %}
+                            <li>{{key}} : {{context.stats.processing.in[key]}}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Processing Out</td>
+                    <td>
+                        <ul>
+                            {% for key in context.stats.processing.out %}
+                            <li>{{key}} : {{context.stats.processing.out[key]}}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                </tr>
+                <tr>
+                    <td>Processing Delta</td>
+                    <td>
+                        <ul>
+                            {% for key in context.stats.processing.delta %}
+                            <li>{{key}} : {{context.stats.processing.delta[key]}}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Processing Errors</td>
+                    <td>
+                        <ul>
+                            {% for key in context.stats.processing.errors %}
+                            <li>{{key}} : {{context.stats.processing.errors[key]}}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+
+                </div>
+            </div>
+        {% else %}
+        <div class="alert alert-danger" role="alert">
+            Charging Station failed to load.
+        </div>
+        {% endif %}
+    </div>
+        <hr>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@9/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({startOnLoad: true});
+    </script>
+</main>
+{% endblock %}
