@@ -15,7 +15,7 @@ class GenericBootNotificationProcessor:
         if context.cp_data["auth"] is True:
             context.cp_data["registration_status"] = RegistrationStatus.accepted
 
-        current_time = datetime.utcnow().isoformat()
+        current_time = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
         interval = context.cp_data["interval"]
         registration_status = context.cp_data["registration_status"]
 

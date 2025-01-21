@@ -1,4 +1,6 @@
-from dataclasses import dataclass
+from typing import List
+
+from pydantic.dataclasses import dataclass
 
 from compote.shared.enums import IdTag
 
@@ -10,3 +12,9 @@ class AuthIdTag:
     parent_id: str
     expiry_date: str
     status: IdTag
+
+@dataclass
+class User:
+    id: str
+    name: str
+    id_tags: List[str]

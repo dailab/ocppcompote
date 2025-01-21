@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any, Optional, Dict
 
 from ocpp.v16.enums import ResetType
 
@@ -21,7 +21,7 @@ class OCPP16ResetProcessor(GenericResetProcessor):
 
 class OCPP20ResetProcessor(GenericResetProcessor):
     @log_processing(name="process_reset")
-    async def process(self, context: Context, type: ResetType, evse_id: Optional[int] = None, **kwargs):
+    async def process(self, context: Context, type: ResetType, evse_id: Optional[int] = None, custom_data: Dict = None, **kwargs):
         await super().process(context=context, type=type, connector_id=evse_id)
-        result = await context.cp.send_reset(type, evse_id)
+        result = await context.cp.send_reset(type, evse_id, custom_data)
         return result

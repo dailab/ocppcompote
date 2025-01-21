@@ -4,7 +4,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
         crossorigin="anonymous"></script>
-<link href="static/dashboard.css" rel="stylesheet">
+<link href="/ui/static/dashboard.css" rel="stylesheet">
 {% block title %}
 Dashboard
 {% endblock %}
@@ -14,7 +14,7 @@ Dashboard
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
         <h1 class="h4">Dashboard</h1>
         <div class="btn-toolbar mb-2 mb-md-0">
-            <a href="/">
+            <a href="/ui">
                 <button class="btn btn-sm btn-outline-secondary">Refresh</button>
             </a>
         </div>
@@ -33,12 +33,12 @@ Dashboard
                         <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                               stroke-width="2" d="M13 2L3 14h9l-1 8l10-12h-9l1-8z"/>
                     </svg>
-                    <a href="/chargingstations">Charging Station Summary</a></div>
+                    <a href="/ui/chargingstations">Charging Station Summary</a></div>
                 <div class="card-body">
                     <table class="table table-sm table-borderless">
                         <tbody>
                         <tr>
-                            <th scope="row"><img class="mr-2" src="/static/img/chargingstation.svg" height="14" width="14">Charging
+                            <th scope="row"><img class="mr-2" src="/ui/static/img/chargingstation.svg" height="14" width="14">Charging
                                 Stations
                             </th>
                             <td>{{ contexts|length }}</td>
@@ -53,7 +53,7 @@ Dashboard
                             {%for connector in contexts[key].connectors%}
                                 CS_{{key}} --> CS_{{key}}_Connector_{{connector}}[Con_{{connector}}]
                             {% endfor %}
-                            click CS_{{key}} "/chargingstations/{{key}}"
+                            click CS_{{key}} "/ui/chargingstations/{{key}}"
                         {% endfor %}
                         ;
                     </pre>
@@ -72,7 +72,7 @@ Dashboard
                               stroke-width="2"
                               d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
                     </svg>&nbsp;
-                    <a href="/settings">System Stats</a></div>
+                    <a href="/ui/settings">System Stats</a></div>
                 <div class="card-body">
                     <table class="table table-sm table-borderless">
                         <tbody>
@@ -107,7 +107,7 @@ Dashboard
                         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"></path>
                     </svg>
                     {% endif %}
-                    <a href="/chargingstations/{{key}}">Charging Station {{key}}: {{contexts[key].id}}</a>
+                    <a href="/ui/chargingstations/{{key}}">Charging Station {{key}}: {{contexts[key].id}}</a>
                 </div>
                 <div class="card-body">
                     <table class="table table-sm table-borderless">
@@ -189,10 +189,10 @@ Dashboard
                         <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                               stroke-width="2" d="M13 2L3 14h9l-1 8l10-12h-9l1-8z"/>
                     </svg>
-                    <a href="/chargingstations">Charging Station Summary</a></div>
+                    <a href="/ui/chargingstations">Charging Station Summary</a></div>
                 <div class="card-body">
                     <p class="card-text">Charging Stations: {{contexts|length}}</p>
-                    <a href="/chargingstations" class="btn btn-primary">Go to Charging Stations</a>
+                    <a href="/ui/chargingstations" class="btn btn-primary">Go to Charging Stations</a>
                 </div>
             </div>
             <div class="card">
@@ -204,7 +204,7 @@ Dashboard
                               stroke-width="2"
                               d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
                     </svg>&nbsp;
-                    <a href="/settings">System Stats</a></div>
+                    <a href="/ui/settings">System Stats</a></div>
                 <div class="card-body">
                     <p>System Start: {{ data.startup }}</p>
                 </div>

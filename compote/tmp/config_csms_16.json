@@ -1,8 +1,8 @@
 {
    "config": {
       "wshandler_config": {
-         "ip": "localhost",
-         "port": 9000,
+         "ip": "0.0.0.0",
+         "port": 8001,
          "ocpp_versions": [
             "ocpp1.6",
             "ocpp2.0",
@@ -10,14 +10,16 @@
          ]
       },
       "cp_defaults": {
-         "interval": 1,
+         "interval": 10,
          "auth": "True",
          "transaction_max_time_delta": "hours = 1"
       },
       "webservice_config": {
          "host": "localhost",
-         "port": 8080
+         "port": 8001,
+         "access_log" : null
       },
+      "telemetry" : "zipkin",
       "auth_id_tags": {
          "0": {
             "id" : "0",
@@ -31,6 +33,22 @@
             "id" : "1",
             "name": "Id Tag 1",
             "value": "VID:001681020002",
+            "parent_id": "0",
+            "expiry_date": "never",
+            "status": "valid"
+         },
+         "2": {
+            "id" : "2",
+            "name": "Id Tag 2",
+            "value": "VID:AABBCCDDEEFF",
+            "parent_id": "0",
+            "expiry_date": "never",
+            "status": "valid"
+         },
+         "3": {
+            "id" : "3",
+            "name": "Id Tag 3",
+            "value": "ABC12345",
             "parent_id": "0",
             "expiry_date": "never",
             "status": "valid"

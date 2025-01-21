@@ -1,3 +1,5 @@
+from typing import Dict
+
 from compote.csms.context.csms_context import Context
 from compote.csms.analytics.stats import log_processing
 
@@ -14,4 +16,8 @@ class OCPP16RemoteStopTransactionProcessor(GenericRemoteStopTransactionProcessor
         return result
 
 class OCPP20RemoteStopTransactionProcessor(GenericRemoteStopTransactionProcessor):
-    pass
+    @log_processing(name="process_remote_stop_transaction")
+    async def process(self, context: Context, transaction_id: str, custom_data: Dict = None, **kwargs):
+        await super().process(context, transaction_id)
+        result = await context.cp.send_request_stop_transaction(transaction_id, custom_data)
+        return result

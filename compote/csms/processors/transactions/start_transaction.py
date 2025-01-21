@@ -63,7 +63,7 @@ class GenericStartTransactionProcessor:
             "meter_start" : meter_start,
             "timestamp_start" : timestamp
         }
-        id_tag_info["expiry_date"] = datetime.utcnow().isoformat()
+        id_tag_info["expiry_date"] = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
         transactions.append(transaction)
         result["transaction_id"] = transaction["id"]
 

@@ -1,4 +1,6 @@
 
+from typing import Dict
+
 from compote.csms.context.csms_context import Context
 from compote.csms.analytics.stats import log_processing
 
@@ -15,7 +17,7 @@ class OCPP16CancelReservationProcessor(GenericCancelReservationProcessor):
 
 class OCPP20CancelReservationProcessor(GenericCancelReservationProcessor):
     @log_processing(name="process_cancel_reservation")
-    async def process(self, context: Context, reservation_id: int, **kwargs):
+    async def process(self, context: Context, reservation_id: int, custom_data: Dict = None, **kwargs):
         await super().process(context, reservation_id, **kwargs)
-        result = await context.cp.send_cancel_reservation(reservation_id)
+        result = await context.cp.send_cancel_reservation(reservation_id, custom_data)
         return result

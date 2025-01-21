@@ -1,0 +1,39 @@
+{
+   "config": {
+      "providerId" : "DE*DCB",
+      "oicp_server_config": {
+         "OICP_SERVER_URL": "http://127.0.0.1:8000/oicp"
+      },
+      "telemetry" : "zipkin",
+      "authentication_data_records" : [
+            {
+                "Identification": {
+                    "RFIDMifareFamilyIdentification": {
+                        "UID": "2A83155EE288040047C1"
+                    }
+                }
+            },
+            {
+                "Identification": {
+                    "RFIDIdentification": {
+                        "UID": "2A83155EE288040047C1",
+                        "EvcoID": "AB-123C12345678A",
+                        "RFID": "mifareFamily",
+                        "PrintedNumber": "string",
+                        "ExpiryDate": "string"
+                    }
+                }
+            }
+        ],
+      "users": [
+         {
+            "id": "U1",
+            "name": "test",
+            "id_tags": [
+               "0",
+               "1"
+            ]
+         }
+      ]
+   }
+}

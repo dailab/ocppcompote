@@ -1,72 +1,99 @@
+# ocpp_ws_app.py
+
 import logging
-import websockets
+from fastapi import FastAPI, WebSocket
 
 from compote.csms.adapters.ocpp.csms_ocpp16_handler import ChargePoint as OCPP16ChargePoint
 from compote.csms.adapters.ocpp.csms_ocpp201_handler import ChargePoint as OCPP201ChargePoint
 from compote.csms.context.csms_contextmanager import ContextManager
 
-logging.basicConfig(level=logging.INFO)
-LOGGER = logging.getLogger('csms_ws_handler')
+LOGGER = logging.getLogger("csms_ws_handler")
 
-class CSMSWSHandler:
+def create_ocpp_ws_app(context_manager: ContextManager) -> FastAPI:
+    """
+    Returns a FastAPI sub-application that handles OCPP WebSockets.
+    """
+    ws_app = FastAPI(
+        title="CSMS OCPP Websocket Service",
+        version="0.0.1",
+        tags=["ocpp"]
+    )
 
-    context_manager: ContextManager = None
+    @ws_app.on_event("startup")
+    async def startup_event():
+        config = await context_manager.get_wshandler_config()
+        LOGGER.info({
+            "message_type": "CSMS.WebsocketAdapter.Info",
+            "function": "Start",
+            "arguments": config
+        })
 
-    async def on_connect(self, websocket, path):
-        """ For every new charge point that connects, create a ChargePoint
-        instance and start listening for messages.
+    @ws_app.websocket("/{charge_point_id}")
+    async def ocpp_websocket(websocket: WebSocket, charge_point_id: str):
         """
-        try:
-            requested_protocols = websocket.request_headers[
-                'Sec-WebSocket-Protocol']
-        except KeyError:
-            logging.error(
-                "Client hasn't requested any Subprotocol. Closing Connection"
+        Single endpoint to handle WebSocket connections for OCPP 1.6, 2.0, 2.0.1, etc.
+        """
+        requested_protocols = websocket.scope.get("subprotocols", [])
+
+        if not requested_protocols:
+            LOGGER.error("Client hasn't requested any subprotocols. Closing connection.")
+            await websocket.close()
+            return
+
+        wshandler_config = await context_manager.get_wshandler_config()
+        supported_subprotocols = wshandler_config["ocpp_versions"]
+
+        chosen_subprotocol = None
+        for candidate in requested_protocols:
+            if candidate in supported_subprotocols:
+                chosen_subprotocol = candidate
+                break
+
+        if not chosen_subprotocol:
+            # No matching subprotocol found
+            LOGGER.warning(
+                "Protocols Mismatched | Expected Subprotocols: %s, but client supports %s | Closing connection",
+                supported_subprotocols, requested_protocols
             )
-            return await websocket.close()
-        if websocket.subprotocol:
-            LOGGER.info("Protocols Matched: %s", websocket.subprotocol)
-        else:
-            # In the websockets lib if no subprotocols are supported by the
-            # cs and the server, it proceeds without a subprotocol,
-            # so we have to manually close the connection.
-            logging.warning('Protocols Mismatched | Expected Subprotocols: %s,'
-                            ' but cs supports  %s | Closing connection',
-                            websocket.available_subprotocols,
-                            requested_protocols)
-            return await websocket.close()
+            await websocket.close()
+            return
 
-        charge_point_id = path.strip('/')
+        # Accept the connection with the chosen subprotocol
+        await websocket.accept(subprotocol=chosen_subprotocol)
 
-        cp = None
+        # Logging
+        LOGGER.info({
+            "message_type": "CSMS.WebsocketAdapter.Info",
+            "function": "MatchSubprotocol",
+            "arguments": {"protocol": chosen_subprotocol}
+        })
 
-        match websocket.subprotocol:
-            case "ocpp1.6": cp = OCPP16ChargePoint(charge_point_id, websocket)
-            case "ocpp2.0": cp = OCPP201ChargePoint(charge_point_id, websocket)
-            case "ocpp2.0.1": cp = OCPP201ChargePoint(charge_point_id, websocket)
-            case other: return await websocket.close()
 
-        context = await self.context_manager.register_new_cp_context(cp)
+        match chosen_subprotocol:
+            case "ocpp1.6":
+                cp = OCPP16ChargePoint(charge_point_id, websocket)
+            case "ocpp2.0" | "ocpp2.0.1":
+                cp = OCPP201ChargePoint(charge_point_id, websocket)
+            case "ocpp2.1":
+                # Not supported at the moment.
+                await websocket.close()
+                return
+            case _:
+                await websocket.close()
+                return
+
+        # Register a new context for this charge point
+        context = await context_manager.register_new_cp_context(cp)
         await cp.register_context(context)
 
         try:
             await cp.start()
-        except Exception:
-            LOGGER.error("Connection Failure in WebSocket Handler")
+        except Exception as e:
+            LOGGER.error({
+                "message_type": "CSMS.WebsocketAdapter.Error",
+                "function": "ConnectionFailure",
+                "arguments": {"error": str(e)}
+            })
+            await websocket.close()
 
-
-    async def run(self, context_manager: ContextManager):
-        self.context_manager = context_manager
-        wshandler_config = await self.context_manager.get_wshandler_config()
-
-        LOGGER.info("Initialized with wshandler_config: " + str(wshandler_config))
-
-        server = await websockets.serve(
-            self.on_connect,
-            wshandler_config["ip"],
-            wshandler_config["port"],
-            subprotocols=wshandler_config["ocpp_versions"]
-        )
-
-        LOGGER.info("Server Started listening to new connections...")
-        await server.wait_closed()
+    return ws_app

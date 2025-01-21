@@ -39,6 +39,7 @@ class OCPP16SetChargingProfileProcessor(GenericSetChargingProfileProcessor):
 
 class OCPP20SetChargingProfileProcessor(GenericSetChargingProfileProcessor):
     @log_processing(name="process_set_charging_profile")
-    async def process(self, context: Context, connector_id = 1, charging_profile = None, **kwargs):
-        await super().process(context, connector_id, charging_profile)
-        return True
+    async def process(self, context: Context, evse_id = 1, charging_profile = None, custom_data = None, **kwargs):
+        await super().process(context, connector_id=evse_id, charging_profile=charging_profile)
+        result = await context.cp.send_set_charging_profile(evse_id, charging_profile, custom_data)
+        return result

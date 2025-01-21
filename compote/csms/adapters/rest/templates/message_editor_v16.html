@@ -8,7 +8,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
 
 
-<link href="/static/dashboard.css" rel="stylesheet">
+<link href="/ui/static/dashboard.css" rel="stylesheet">
 {% block title %}
 Message Editor View
 {% endblock %}
@@ -19,28 +19,28 @@ Message Editor View
         <h1 class="h4">OCPP v16 Message Editor for: Charging Station {{key}}: {{context.id}}</h1>
         <div class="btn-toolbar mb-2 mb-md-0">
 
-            <a href="/chargingstations/{{key}}/analytics">
+            <a href="/ui/chargingstations/{{key}}/analytics">
             <button type="button" class="btn btn-primary btn-sm mr-1">Analytics</button>
             </a>
 
-            <a href="/chargingstations/{{key}}/error_viewer">
+            <a href="/ui/chargingstations/{{key}}/error_viewer">
             <button type="button" class="btn btn-primary btn-sm mr-1">Errors</button>
             </a>
 
             <div class="btn-group mr-1">
-                <a href="/chargingstations/{{key}}">
+                <a href="/ui/chargingstations/{{key}}">
                 <button type="button" class="btn btn-success btn-sm active">View</button>
                     </a>
             </div>
             <div class="btn-group">
-                <a href="/chargingstations" class="btn btn-sm btn-outline-secondary active">
+                <a href="/ui/chargingstations" class="btn btn-sm btn-outline-secondary active">
                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
                         <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                               stroke-width="2"
                               d="M5 19h14a2 2 0 0 0 1.84-2.75L13.74 4a2 2 0 0 0-3.5 0l-7.1 12.25A2 2 0 0 0 4.89 19"/>
                     </svg>
                 </a>
-                <a href="/chargingstations/{{key}}/message_editor" class="btn btn-sm btn-outline-secondary">Refresh</a>
+                <a href="/ui/chargingstations/{{key}}/message_editor_v16" class="btn btn-sm btn-outline-secondary">Refresh</a>
             </div>
 
         </div>

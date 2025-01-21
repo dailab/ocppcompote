@@ -19,7 +19,7 @@ class OCPP16ChangeAvailabilityProcessor(GenericChangeAvailabilityProcessor):
 
 class OCPP20ChangeAvailabilityProcessor(GenericChangeAvailabilityProcessor):
     @log_processing(name="process_change_availability")
-    async def process(self, context: Context, operational_status: str, evse: Optional[Dict], **kwargs):
+    async def process(self, context: Context, operational_status: str, evse: Optional[Dict], custom_data: Dict = None, **kwargs):
         await super().process(context, connector_id=evse, type=operational_status, **kwargs)
-        result = await context.cp.send_change_availability(operational_status, evse)
+        result = await context.cp.send_change_availability(operational_status, evse, custom_data)
         return result

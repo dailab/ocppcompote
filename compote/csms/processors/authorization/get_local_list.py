@@ -1,3 +1,5 @@
+from typing import Optional, Dict
+
 from compote.csms.context.csms_context import Context
 from compote.csms.analytics.stats import log_processing
 
@@ -14,7 +16,7 @@ class OCPP16GetLocalListVersionProcessor(GenericGetLocalListVersionProcessor):
 
 class OCPP20GetLocalListVersionProcessor(GenericGetLocalListVersionProcessor):
     @log_processing(name="process_get_local_list_version")
-    async def process(self, context: Context, **kwargs):
+    async def process(self, context: Context, custom_data: Optional[Dict] = None, **kwargs):
         await super().process(context, **kwargs)
-        result = await context.cp.send_get_local_list_version()
+        result = await context.cp.send_get_local_list_version(custom_data)
         return result

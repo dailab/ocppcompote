@@ -27,7 +27,7 @@ class GenericStopTransactionProcessor:
 
                     # Set stop_transaction request as accepted and return result
                    id_tag_info["status"] = 'Accepted'
-                   id_tag_info["expiry_date"] =  datetime.utcnow().isoformat()
+                   id_tag_info["expiry_date"] =  datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
                    return id_tag_info
         return id_tag_info
 

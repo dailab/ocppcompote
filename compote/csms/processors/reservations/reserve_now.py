@@ -17,7 +17,7 @@ class OCPP16ReserveNowProcessor(GenericReserveNowProcessor):
 
 class OCPP20ReserveNowProcessor(GenericReserveNowProcessor):
     @log_processing(name="process_reserve_now")
-    async def process(self, context: Context, id: int, expiry_date_time: str, id_token: Dict, connector_type: str = None, evse_id: int = None, group_id_token: Dict = None, **kwargs):
+    async def process(self, context: Context, id: int, expiry_date_time: str, id_token: Dict, connector_type: str = None, evse_id: int = None, group_id_token: Dict = None, custom_data: Dict = None, **kwargs):
         await super().process(context, connector_id = evse_id, expiry_date=expiry_date_time, id_tag=id_token, reservation_id=id, parent_id_tag=group_id_token, connector_type=connector_type, **kwargs)
-        result = await context.cp.send_reserve_now(id, expiry_date_time, id_token, connector_type, evse_id, group_id_token)
+        result = await context.cp.send_reserve_now(id, expiry_date_time, id_token, connector_type, evse_id, group_id_token, custom_data)
         return result

@@ -8,7 +8,14 @@ from ocpp.v16.call import HeartbeatPayload
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger('analytics_engine')
 
+
 def log_processing(name):
+    """Log the processing of a messages and capture errors using decorator function
+    Args:
+        name (str): the name of the function to be logged
+    Returns:
+        decorator: the decorator to be used
+    """
     def decorator(func):
         @functools.wraps(func)
         async def wrapper(self, *args, **kwargs):
@@ -35,19 +42,35 @@ def log_processing(name):
         return wrapper
     return decorator
 
-
 def log_ocpp_processing(type):
+    """Log the processing of ocpp messages using a decorator function
+    Args:
+        type (str): the type of the message (req or resp) denoting communication side of the exchange
+    Returns:
+        decorator: the decorator to be used
+    """
     def decorator(func):
         @functools.wraps(func)
         async def wrapper(*args, **kwargs):
             self = args[0]
+
             fun_name = func.__name__
             in_time = await update_ocpp_in(self, fun_name=fun_name, locals=locals(), type=type)
 
             output = None
             try:
                 output = await func(*args, **kwargs)
-                LOGGER.info("OCPP call, dispatching " + fun_name + str(kwargs))
+
+                #LOGGER.info("OCPP call, dispatching " + fun_name + str(kwargs))
+                message_type = "OCPP.Call.Dispatch"
+                function = fun_name
+                arguments = kwargs
+
+                #arguments["uuid"] = self.last_uuid
+
+                msg = {"message_type" : message_type, "function" : function, "arguments" : arguments}
+
+                LOGGER.info(msg)
             except Exception as e:
                 error_time = str(datetime.utcnow())
                 LOGGER.error(f"Exception caught in {fun_name}: {str(e)}")
@@ -63,6 +86,15 @@ def log_ocpp_processing(type):
     return decorator
 
 async def update_ocpp_in(context, fun_name=None, locals=None, type=None):
+    """Log the processing of incoming ocpp messages
+    Args:
+        context (Context): the charging station context
+        fun_name (str): the name of the function to be logged
+        locals (dict): the local variables of the function environment
+        type (str): the type of the message (req or resp) denoting communication side
+    Returns:
+        dict: the dictionary for the arrival time and processing time regarding the processed message
+    """
     context_object = context.context
     current_time = datetime.utcnow()
     processing_time = time.perf_counter()
@@ -89,8 +121,17 @@ async def update_ocpp_in(context, fun_name=None, locals=None, type=None):
 
     return {"time": current_time, "processing_time": processing_time}
 
-
 async def update_ocpp_out(context, fun_name=None, output=None, in_time=None, type=None):
+    """Log the processing of outgoing ocpp messages
+    Args:
+        context (Context): the charging station context
+        fun_name (str): the name of the function to be logged
+        output (dict): the output regarding the processed message
+        in_time (float): the time when the incoming ocpp message was first registered
+        type (str): the type of the message (req or resp) denoting communication side
+    Returns:
+        dict: the dictionary for the arrival time and processing time regarding the processed message
+    """
     context_object = context.context
     current_time = datetime.utcnow()
     processing_time = time.perf_counter()
@@ -134,6 +175,13 @@ async def update_ocpp_out(context, fun_name=None, output=None, in_time=None, typ
 
 
 async def update_processing_in(context, fun_name=None):
+    """Log the processing of incoming messages at the message processor functions
+    Args:
+        context (Context): the charging station context
+        fun_name (str): the name of the function to be logged
+    Returns:
+        dict: the dictionary for the arrival time and processing time regarding the processed message
+    """
     current_time = datetime.utcnow()
     processing_time = time.perf_counter()
 
@@ -151,6 +199,14 @@ async def update_processing_in(context, fun_name=None):
 
 
 async def update_processing_out(context, fun_name=None, in_time=None):
+    """Log the processing of outgoing messages at the message processor functions
+    Args:
+        context (Context): the charging station context
+        fun_name (str): the name of the function to be logged
+        in_time (float): the time when the incoming message to be processed was first registered
+    Returns:
+        dict: the dictionary for the arrival time and processing time regarding the processed message
+    """
     current_time = datetime.utcnow()
     processing_time = time.perf_counter()
 
@@ -175,6 +231,16 @@ async def update_processing_out(context, fun_name=None, in_time=None):
 
 
 async def log_processing_error(context, fun_name=None, locals = None, error_time = None, error=None):
+    """Log the processing errors with respect to processed messages
+    Args:
+        context (Context): the charging station context
+        fun_name (str): the name of the function to be logged
+        locals (dict): the local variables of the function environment
+        error_time (str): the time when the error was captured
+        in_time (float): the time when the incoming message to be processed was first registered
+    Returns:
+        dict: the dictionary for the error times, error messages and their arguments
+    """
     context_object = context.context
 
     data = context_object.cp_data["stats"]["processing"]["errors"]
@@ -189,7 +255,18 @@ async def log_processing_error(context, fun_name=None, locals = None, error_time
         data["messages"][fun_name].append(
             {"error_time": error_time, "error": str(error), "args": values})
 
+
 async def log_ocpp_error(context, fun_name=None, locals=None, error_time = None, error=None):
+    """Log the ocpp errors with respect to processed messages
+    Args:
+        context (Context): the charging station context
+        fun_name (str): the name of the function to be logged
+        locals (dict): the local variables of the function environment
+        error_time (str): the time when the error was captured
+        error (str): the error message captured
+    Returns:
+        dict: the dictionary for the error times, error messages and their arguments
+    """
     context_object = context.context
     data = context_object.cp_data["stats"]["ocpp"]["errors"]
     data["total"] += 1
