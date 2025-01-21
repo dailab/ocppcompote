@@ -72,7 +72,7 @@ git clone https://github.com/dailab/ocppcompote.git
 ```
 2. **Navigate to the cloned repository**:
 ```bash
-cd OCPP-Compote
+cd ocppcompote
 ```
 
 ##  4.2 Dependencies and Requirements
@@ -80,14 +80,7 @@ Please see the requirements.txt file and install with:
 ```bash
 pip install -r requirements.txt
 ```
-The following packages that are crucial for the project:
-* Python 3.10+
-* ocpp (Mobilityhouse/ocpp)
-* aiohttp 
-* aiohttp-cors
-* aiohttp-jinja2
-* numpy
-* greenlet
+Please use a Python version 3.10+.
 
 ---
 
