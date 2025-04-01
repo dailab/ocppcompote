@@ -114,7 +114,7 @@ async def eRoamingAuthorizeRemoteStart_v21(
 
     if not body:
         request = ERoamingAuthorizeRemoteStart(
-            ProviderID=context.data["providerId"],
+            ProviderID = providerID or context.data["providerId"],
             Identification = context.data["authentication_data_records"][0]["Identification"],
             EvseID = "DE*XYZ*ETEST1",
             SessionID = "f98efba4-02d8-4fa0-b810-9a9d50d2c527"
@@ -163,7 +163,7 @@ async def eRoamingAuthorizeRemoteStop_v21(
     if not body:
         request = ERoamingAuthorizeRemoteStop(
             ProviderID=context.data["providerId"],
-            SessionID="",
+            SessionID="f98efba4-02d8-4fa0-b810-9a9d50d2c527",
             EvseID = "DE*XYZ*ETEST1"
         )
     else:
@@ -227,10 +227,10 @@ async def eRoamingGetChargeDetailRecords_V22(
 
     if not body:
         request = ERoamingGetChargeDetailRecords(
-            ProviderID=context.data["providerId"],
-            From="2020-08-23T14:20:10.285Z",
-            OperatorID="DE*ABC",
-            To="2020-09-23T14:20:10.285Z",
+            ProviderID = providerID or context.data["providerId"],
+            From = "2020-08-23T14:20:10.285Z",
+            OperatorID = "DE*ABC",
+            To = "2020-09-23T14:20:10.285Z",
         )
     else:
         request = body

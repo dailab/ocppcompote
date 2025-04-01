@@ -12,7 +12,6 @@ from pydantic import BaseModel, create_model
 from starlette.staticfiles import StaticFiles
 
 from compote.csms.adapters.rest.api_error_dataclasses import ContextIdErr, ContextResult
-from compote.csms.context.csms_contextmanager import ContextManager
 from compote.csms.processors.authorization.get_local_list import OCPP16GetLocalListVersionProcessor, \
     OCPP20GetLocalListVersionProcessor
 from compote.csms.processors.authorization.send_local_list import OCPP16SendLocalListProcessor, \
@@ -40,15 +39,19 @@ from compote.csms.processors.smart_charging.get_composite_schedule import OCPP16
 from compote.csms.processors.smart_charging.set_charging_profile import OCPP16SetChargingProfileProcessor
 from compote.csms.processors.status.get_base_report import OCPP20GetBaseReportProcessor
 from compote.csms.processors.status.get_report import OCPP20GetReportProcessor
+from compote.csms.processors.status.receive_data_transfer import OCPP16ReceiveDataTransferProcessor, \
+    OCPP16ReceiveDataTransferGet15118EVCertificateProcessor, OCPP16ReceiveDataTransferAuthorizeProcessor, \
+    OCPP16ReceiveDataTransferSignCertificateProcessor, OCPP16ReceiveDataTransferGetCertificateStatusProcessor
 from compote.csms.processors.status.send_data_transfer import OCPP16SendDataTransferProcessor, \
-    OCPP20SendDataTransferProcessor, OCPP16SendDataTransferV2GCertificateProcessor, \
-    OCPP16SendDataTransferGetCertificateStatusProcessor, OCPP16SendDataTransferGetInstalledCertificateIdsProcessor, \
+    OCPP20SendDataTransferProcessor, \
+    OCPP16SendDataTransferGetInstalledCertificateIdsProcessor, \
     OCPP16SendDataTransferCertificateSignedProcessor, OCPP16SendDataTransferTriggerMessageProcessor, \
-    OCPP16SendDataTransferCertificateInstallationProcessor
+    OCPP16SendDataTransferCertificateInstallationProcessor, OCPP16SendDataTransferDeleteCertificateProcessor
 from compote.csms.processors.transactions.remote_start_transaction import OCPP16RemoteStartTransactionProcessor, \
     OCPP20RemoteStartTransactionProcessor
 from compote.csms.processors.transactions.remote_stop_transaction import OCPP16RemoteStopTransactionProcessor, \
     OCPP20RemoteStopTransactionProcessor
+from compote.shared.dataclasses import AuthIdTag
 from compote.shared.helper_functions import convert_dict_recursive
 
 logging.basicConfig(level=logging.INFO)
@@ -87,12 +90,12 @@ def generate_pydantic_model_from_processor(
     model = create_model(model_name, **fields)
     return model
 
-async def match_context_id(context_manager: ContextManager, id: str) -> ContextResult:
+async def match_context_id(context_manager, id: str) -> ContextResult:
     contexts = await context_manager.get_contexts()
     if not contexts:
-        return ContextResult(valid=False, error="No context found", context=None)
+        return ContextResult(valid=False, error=ContextIdErr.nocontext, context=None)
     ...
-    return ContextResult(valid=True, error="", context=contexts[id])
+    return ContextResult(valid=True, error=ContextIdErr.valid, context=contexts[id])
 
 async def extract_from_json(request: Request, processor_class):
     """
@@ -126,7 +129,7 @@ def add_processor_route(
     method: str,
     path: str,
     processor_class,
-    context_manager: ContextManager,
+    context_manager,
     tags: List[str] = None
 ):
     ModelClass = generate_pydantic_model_from_processor(
@@ -140,7 +143,7 @@ def add_processor_route(
         request: Request
     ):
 
-        context_result = await match_context_id(context_manager, id)
+        context_result = await match_context_id(context_manager, str(id))
         if not context_result.valid:
             raise HTTPException(status_code=400, detail=context_result.error)
 
@@ -156,7 +159,7 @@ def add_processor_route(
         tags=tags
     )
 
-def create_api_app(context_manager: ContextManager) -> FastAPI:
+def create_api_app(context_manager) -> FastAPI:
     """
     Returns a FastAPI sub-application that handles OCPP WebSockets.
     """
@@ -348,24 +351,16 @@ def create_api_app(context_manager: ContextManager) -> FastAPI:
     add_processor_route(
         router,
         method="POST",
-        path="/context/{id}/v16/datatransferv2gcertificate",
-        processor_class=OCPP16SendDataTransferV2GCertificateProcessor,
-        context_manager=context_manager,
-        tags=["OCPPv16-ISO15118"]
-    )
-    add_processor_route(
-        router,
-        method="POST",
-        path="/context/{id}/v16/datatransfergetcertificatestatus",
-        processor_class=OCPP16SendDataTransferGetCertificateStatusProcessor,
-        context_manager=context_manager,
-        tags=["OCPPv16-ISO15118"]
-    )
-    add_processor_route(
-        router,
-        method="POST",
         path="/context/{id}/v16/datatransfergetinstalledcertificateids",
         processor_class=OCPP16SendDataTransferGetInstalledCertificateIdsProcessor,
+        context_manager=context_manager,
+        tags=["OCPPv16-ISO15118"]
+    )
+    add_processor_route(
+        router,
+        method="POST",
+        path="/context/{id}/v16/datatransferdeletecertificate",
+        processor_class=OCPP16SendDataTransferDeleteCertificateProcessor,
         context_manager=context_manager,
         tags=["OCPPv16-ISO15118"]
     )
@@ -393,7 +388,46 @@ def create_api_app(context_manager: ContextManager) -> FastAPI:
         context_manager=context_manager,
         tags=["OCPPv16-ISO15118"]
     )
-
+    add_processor_route(
+        router,
+        method="POST",
+        path="/context/{id}/v16/receivedatatransfer",
+        processor_class=OCPP16ReceiveDataTransferProcessor,
+        context_manager=context_manager,
+        tags=["OCPPv16-ISO15118-Debugging"]
+    )
+    add_processor_route(
+        router,
+        method="POST",
+        path="/context/{id}/v16/receivedatatransferauthorize",
+        processor_class=OCPP16ReceiveDataTransferAuthorizeProcessor,
+        context_manager=context_manager,
+        tags=["OCPPv16-ISO15118-Debugging"]
+    )
+    add_processor_route(
+        router,
+        method="POST",
+        path="/context/{id}/v16/receivedatatransfersigncertificate",
+        processor_class=OCPP16ReceiveDataTransferSignCertificateProcessor,
+        context_manager=context_manager,
+        tags=["OCPPv16-ISO15118-Debugging"]
+    )
+    add_processor_route(
+        router,
+        method="POST",
+        path="/context/{id}/v16/receivedatatransferget15118evcertificate",
+        processor_class=OCPP16ReceiveDataTransferGet15118EVCertificateProcessor,
+        context_manager=context_manager,
+        tags=["OCPPv16-ISO15118-Debugging"]
+    )
+    add_processor_route(
+        router,
+        method="POST",
+        path="/context/{id}/v16/receivedatatransfergetcertificatestatus",
+        processor_class=OCPP16ReceiveDataTransferGetCertificateStatusProcessor,
+        context_manager=context_manager,
+        tags=["OCPPv16-ISO15118-Debugging"]
+    )
     # OCPP v201 routes
     add_processor_route(
         router,
@@ -576,7 +610,7 @@ def create_api_app(context_manager: ContextManager) -> FastAPI:
         Args:
             id (str): the id to match to a specific csms context
         Returns:
-            aiohttp.web_response: the csms contexts as a json dictionary wrapped in a aiohttp web_response
+            web.Response: the csms contexts as a json dictionary
         """
 
         result = await context_manager.get_contexts()
@@ -687,6 +721,14 @@ def create_api_app(context_manager: ContextManager) -> FastAPI:
 
         return result
 
+    @api_app.get("/context_manager_data", tags=["Context"])
+    async def list_context_manager_data():
+        """List all csms context manager data and return as json
+        Returns:
+            web.Response: the csms context manager data wrapped in json
+        """
+        result = await context_manager.get_data()
+        return result
 
     @api_app.get("/log_uuid", tags=["Logging"])
     async def log_uuid():
@@ -711,10 +753,51 @@ def create_api_app(context_manager: ContextManager) -> FastAPI:
             web.Response: logging entries as json
         """
         log = await context_manager.get_json_log()
+
         if not log:
             raise HTTPException(status_code=404, detail="Log not found")
 
         return log
+    
+    @api_app.get("/auth_id_tags", tags=["Context"])
+    async def auth_tags():
+        """Get auth id tags as json
+        Args:
+            request: the request to handle
+        Returns:
+            web.Response: event entries as json
+        """
+        auth_id_tags = await context_manager.get_auth_id_tags()
+        # if not log:
+        #     raise HTTPException(status_code=404, detail="Log not found")
+
+        return auth_id_tags
+
+    @api_app.post("/auth_id_tags/add", tags=["Context"])
+    async def auth_tags_add(auth_id_tag: AuthIdTag):
+        """Add auth id tag
+        Args:
+            auth_id_tag: the AuthIdTag to add
+        Returns:
+            web.Response: auth_id_tags entries as json
+        """
+        await context_manager.add_auth_id(auth_id_tag)
+
+        auth_id_tags = await context_manager.get_auth_id_tags()
+
+        return auth_id_tags
+
+    @api_app.post("/auth_id_tags/remove", tags=["Context"])
+    async def auth_tags_remove(id: str):
+        """Remove auth id tag
+        Args:
+            request: the request to handle
+        Returns:
+            web.Response: event entries as json
+        """
+        removed_auth_id = await context_manager.remove_auth_id(id)
+
+        return removed_auth_id
 
     api_app.mount("/static", StaticFiles(directory=Path(__file__).parents[0] / "static"), name="static")
 

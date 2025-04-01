@@ -1,0 +1,14 @@
+{
+   "config": {
+      "oicp_server_config": {
+         "OICP_SERVER_URL": "http://127.0.0.1:8002/oicp"
+      },
+      "cpo_config": {
+         "CPO_URL": "http://127.0.0.1:8001/oicp_api"
+      },
+      "emp_config": {
+         "EMP_URL": "http://127.0.0.1:8000/oicp"
+      },
+      "telemetry" : "zipkin"
+   }
+}

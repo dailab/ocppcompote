@@ -9,10 +9,6 @@ from compote.shared.enums import IdTag
 
 logging.basicConfig(level=logging.INFO)
 
-"""
-Class used to represent charging station state on the csms.
-"""
-
 
 class Context:
     """
@@ -26,8 +22,9 @@ class Context:
     connectors = None
     transactions = None
     db = None
+    context_manager = None
 
-    async def register_new_cp(self, cp, cp_defaults=None, auth_id_tags=None):
+    async def register_new_cp(self, cp, context_manager, cp_defaults=None, auth_id_tags=None):
         """Register a new OCPP ChargePoint instance in the context manager
         Args:
             cp (ChargePoint): instance of the communication adapter
@@ -35,6 +32,7 @@ class Context:
         self.cp = cp
         self.cp_defaults = cp_defaults
         self.auth_id_tags = auth_id_tags
+        self.context_manager = context_manager
         self.LOGGER = logging.getLogger('csms_context:' + self.cp.id)
         await self.create_cp_data(self.cp)
 
@@ -44,7 +42,6 @@ class Context:
         msg = {"message_type": message_type, "function": function, "arguments": arguments}
         self.LOGGER.info(msg)
 
-        # self.LOGGER.info("created")
 
     async def create_cp_data(self, cp):
         """Create system data for a new OCPP ChargePoint instance in the context manager based on default configuration
@@ -123,25 +120,29 @@ class Context:
                                            },
                                            "diagnostic_status_notifications": [],
                                            "firmware_status_notifications": [],
+                                           "security_event_notifications" : [],
                                            "data_transfers": [],
                                            "connectors": {
                                                0: {
                                                    "status": [],
                                                    "transactions": [],
-                                                   "meter_values": []
+                                                   "meter_values": [],
+                                                   "reservations": []
                                                },
                                                1: {
                                                    "status": [],
                                                    "transactions": [],
-                                                   "meter_values": []
+                                                   "meter_values": [],
+                                                   "reservations": []
                                                },
                                                2: {
                                                    "status": [],
                                                    "transactions": [],
-                                                   "meter_values": []
+                                                   "meter_values": [],
+                                                   "reservations": []
                                                }
                                            },
-                                           }
+                                        }
 
     async def get_cp_data(self):
         """Get all csms context data related to the specific charge point

@@ -1,15 +1,13 @@
-# ocpp_ws_app.py
 
 import logging
 from fastapi import FastAPI, WebSocket
 
 from compote.csms.adapters.ocpp.csms_ocpp16_handler import ChargePoint as OCPP16ChargePoint
 from compote.csms.adapters.ocpp.csms_ocpp201_handler import ChargePoint as OCPP201ChargePoint
-from compote.csms.context.csms_contextmanager import ContextManager
 
 LOGGER = logging.getLogger("csms_ws_handler")
 
-def create_ocpp_ws_app(context_manager: ContextManager) -> FastAPI:
+def create_ocpp_ws_app(context_manager) -> FastAPI:
     """
     Returns a FastAPI sub-application that handles OCPP WebSockets.
     """
@@ -31,7 +29,7 @@ def create_ocpp_ws_app(context_manager: ContextManager) -> FastAPI:
     @ws_app.websocket("/{charge_point_id}")
     async def ocpp_websocket(websocket: WebSocket, charge_point_id: str):
         """
-        Single endpoint to handle WebSocket connections for OCPP 1.6, 2.0, 2.0.1, etc.
+        Single endpoint to handle WebSocket connections for OCPP 1.6, 2.0, 2.0.1
         """
         requested_protocols = websocket.scope.get("subprotocols", [])
 

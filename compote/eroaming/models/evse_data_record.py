@@ -25,18 +25,18 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from openapi_server.models.accessibility import Accessibility
-from openapi_server.models.address_iso19773 import AddressIso19773
-from openapi_server.models.authentication_mode import AuthenticationMode
-from openapi_server.models.charging_facility import ChargingFacility
-from openapi_server.models.energy_source import EnergySource
-from openapi_server.models.geo_coordinates import GeoCoordinates
-from openapi_server.models.info_text_type import InfoTextType
-from openapi_server.models.opening_times import OpeningTimes
-from openapi_server.models.payment_option import PaymentOption
-from openapi_server.models.plug import Plug
-from openapi_server.models.pull_evse_data_record_environmental_impact import PullEvseDataRecordEnvironmentalImpact
-from openapi_server.models.value_added_service import ValueAddedService
+from compote.eroaming.models.accessibility import Accessibility
+from compote.eroaming.models.address_iso19773 import AddressIso19773
+from compote.eroaming.models.authentication_mode import AuthenticationMode
+from compote.eroaming.models.charging_facility import ChargingFacility
+from compote.eroaming.models.energy_source import EnergySource
+from compote.eroaming.models.geo_coordinates import GeoCoordinates
+from compote.eroaming.models.info_text_type import InfoTextType
+from compote.eroaming.models.opening_times import OpeningTimes
+from compote.eroaming.models.payment_option import PaymentOption
+from compote.eroaming.models.plug import Plug
+from compote.eroaming.models.pull_evse_data_record_environmental_impact import PullEvseDataRecordEnvironmentalImpact
+from compote.eroaming.models.value_added_service import ValueAddedService
 try:
     from typing import Self
 except ImportError:

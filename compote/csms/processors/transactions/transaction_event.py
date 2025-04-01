@@ -88,6 +88,8 @@ class OCPP20TransactionProcessor(GenericTransactionProcessor):
             result["transaction_id"] = transaction["id"]
             result["total_cost"] = 0
 
+            await context.context_manager.dispatch_charging_notification_start(cp_identity=context.cp_data["id"], start_timestamp=timestamp, id=idTag_temp, meter_value=meter_value)
+
             return result
 
         if (event_type == TransactionEventType.ended):
@@ -97,7 +99,6 @@ class OCPP20TransactionProcessor(GenericTransactionProcessor):
             for connector in context.cp_data["connectors"]:
                 for transaction in context.cp_data["connectors"][connector]["transactions"]:
                     if transaction["id"] == transaction_info["transaction_id"]:
-                        print(transaction["id"], transaction_info["transaction_id"])
                         # Proceed with stopping transaction
                         transaction["status"] = Transaction.stopped
                         transaction["timestamp_stop"] = timestamp
@@ -106,10 +107,13 @@ class OCPP20TransactionProcessor(GenericTransactionProcessor):
                         # Set stop_transaction request as accepted and return result
                         id_tag_info["status"] = 'Accepted'
                         id_tag_info["expiry_date"] = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
+
+                        await context.context_manager.dispatch_charging_notification_end(cp_identity=context.cp_data["id"], stop_timestamp=timestamp, id=id_token.get("id_token"), meter_value=meter_value)
+
                         return id_tag_info
+
             return id_tag_info
 
-        # TODO Implement TransactionEventType.updated
         if (event_type == TransactionEventType.updated):
             id_tag_info = {'status': 'Blocked'}
             # Traverse connectors and their transactions if there is a transaction with the given transaction_id
@@ -121,5 +125,8 @@ class OCPP20TransactionProcessor(GenericTransactionProcessor):
                         transaction["meter_values"].append(meter_value)
                         id_tag_info["status"] = 'Accepted'
                         id_tag_info["expiry_date"] = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
+
+                        await context.context_manager.dispatch_charging_notification_updated(cp_identity=context.cp_data["id"], timestamp=timestamp, id=id_token.get("id_token"), meter_value=meter_value)
+
                         return id_tag_info
             return id_tag_info

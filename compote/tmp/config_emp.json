@@ -1,8 +1,12 @@
 {
    "config": {
       "providerId" : "DE*DCB",
+      "webservice_config": {
+         "host": "localhost",
+         "port": 8000
+      },
       "oicp_server_config": {
-         "OICP_SERVER_URL": "http://127.0.0.1:8000/oicp"
+         "OICP_SERVER_URL": "http://127.0.0.1:8002/oicp"
       },
       "telemetry" : "zipkin",
       "authentication_data_records" : [
@@ -17,10 +21,10 @@
                 "Identification": {
                     "RFIDIdentification": {
                         "UID": "2A83155EE288040047C1",
-                        "EvcoID": "AB-123C12345678A",
-                        "RFID": "mifareFamily",
-                        "PrintedNumber": "string",
-                        "ExpiryDate": "string"
+                        "EvcoID": "DE-DCB-C12345678-X",
+                        "RFID": "mifareCls",
+                        "PrintedNumber": "9876655",
+                        "ExpiryDate": "2026-01-23T14:21:23.744Z"
                     }
                 }
             }

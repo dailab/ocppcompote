@@ -5,26 +5,28 @@ import json
 import logging
 from typing import Optional, Dict, List, Any
 
-import ocpp.v201.enums
 from ocpp.charge_point import remove_nones, snake_to_camel_case, camel_to_snake_case
 from ocpp.exceptions import NotSupportedError
 from ocpp.messages import validate_payload, MessageType, Call
 from ocpp.routing import on
-from ocpp.v201.enums import UpdateType
 from ocpp.v201 import ChargePoint as cp, call
 from ocpp.v201 import call_result
-from ocpp.v201.enums import ResetType, Action
+from ocpp.v201.datatypes import FirmwareType
+from ocpp.v201.enums import ResetType, Action, FirmwareStatusType, MessageTriggerType, ChargingRateUnitType
 
 from compote.csms.context.csms_context import Context
 from compote.csms.analytics.stats import log_ocpp_processing
 from compote.csms.processors.authorization.authorize import OCPP20AuthorizeProcessor
 from compote.csms.processors.connectivity.boot_notification import OCPP20BootNotificationProcessor
 from compote.csms.processors.connectivity.heartbeat import OCPP20HeartbeatProcessor
+from compote.csms.processors.firmware.firmware_status_notification import OCPP20FirmwareStatusNotificationProcessor
 from compote.csms.processors.metering.meter_values import OCPP20MeterValuesProcessor
+from compote.csms.processors.status.notify_event import OCPP20NotifyEventProcessor
 from compote.csms.processors.status.receive_data_transfer import OCPP20ReceiveDataTransferProcessor
 from compote.csms.processors.status.security_event_notification import OCPP20SecurityEventNotificationProcessor
 from compote.csms.processors.status.status_notification import OCPP20StatusNotificationProcessor
 from compote.csms.processors.transactions.transaction_event import OCPP20TransactionProcessor
+
 
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger('csms_ocpp201_handler')
@@ -33,7 +35,7 @@ class ChargePoint(cp):
 
     last_uuid = None
 
-    # Override for ocpp.v201.ChargePoint function _send to allow structured logging
+    # Override for ocpp.v201.ChargePoint function _send to allow structured logging and replace ws
     async def _send(self, message):
         message_type = "OCPP.Call.Send"
         function = "Send"
@@ -41,16 +43,11 @@ class ChargePoint(cp):
         arguments = json.loads(message)
         msg = {"message_type": message_type, "function": function, "cp_id": cp_id, "arguments": arguments}
         LOGGER.info(msg)
-
-        # LOGGER.info(f"Custom log: {self.id} sending {message}")
-
-        #await self._connection.send(message)
         await self._connection.send_text(message)
 
-    # Override for ocpp.v201.ChargePoint function start to allow structured logging
+    # Override for ocpp.v201.ChargePoint function _send to allow structured logging and replace ws
     async def start(self):
         while True:
-            #message = await self._connection.recv()
             message = await self._connection.receive_text()
             message_type = "OCPP.Call.Receive"
             function = "Receive"
@@ -63,6 +60,7 @@ class ChargePoint(cp):
 
             await self.route_message(message)
 
+    # Override for ocpp.v201.ChargePoint function _send to allow structured logging and replace ws
     async def call(self, payload, suppress=True, unique_id=None):
         """
         Send Call message to client and return payload of response.
@@ -133,6 +131,7 @@ class ChargePoint(cp):
         cls = getattr(self._call_result, payload.__class__.__name__)  # noqa
         return cls(**snake_case_payload)
 
+    # Override for ocpp.v201.ChargePoint function _send to allow structured logging and replace ws
     async def _handle_call(self, msg):
         """
         Execute all hooks installed for based on the Action of the message.
@@ -256,9 +255,15 @@ class ChargePoint(cp):
         )
 
     @log_ocpp_processing(type="req")
+    @on(Action.FirmwareStatusNotification)
+    async def on_Firmware_StatusNotification(self, status: FirmwareStatusType):
+        output = await OCPP20FirmwareStatusNotificationProcessor().process(self.context, status)
+        return call_result.FirmwareStatusNotificationPayload()
+
+    @log_ocpp_processing(type="req")
     @on(Action.MeterValues)
     async def on_meter_values(self, evse_id: int, meter_value: List, **kwargs):
-        output = await OCPP20MeterValuesProcessor().process(self.context, evse_id, meter_value)
+        await OCPP20MeterValuesProcessor().process(self.context, evse_id, meter_value)
         return call_result.MeterValuesPayload()
 
     @log_ocpp_processing(type="req")
@@ -266,6 +271,12 @@ class ChargePoint(cp):
     async def on_security_event_notification(self, type: str, timestamp: str, tech_info: str = None, custom_date: Dict[str, Any] = None):
         await OCPP20SecurityEventNotificationProcessor().process(self.context, type, timestamp, tech_info, custom_date)
         return call_result.SecurityEventNotificationPayload()
+
+    @log_ocpp_processing(type="req")
+    @on(Action.NotifyEvent)
+    async def on_notify_event(self, generated_at: str, seq_no: int, event_data: List, tbc: bool = None, custom_data = None):
+        await OCPP20NotifyEventProcessor().process(self.context, generated_at, seq_no, event_data, tbc, custom_data)
+        return call_result.NotifyEventPayload()
 
     @log_ocpp_processing(type="req")
     @on(Action.StatusNotification)
@@ -442,6 +453,17 @@ class ChargePoint(cp):
         return result
 
     @log_ocpp_processing(type="req")
+    async def send_get_composite_schedule(self, connector_id: int, duration: int, charging_rate_unit: ChargingRateUnitType = None):
+        request = call.GetCompositeSchedulePayload(
+            evse_id = connector_id,
+            duration = duration,
+            charging_rate_unit = charging_rate_unit
+        )
+        LOGGER.info("Sending get composite schedule request: " + str(request))
+        result = await self.call(request)
+        return result
+
+    @log_ocpp_processing(type="req")
     async def send_request_start_transaction(self, id_token: Dict, remote_start_id: int, evse_id: int = None, group_id_token: Dict = None, charging_profile: Dict = None, custom_data: Optional[Dict] = None):
         request = call.RequestStartTransactionPayload(
             id_token = id_token,
@@ -462,6 +484,28 @@ class ChargePoint(cp):
             custom_data = custom_data
         )
         LOGGER.info("Sending remote stop request: " + str(request))
+        result = await self.call(request)
+        return result
+
+    @log_ocpp_processing(type="req")
+    async def send_trigger_message(self, requested_message: MessageTriggerType, connector_id: int = None):
+        request = call.TriggerMessagePayload(
+            requested_message = requested_message,
+            evse = {"id": 0, "connector_id": connector_id}
+        )
+        LOGGER.info("Sending trigger message request: " + str(request))
+        result = await self.call(request)
+        return result
+
+    @log_ocpp_processing(type="req")
+    async def send_update_firmware(self, request_id: int, firmware: FirmwareType, retries: int = None, retry_interval: int = None):
+        request = call.UpdateFirmwarePayload(
+            request_id = request_id,
+            firmware = dataclasses.asdict(firmware),
+            retries = retries,
+            retry_interval = retry_interval
+        )
+        LOGGER.info("Sending update firmware request: " + str(request))
         result = await self.call(request)
         return result
 

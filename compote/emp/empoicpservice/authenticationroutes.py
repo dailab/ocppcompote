@@ -26,20 +26,11 @@ DEFAULT_PUSH_AUTHENTICATION_DATA = ERoamingPushAuthenticationData(
                         "UID": "2A83155EE288040047C1",
                         "EvcoID": "AB-123C12345678A",
                         "RFID": "mifareFamily",
-                        "PrintedNumber": "string",
-                        "ExpiryDate": "string"
+                        "PrintedNumber": "9876655",
+                        "ExpiryDate": 2026-01-23T14:21:23.744Z"
                     },
                     "QRCodeIdentification": {
                         "EvcoID": "AB-123C12345678A",
-                        # "HashedPIN": {
-                        #     "Value": "string",
-                        #     "Function": "Bcrypt",
-                        #     "LegacyHashData": {
-                        #         "Function": "string",
-                        #         "Salt": "string",
-                        #         "Value": "string"
-                        #     }
-                        # },
                         "PIN": "1234"
                     },
                     "PlugAndChargeIdentification": {
@@ -101,7 +92,7 @@ async def eRoamingPushAuthenticationData_V21(
         request = ERoamingPushAuthenticationData(
             ActionType="fullLoad",
             ProviderAuthenticationData={
-                "ProviderID": context.data["providerId"],
+                "ProviderID": providerID or context.data["providerId"],
                 "AuthenticationDataRecord": context.data["authentication_data_records"]
             }
         )

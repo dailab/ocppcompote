@@ -8,7 +8,6 @@ from typing import List, Dict, Any
 from ocpp.charge_point import snake_to_camel_case, remove_nones, camel_to_snake_case
 from ocpp.exceptions import NotSupportedError
 from ocpp.messages import Call, validate_payload, MessageType
-from ocpp.v16.datatypes import ChargingProfile
 
 from ocpp.v16.enums import DiagnosticsStatus, FirmwareStatus, ChargingProfilePurposeType, \
     AvailabilityType, ChargingRateUnitType, LogStatus
@@ -27,6 +26,7 @@ from compote.csms.processors.metering.meter_values import OCPP16MeterValuesProce
 from compote.csms.processors.status.receive_data_transfer import OCPP16ReceiveDataTransferProcessor
 from compote.csms.processors.firmware.diagnostic_status_notification import OCPP16DiagnosticsStatusNotificationProcessor
 from compote.csms.processors.firmware.firmware_status_notification import OCPP16FirmwareStatusNotificationProcessor
+from compote.csms.processors.status.security_event_notification import OCPP16SecurityEventNotificationProcessor
 from compote.csms.processors.status.status_notification import OCPP16StatusNotificationProcessor
 from compote.csms.processors.transactions.start_transaction import OCPP16StartTransactionProcessor
 from compote.csms.processors.transactions.stop_transaction import OCPP16StopTransactionProcessor
@@ -38,7 +38,7 @@ class ChargePoint(cp):
 
     last_uuid = None
 
-    # Override for ocpp.v16.ChargePoint function _send to allow structured logging
+    # Override for ocpp.v16.ChargePoint function _send to allow structured logging and replace ws
     async def _send(self, message):
         message_type = "OCPP.Call.Send"
         function = "Send"
@@ -46,17 +46,12 @@ class ChargePoint(cp):
         arguments = json.loads(message)
         msg = {"message_type": message_type, "function": function, "cp_id" : cp_id, "arguments": arguments}
         LOGGER.info(msg)
-
-        #LOGGER.info(f"Custom log: {self.id} sending {message}")
-
-        #await self._connection.send(message)
         await self._connection.send_text(message)
 
 
     # Override for ocpp.v16.ChargePoint function start to allow structured logging
     async def start(self):
         while True:
-            #message = await self._connection.recv()
             message = await self._connection.receive_text()
             message_type = "OCPP.Call.Receive"
             function = "Receive"
@@ -64,11 +59,9 @@ class ChargePoint(cp):
             arguments = json.loads(message)
             msg = {"message_type": message_type, "function": function, "cp_id": cp_id, "arguments": arguments}
             LOGGER.info(msg)
-
-            #LOGGER.info("%s: receive message %s", self.id, message)
-
             await self.route_message(message)
 
+    # Override for ocpp.v16.ChargePoint function _send to allow structured logging and replace ws
     async def call(self, payload, suppress=True, unique_id=None):
         """
         Send Call message to client and return payload of response.
@@ -139,6 +132,7 @@ class ChargePoint(cp):
         cls = getattr(self._call_result, payload.__class__.__name__)  # noqa
         return cls(**snake_case_payload)
 
+    # Override for ocpp.v16.ChargePoint function _send to allow structured logging and replace ws
     async def _handle_call(self, msg):
         """
         Execute all hooks installed for based on the Action of the message.
@@ -226,7 +220,6 @@ class ChargePoint(cp):
     @log_ocpp_processing(type="req")
     @on(Action.Authorize)
     async def on_authorize(self, id_tag: str):
-        #LOGGER.info("auth requested for " + id_tag)
         output = await OCPP16AuthorizeProcessor().process(self.context, id_tag)
 
         return call_result.AuthorizePayload(
@@ -236,14 +229,18 @@ class ChargePoint(cp):
     @log_ocpp_processing(type="req")
     @on(Action.BootNotification)
     async def on_boot_notification(self, charge_point_vendor: str, charge_point_model: str, **kwargs):
-
         output = await OCPP16BootNotificationProcessor().process(self.context, charge_point_vendor, charge_point_model, **kwargs)
-
         return call_result.BootNotificationPayload(
             current_time=output.get("current_time"),
             interval=output.get("interval"),
             status=output.get("status")
         )
+
+    @log_ocpp_processing(type="req")
+    @on(Action.SecurityEventNotification)
+    async def on_securityeventnotification(self, type: str, timestamp: str, tech_info: str = None):
+        output = await OCPP16SecurityEventNotificationProcessor().process(self.context, type, timestamp, tech_info)
+        return call_result.SecurityEventNotificationPayload()
 
     @log_ocpp_processing(type="req")
     @on(Action.StartTransaction)
@@ -264,7 +261,7 @@ class ChargePoint(cp):
 
     @log_ocpp_processing(type="req")
     @on(Action.StopTransaction)
-    async def on_stop_transaction(self, meter_stop: int, timestamp: str, transaction_id: int, id_tag: str, **kwargs):
+    async def on_stop_transaction(self, meter_stop: int, timestamp: str, transaction_id: int, id_tag: str = None, **kwargs):
         output = await OCPP16StopTransactionProcessor().process(self.context, meter_stop, timestamp, transaction_id, id_tag)
         return call_result.StopTransactionPayload(
             id_tag_info = output
@@ -293,8 +290,6 @@ class ChargePoint(cp):
     @log_ocpp_processing(type="req")
     @on(Action.DataTransfer)
     async def on_data_transfer(self, vendor_id: str, message_id: str = None,  data: str = None):
-        #LOGGER.info("received Data")
-
         output = await OCPP16ReceiveDataTransferProcessor().process(self.context, vendor_id, message_id, data)
 
         return call_result.DataTransferPayload(
@@ -305,21 +300,17 @@ class ChargePoint(cp):
     @log_ocpp_processing(type="req")
     @on(Action.DiagnosticsStatusNotification)
     async def on_Diagnostics_StatusNotification(self, status: DiagnosticsStatus):
-        #LOGGER.info("received Diagnostic Status")
         output = await OCPP16DiagnosticsStatusNotificationProcessor().process(self.context, status)
         return call_result.DiagnosticsStatusNotificationPayload()
 
     @log_ocpp_processing(type="req")
     @on(Action.LogStatusNotification)
     async def on_LogStatusNotification(self, status: LogStatus):
-        #LOGGER.info("received Diagnostic Status")
         pass
-
 
     @log_ocpp_processing(type="req")
     @on(Action.FirmwareStatusNotification)
     async def on_Firmware_StatusNotification(self, status: FirmwareStatus):
-        #LOGGER.info("received Firmware Status")
         output = await OCPP16FirmwareStatusNotificationProcessor().process(self.context, status)
         return call_result.FirmwareStatusNotificationPayload()
 
@@ -333,8 +324,7 @@ class ChargePoint(cp):
         return result
 
     @log_ocpp_processing(type="req")
-    async def send_change_availability(self, connector_id: int, type = AvailabilityType):
-
+    async def send_change_availability(self, connector_id: int, type: AvailabilityType):
         request = call.ChangeAvailabilityPayload(
             connector_id = connector_id,
             type = type
@@ -441,7 +431,7 @@ class ChargePoint(cp):
         return result
 
     @log_ocpp_processing(type="req")
-    async def send_set_charging_profile(self, connector_id: int, cs_charging_profiles: ChargingProfile):
+    async def send_set_charging_profile(self, connector_id: int, cs_charging_profiles: Dict):
         request = call.SetChargingProfilePayload(
             connector_id = connector_id,
             cs_charging_profiles = cs_charging_profiles

@@ -19,7 +19,7 @@ class OCPP16ClearChargingProfileProcessor(GenericClearChargingProfileProcessor):
 
 class OCPP20ClearChargingProfileProcessor(GenericClearChargingProfileProcessor):
     @log_processing(name="process_clear_charging_profile")
-    async def process(self, context: Context, charging_profile_id: Optional[int] = None, charging_profile_criteria: Optional[Dict] = None, custom_data: Dict = None, **kwargs):
+    async def process(self, context: Context, connector_id: int, charging_profile_id: Optional[int] = None, charging_profile_criteria: Optional[Dict] = None, custom_data: Dict = None, **kwargs):
         await super().process(context, id=charging_profile_id, charging_profile_purpose=charging_profile_criteria)
         result = await context.cp.send_clear_charging_profile(id, charging_profile_criteria, custom_data)
         return result

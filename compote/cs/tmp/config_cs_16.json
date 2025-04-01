@@ -1,0 +1,116 @@
+{
+  "config_1": {
+    "cs_config": {
+      "charge_point_model": "Optimus",
+      "charge_point_vendor": "The Mobility House"
+    },
+    "wshandler_config": {
+      "url": "127.0.0.1:8001/ocpp",
+      "id": "CP_Identity_0",
+      "retry_interval": 5,
+      "retry_maxtries": 2,
+      "ocpp_versions": [
+        "ocpp1.6",
+        "ocpp2.0",
+        "ocpp2.0.1"
+      ],
+      "auth": "0001020304050607FFFFFFFFFFFFFFFFFFFFFFFF"
+    },
+    "telemetry": "zipkin"
+  },
+  "config_2": {
+    "cs_config": {
+      "charge_point_model": "Optimus",
+      "charge_point_vendor": "The Mobility House"
+    },
+    "wshandler_config": {
+      "url": "127.0.0.1:8001/ocpp",
+      "id": "CP_Identity_1",
+      "retry_interval": 5,
+      "retry_maxtries": 2,
+      "ocpp_versions": [
+        "ocpp1.6",
+        "ocpp2.0",
+        "ocpp2.0.1"
+      ],
+      "auth": "0001020304050607FFFFFFFFFFFFFFFFFFFFFFFF"
+    },
+    "telemetry": "zipkin"
+  },
+  "config_3": {
+    "cs_config": {
+      "charge_point_model": "Optimus",
+      "charge_point_vendor": "The Mobility House"
+    },
+    "wshandler_config": {
+      "url": "127.0.0.1:8001/ocpp",
+      "id": "CP_Identity_2",
+      "retry_interval": 5,
+      "retry_maxtries": 2,
+      "ocpp_versions": [
+        "ocpp1.6",
+        "ocpp2.0",
+        "ocpp2.0.1"
+      ],
+      "auth": "0001020304050607FFFFFFFFFFFFFFFFFFFFFFFF"
+    },
+    "telemetry": "zipkin"
+  },
+  "config_4": {
+    "cs_config": {
+      "charge_point_model": "Optimus",
+      "charge_point_vendor": "The Mobility House"
+    },
+    "wshandler_config": {
+      "url": "127.0.0.1:8001/ocpp",
+      "id": "CP_Identity_3",
+      "retry_interval": 5,
+      "retry_maxtries": 2,
+      "ocpp_versions": [
+        "ocpp1.6",
+        "ocpp2.0",
+        "ocpp2.0.1"
+      ],
+      "auth": "0001020304050607FFFFFFFFFFFFFFFFFFFFFFFF"
+    },
+    "telemetry": "zipkin"
+  },
+  "config_5": {
+    "cs_config": {
+      "charge_point_model": "Optimus",
+      "charge_point_vendor": "The Mobility House"
+    },
+    "wshandler_config": {
+      "url": "127.0.0.1:8001/ocpp",
+      "id": "CP_Identity_4",
+      "retry_interval": 5,
+      "retry_maxtries": 2,
+      "ocpp_versions": [
+        "ocpp1.6",
+        "ocpp2.0",
+        "ocpp2.0.1"
+      ],
+      "auth": "0001020304050607FFFFFFFFFFFFFFFFFFFFFFFF"
+    },
+    "telemetry": "zipkin"
+  },
+  "config_6": {
+    "cs_config": {
+      "charge_point_model": "Optimus",
+      "charge_point_vendor": "The Mobility House"
+    },
+    "wshandler_config": {
+      "url": "127.0.0.1:8001/ocpp",
+      "id": "CP_Identity_5",
+      "retry_interval": 5,
+      "retry_maxtries": 2,
+      "ocpp_versions": [
+        "ocpp1.6",
+        "ocpp2.0",
+        "ocpp2.0.1"
+      ],
+      "auth": "0001020304050607FFFFFFFFFFFFFFFFFFFFFFFF"
+    },
+    "telemetry": "zipkin"
+  }
+}

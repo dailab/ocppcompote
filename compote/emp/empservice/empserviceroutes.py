@@ -3,8 +3,7 @@ from typing import List, Dict
 from fastapi import APIRouter, Depends
 
 from compote.emp.context.emp_context import EMPContext, get_shared_context
-from compote.shared.dataclasses import AuthIdTag, User
-
+from compote.shared.dataclasses import User
 from compote.shared.helper_functions import log_json_sync
 
 router = APIRouter()
@@ -24,22 +23,38 @@ async def update_context(
 async def get_authentication_data_records(context: EMPContext = Depends(get_shared_context)):
     return {"authentication_data_records": context.data["authentication_data_records"]}
 
+@router.post("/authdata/add", tags=["Auth ID Management"], response_model=Dict[str,List[User]])
+async def add_auth_data(context: EMPContext = Depends(get_shared_context), auth_id = None):
+    context.data["authentication_data_records"].append(auth_id)
+    return {"authentication_data_records": context.data["authentication_data_records"]}
+
+
+@router.put("/authdata/{auth_id}", tags=["Auth ID Management"], response_model=Dict[str,List[User]])
+async def modify_auth_data(context: EMPContext = Depends(get_shared_context), auth_id: int = None, user: User = None):
+    context.data["authentication_data_records"][auth_id] = user
+    return {"authentication_data_records": context.data["authentication_data_records"]}
+
+@router.delete("/authdata/{auth_id}", tags=["Auth ID Management"], response_model=Dict[str,List[User]])
+async def delete_auth_data(context: EMPContext = Depends(get_shared_context), auth_id: int = None):
+    del context.data["authentication_data_records"][auth_id]
+    return {"authentication_data_records": context.data["authentication_data_records"]}
+
 @router.get("/users", tags=["User Management"], response_model=Dict[str,List[User]])
 async def get_users(context: EMPContext = Depends(get_shared_context)):
     return {"users": context.data["config"]["users"]}
 
 @router.post("/users/add", tags=["User Management"], response_model=Dict[str,List[User]])
-async def add_id_tag(context: EMPContext = Depends(get_shared_context), user: User = None):
+async def add_user(context: EMPContext = Depends(get_shared_context), user: User = None):
     context.data["config"]["users"].append(user)
     return {"users": context.data["config"]["users"]}
 
 @router.put("/users/{user_id}", tags=["User Management"], response_model=Dict[str,List[User]])
-async def modify_id_tag(context: EMPContext = Depends(get_shared_context), user_id: int = None, user: User = None):
+async def modify_user(context: EMPContext = Depends(get_shared_context), user_id: int = None, user: User = None):
     context.data["config"]["users"][user_id] = user
     return {"users": context.data["config"]["users"]}
 
 @router.delete("/users/{user_id}", tags=["User Management"], response_model=Dict[str,List[User]])
-async def modify_id_tag(context: EMPContext = Depends(get_shared_context), user_id: int = None):
+async def delete_user(context: EMPContext = Depends(get_shared_context), user_id: int = None):
     del context.data["config"]["users"][user_id]
     return {"users": context.data["config"]["users"]}
 
@@ -68,15 +83,15 @@ async def get_remote_reservations(context: EMPContext = Depends(get_shared_conte
     return {"remote_reservations": context.data["remote_reservations"]}
 
 @router.get("/evsepricing", tags=["Pricing Management"])
-async def get_cdr(context: EMPContext = Depends(get_shared_context)):
+async def get_evse_pricing(context: EMPContext = Depends(get_shared_context)):
     return {"evse_pricing": context.data["evse_pricing"]}
 
 @router.get("/pricingproductdata", tags=["Pricing Management"])
-async def get_cdr(context: EMPContext = Depends(get_shared_context)):
+async def get_pricing_product_data(context: EMPContext = Depends(get_shared_context)):
     return {"pricing_product_data": context.data["pricing_product_data"]}
 
 @router.get("/charging_notifications", tags=["Charging Notification Management"])
-async def get_cdr(context: EMPContext = Depends(get_shared_context)):
+async def get_charging_notifications(context: EMPContext = Depends(get_shared_context)):
     return {"charging_notifications": context.data["charging_notifications"]}
 
 @router.get("/log", tags=["Logs"])

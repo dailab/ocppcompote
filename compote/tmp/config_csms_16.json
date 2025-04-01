@@ -1,7 +1,7 @@
 {
    "config": {
       "wshandler_config": {
-         "ip": "0.0.0.0",
+         "ip": "127.0.0.1",
          "port": 8001,
          "ocpp_versions": [
             "ocpp1.6",
@@ -10,7 +10,7 @@
          ]
       },
       "cp_defaults": {
-         "interval": 10,
+         "interval": 5,
          "auth": "True",
          "transaction_max_time_delta": "hours = 1"
       },
@@ -19,6 +19,8 @@
          "port": 8001,
          "access_log" : null
       },
+      "operatorId" : "DE*ABC",
+      "operatorName" : "ABC technologies",
       "telemetry" : "zipkin",
       "auth_id_tags": {
          "0": {
@@ -40,7 +42,7 @@
          "2": {
             "id" : "2",
             "name": "Id Tag 2",
-            "value": "VID:AABBCCDDEEFF",
+            "value": "ABC12345",
             "parent_id": "0",
             "expiry_date": "never",
             "status": "valid"
@@ -48,7 +50,7 @@
          "3": {
             "id" : "3",
             "name": "Id Tag 3",
-            "value": "ABC12345",
+            "value": "2A83155EE288040047C1",
             "parent_id": "0",
             "expiry_date": "never",
             "status": "valid"

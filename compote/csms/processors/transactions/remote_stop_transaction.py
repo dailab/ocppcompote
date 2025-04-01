@@ -1,8 +1,7 @@
 from typing import Dict
 
-from compote.csms.context.csms_context import Context
 from compote.csms.analytics.stats import log_processing
-
+from compote.csms.context.csms_context import Context
 
 class GenericRemoteStopTransactionProcessor:
     async def process(self, context: Context, transaction_id: int, **kwargs):

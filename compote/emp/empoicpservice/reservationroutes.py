@@ -99,7 +99,7 @@ async def eRoamingAuthorizeRemoteReservationStart_V11(
 
     if not body:
         request = ERoamingAuthorizeRemoteReservationStart(
-            ProviderID=context.data["providerId"],
+            ProviderID = providerID or context.data["providerId"],
             Identification = context.data.authentication_data_records[0],
             EvseID = "DE*XYZ*ETEST1"
         )
@@ -151,9 +151,9 @@ async def eRoamingAuthorizeRemoteReservationStop_V1(
 
     if not body:
         request = ERoamingAuthorizeRemoteReservationStop(
-            ProviderID=context.data["providerId"],
+            ProviderID = providerID or context.data["providerId"],
             EvseID = "DE*XYZ*ETEST1",
-            SessionID = ""
+            SessionID = "b2688855-7f00-0002-6d8e-48d883f6abb6"
         )
     else:
         request = body

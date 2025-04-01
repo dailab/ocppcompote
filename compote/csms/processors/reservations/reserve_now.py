@@ -6,6 +6,15 @@ from compote.csms.analytics.stats import log_processing
 
 class GenericReserveNowProcessor:
     async def process(self, context: Context, connector_id: int, expiry_date: str, id_tag: Any, reservation_id: int, parent_id_tag: Any = None, connector_type: str = None, **kwargs):
+        context.cp_data["connectors"][connector_id]["reservations"].append(
+            {
+                "connector_id": connector_id,
+                "expiry_date" : expiry_date,
+                "id_tag" : id_tag,
+                "id" : reservation_id,
+                "parent_id_tag" : parent_id_tag
+            }
+        )
         return True
 
 class OCPP16ReserveNowProcessor(GenericReserveNowProcessor):

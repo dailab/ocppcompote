@@ -203,7 +203,7 @@ async def eRoamingPullEvseStatus_V21(
 
     if not body:
         request = ERoamingPullEVSEStatus(
-            ProviderID=context.data["providerId"]
+            ProviderID = providerID or context.data["providerId"]
         )
     else:
         request = body
@@ -218,13 +218,13 @@ async def eRoamingPullEvseStatus_V21(
 
     endpoint_url = (
         f"{context.data['config']['oicp_server_config']['OICP_SERVER_URL']}"
-        f"/evsepull/v23/providers/{context.data['providerId']}/status-records"
+        f"/evsepull/v21/providers/{context.data['providerId']}/status-records"
     )
 
     async with httpx.AsyncClient() as client:
         response = await client.post(endpoint_url, json=payload)
         response.raise_for_status()
 
-    context.data["cs_status_data"].append(response.json()["content"])
+    context.data["cs_status_data"].append(response.json())
     context.currentresponse = response.json()
     return response.json()

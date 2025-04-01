@@ -56,6 +56,7 @@ class GenericStartTransactionProcessor:
 
         # If checks successful, finally add transaction
         transactions = connector["transactions"]
+
         transaction = {
             "id" : len(transactions)+1,
             "status" : Transaction.active,
@@ -66,6 +67,8 @@ class GenericStartTransactionProcessor:
         id_tag_info["expiry_date"] = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
         transactions.append(transaction)
         result["transaction_id"] = transaction["id"]
+
+        await context.context_manager.dispatch_charging_notification_start(cp_identity=context.cp_data["id"], start_timestamp=timestamp, id=id_tag, meter_value=meter_start)
 
         return result
 

@@ -1,4 +1,3 @@
-import uuid
 
 from fastapi import APIRouter, Depends
 
@@ -17,46 +16,6 @@ from compote.eroaming.models.e_roaming_get_charge_detail_records import \
 
 router = APIRouter()
 providerId = "DE-DCB"
-
-# DEFAULT_AUTHORIZE_START_DATA = ERoamingAuthorizeStart(
-#     Identification={
-#         "RFIDMifareFamilyIdentification": {
-#             "UID": "1234ABCD"
-#         },
-#         "QRCodeIdentification": {
-#             "EvcoID": "DE-DCB-C12345678-X",
-#             "HashedPIN": {
-#                 "Function": "Bcrypt",
-#                 "LegacyHashData": {
-#                     "Function": "MD5",
-#                     "Salt": "string",
-#                     "Value": "string123456"
-#                 },
-#                 "Value": "string123456"
-#             },
-#             "PIN": "1234"
-#         },
-#         "PlugAndChargeIdentification": {
-#             "EvcoID": "DE-DCB-C12345678-X"
-#         },
-#         "RemoteIdentification": {
-#             "EvcoID": "DE-DCB-C12345678-X"
-#         },
-#         "RFIDIdentification": {
-#             "EvcoID": "DE-DCB-C12345678-X",
-#             "ExpiryDate": "2021-01-23T14:21:36.954Z",
-#             "PrintedNumber": "9876655",
-#             "RFID": "mifareCls",
-#             "UID": "1234ABCD"
-#         }
-#     },
-#     CPOPartnerSessionID="1234XYZ",
-#     EMPPartnerSessionID="2345ABC",
-#     ProviderID="DE-DCB",
-#     SessionID="f98efba4-02d8-4fa0-b810-9a9d50d2c527",
-#     PartnerProductID="AC 1",
-#     EvseID="DE*XYZ*ETEST1"
-# )
 
 DEFAULT_AUTHORIZATION_START = ERoamingAuthorizationStart(
     AuthorizationStatus="Authorized",

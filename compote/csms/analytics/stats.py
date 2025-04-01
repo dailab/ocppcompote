@@ -19,8 +19,11 @@ def log_processing(name):
     def decorator(func):
         @functools.wraps(func)
         async def wrapper(self, *args, **kwargs):
-            if len(args) > 0 and hasattr(args[0], 'cp_data'):
+            context = None
+            if args and hasattr(args[0], 'cp_data'):
                 context = args[0]
+            elif 'context' in kwargs and hasattr(kwargs['context'], 'cp_data'):
+                context = kwargs['context']
             else:
                 context = self
 
@@ -182,6 +185,7 @@ async def update_processing_in(context, fun_name=None):
     Returns:
         dict: the dictionary for the arrival time and processing time regarding the processed message
     """
+
     current_time = datetime.utcnow()
     processing_time = time.perf_counter()
 
@@ -241,7 +245,11 @@ async def log_processing_error(context, fun_name=None, locals = None, error_time
     Returns:
         dict: the dictionary for the error times, error messages and their arguments
     """
-    context_object = context.context
+    #if context is not None:
+    #    context_object = context.context
+    #else:
+
+    context_object = context
 
     data = context_object.cp_data["stats"]["processing"]["errors"]
     data["total"] += 1

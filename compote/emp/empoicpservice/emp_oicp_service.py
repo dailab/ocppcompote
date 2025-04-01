@@ -14,7 +14,7 @@ from compote.emp.empoicpservice.chargingnotifications import router as ERoamingC
 
 def create_api_app():
     apiapp = FastAPI(
-        title="EMPMS API",
+        title="EMPMS OICP API",
         version="0.0.1",
     )
 

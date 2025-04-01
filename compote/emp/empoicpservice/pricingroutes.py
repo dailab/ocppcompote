@@ -44,8 +44,8 @@ async def eRoamingPullPricingProductData_V10(
 
     if not body:
         request = ERoamingPullPricingProductData(
-            ProviderID=context.data["providerId"],
-            OperatorIDs=["DE*ABC"]
+            ProviderID = providerID or context.data["providerId"],
+            OperatorIDs = ["DE*ABC"]
         )
     else:
         request = body
@@ -90,8 +90,8 @@ async def eRoamingPullEVSEPricing_V10(
 
     if not body:
         request = ERoamingPullEVSEPricing(
-            ProviderID=context.data["providerId"],
-            OperatorIDs=["DE*ABC"]
+            ProviderID = providerID or context.data["providerId"],
+            OperatorIDs = ["DE*ABC"]
         )
     else:
         request = body

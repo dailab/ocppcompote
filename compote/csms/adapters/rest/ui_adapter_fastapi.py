@@ -1,8 +1,6 @@
-
 import json
-
 import logging
-from datetime import date, datetime
+from datetime import datetime
 
 from fastapi import FastAPI, Request, APIRouter
 import numpy
@@ -13,14 +11,13 @@ from pathlib import Path
 
 from compote.csms.adapters.rest.api_error_dataclasses import ContextIdErr, ContextResult
 from compote.csms.adapters.rest.webservice_adapter_fastapi import match_context_id
-from compote.csms.context.csms_contextmanager import ContextManager
 
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger('webservice_adapter')
 
 router = APIRouter()
 
-def create_ui_app(context_manager: ContextManager) -> FastAPI:
+def create_ui_app(context_manager) -> FastAPI:
 
     ui_app = FastAPI(
         title="CSMS UI Service",
@@ -137,7 +134,6 @@ def create_ui_app(context_manager: ContextManager) -> FastAPI:
             messages["ocpp_delta_raw"] = data["stats"]["ocpp"]["delta"]["messages"]
             messages["ocpp_errors"] = data["stats"]["ocpp"]["errors"]["messages"]
 
-            # Convert to json
             messages = json.dumps(messages)
 
             context = {'current_time': datetime.now().replace(microsecond=0), 'key': id,
@@ -173,7 +169,6 @@ def create_ui_app(context_manager: ContextManager) -> FastAPI:
             messages["ocpp_delta_raw"] = data["stats"]["ocpp"]["delta"]["messages"]
             messages["ocpp_errors"] = data["stats"]["ocpp"]["errors"]["messages"]
 
-            # Convert to json
             messages = json.dumps(messages)
 
             context = {'current_time': datetime.now().replace(microsecond=0), 'key': id,

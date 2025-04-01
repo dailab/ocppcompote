@@ -3,7 +3,7 @@ from datetime import datetime
 
 from compote.csms.context.csms_context import Context
 from compote.csms.analytics.stats import log_processing
-from compote.shared.enums import Transaction, IdTag
+from compote.shared.enums import Transaction
 
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger('stop_transaction_processor')
@@ -28,7 +28,11 @@ class GenericStopTransactionProcessor:
                     # Set stop_transaction request as accepted and return result
                    id_tag_info["status"] = 'Accepted'
                    id_tag_info["expiry_date"] =  datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
-                   return id_tag_info
+
+                   await context.context_manager.dispatch_charging_notification_end(cp_identity=context.cp_data["id"], stop_timestamp=timestamp, id=id_tag, meter_value=meter_stop)
+
+               return id_tag_info
+
         return id_tag_info
 
 class OCPP16StopTransactionProcessor(GenericStopTransactionProcessor):

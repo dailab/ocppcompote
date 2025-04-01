@@ -18,13 +18,11 @@ import pprint
 import re  # noqa: F401
 import json
 
-
-
-
 from pydantic import BaseModel, Field
 from typing import Any, ClassVar, Dict, List, Optional
 from compote.eroaming.models.e_roaming_evse_status_evse_statuses import ERoamingEVSEStatusEvseStatuses
 from compote.eroaming.models.status_code import StatusCode
+
 try:
     from typing import Self
 except ImportError:

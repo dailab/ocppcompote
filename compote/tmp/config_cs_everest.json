@@ -1,0 +1,9 @@
+{
+   "config": {
+      "telemetry" : "zipkin",
+      "mqtt_config" : {
+         "hostname": "localhost",
+         "port": 1883, "keepalive": 60
+      }
+   }
+}

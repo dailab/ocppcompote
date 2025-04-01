@@ -35,8 +35,6 @@ def init(fastapi_app: FastAPI, context = None) -> None:
 
     async def clear():
         context.data["root"] = {}
-        context.data["coordinates"]["latitude"] = 0.0
-        context.data["coordinates"]["longitude"] = 0.0
         context.currentresponse = {}
         context.currentrequest = {}
         await refresh_ui()
@@ -144,12 +142,16 @@ def init(fastapi_app: FastAPI, context = None) -> None:
                  options={})
 
         with ui.grid(columns=2):
-            ui.button('London', on_click=lambda: m.set_center((51.505, -0.090)))
             ui.button('Berlin', on_click=lambda: m.set_center((52.520, 13.405)))
 
     @ui.refreshable
     def configuration_ui():
         ui.label('Configuration')
+        ui.json_editor({'content': {'json': context.data["config"]}}).classes('w-full')
+
+    @ui.refreshable
+    def contextview_ui():
+        ui.label('Context')
         ui.input(value=context.data["providerId"], on_change=lambda e: set_providerId(e.value)).props(
             'rounded outlined dense')
         ui.json_editor({'content': {'json': context.data}}).classes('w-full')
@@ -178,7 +180,7 @@ def init(fastapi_app: FastAPI, context = None) -> None:
     def authidtags_ui():
         with ui.label("Authentication Data Records "):
             badge = ui.badge('1', color='red')
-            badge.set_text(len(context.data["authentication_data_records"]))
+            badge.set_text(str(len(context.data["authentication_data_records"])))
 
         ui.json_editor({'content': {'json': context.data["authentication_data_records"]}}).classes('w-full')
 
@@ -186,7 +188,7 @@ def init(fastapi_app: FastAPI, context = None) -> None:
     def users_ui():
         with ui.label("Users"):
             badge = ui.badge('1', color='red')
-            badge.set_text(len(context.data["config"]["users"]))
+            badge.set_text(str(len(context.data["config"]["users"])))
 
         ui.json_editor({'content': {'json': context.data["config"]["users"]}}).classes('w-full')
 
@@ -194,7 +196,7 @@ def init(fastapi_app: FastAPI, context = None) -> None:
     def chargedetailrecords_ui():
         with ui.label("Charge Detail Records"):
             badge = ui.badge('1', color='red')
-            badge.set_text(len(context.data["cdrs"]))
+            badge.set_text(str(len(context.data["cdrs"])))
 
         ui.json_editor({'content': {'json': context.data["cdrs"]}}).classes('w-full')
 
@@ -202,7 +204,7 @@ def init(fastapi_app: FastAPI, context = None) -> None:
     def chargingnotifications_ui():
         with ui.label("Charging Notifications"):
             badge = ui.badge('1', color='red')
-            badge.set_text(len(context.data["charging_notifications"]))
+            badge.set_text(str(len(context.data["charging_notifications"])))
 
         ui.json_editor({'content': {'json': context.data["charging_notifications"]}}).classes('w-full')
 
@@ -227,7 +229,6 @@ def init(fastapi_app: FastAPI, context = None) -> None:
     @ui.refreshable
     def chargingstationcommands_ui():
         chargingstations = context.data["root"]
-        #users = context.data["config"]["users"]
 
         listresult = []
         for cs in chargingstations:
@@ -237,7 +238,7 @@ def init(fastapi_app: FastAPI, context = None) -> None:
 
     @ui.refreshable
     def chargingstationcommands_detail_ui(id):
-        with ui.grid(columns=8):
+        with ui.grid(columns=4):
             ui.button('Remote Auth Start', on_click=lambda: authorize_remote_start(id))
             ui.button('Remote Auth Stop', on_click=lambda: authorize_remote_stop(id))
             ui.button('Auth Remote Reservation Start', on_click=lambda: authorize_remote_reservation_start(id))
@@ -251,6 +252,9 @@ def init(fastapi_app: FastAPI, context = None) -> None:
             ui.button(on_click=lambda: left_drawer.toggle(), icon='menu').props('flat color=white')
             with ui.tabs() as tabs:
                 ui.tab('EMP')
+                ui.tab('EMP API')
+                ui.tab('EMP OICP API')
+                ui.tab('EMP PnC API')
                 ui.tab('Telemetry')
 
         with ui.footer(value=False) as footer:
@@ -268,7 +272,7 @@ def init(fastapi_app: FastAPI, context = None) -> None:
             with ui.tab_panel('EMP'):
                 with ui.grid(columns=2).classes('w-full'):
                     with ui.column().classes('w-full'):
-                        with ui.expansion('Commands', icon='settings', value="true").classes('w-full border'):
+                        with ui.expansion('Commands', icon='settings', value=True).classes('w-full border'):
                             with ui.grid(columns=8):
                                 ui.button('Clear', on_click=lambda: clear())
                                 ui.button('Pull EVSE Data', on_click=lambda: pull_evse_data())
@@ -304,6 +308,10 @@ def init(fastapi_app: FastAPI, context = None) -> None:
                         with ui.expansion('Configuration', icon='settings').classes('w-full border'):
                             configuration_ui()
 
+                        with ui.column().classes('w-full'):
+                            with ui.expansion('Context View', icon='info').classes('w-full border'):
+                                contextview_ui()
+
                         with ui.expansion('Current Request', icon='input', value=False).classes('w-full border'):
                             currentrequest_ui()
 
@@ -312,6 +320,27 @@ def init(fastapi_app: FastAPI, context = None) -> None:
 
                         with ui.expansion('Status Log', icon='error', value=True).classes('w-full border'):
                             statuslog_ui()
+
+            with ui.tab_panel('EMP API'):
+                ui.html('''
+                    <div style="width: 100%; height: 100vh; margin: 0; padding: 0;">
+                        <iframe src="http://localhost:8000/docs" style="width: 100%; height: 100%; border: none;"></iframe>
+                    </div>
+                ''').classes('w-full h-full flex p-0')
+
+            with ui.tab_panel('EMP OICP API'):
+                ui.html('''
+                    <div style="width: 100%; height: 100vh; margin: 0; padding: 0;">
+                        <iframe src="http://localhost:8000/oicp_api/docs" style="width: 100%; height: 100%; border: none;"></iframe>
+                    </div>
+                ''').classes('w-full h-full flex p-0')
+
+            with ui.tab_panel('EMP PnC API'):
+                ui.html('''
+                    <div style="width: 100%; height: 100vh; margin: 0; padding: 0;">
+                        <iframe src="http://localhost:8000/pnc_api/docs" style="width: 100%; height: 100%; border: none;"></iframe>
+                    </div>
+                ''').classes('w-full h-full flex p-0')
 
             with ui.tab_panel('Telemetry'):
                 ui.html('''
