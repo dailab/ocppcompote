@@ -1,0 +1,284 @@
+{
+  "openapi": "3.1.0",
+  "info": { "title": "Everest CS Test", "version": "0.0.1" },
+  "paths": {
+    "/context": {
+      "get": {
+        "tags": ["Context Management"],
+        "summary": "Show Context",
+        "operationId": "show_context_context_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": { "application/json": { "schema": {} } }
+          }
+        }
+      }
+    },
+    "/update-context": {
+      "post": {
+        "tags": ["Context Management"],
+        "summary": "Update Context",
+        "operationId": "update_context_update_context_post",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "title": "Key" }
+          },
+          {
+            "name": "value",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "title": "Value" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": { "application/json": { "schema": {} } }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/connector_state/{id}": {
+      "get": {
+        "tags": ["Context Management"],
+        "summary": "Get Connector State",
+        "operationId": "get_connector_state_connector_state__id__get",
+        "parameters": [
+          {
+            "name": "connector_id",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string", "title": "Connector Id" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": { "application/json": { "schema": {} } }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/startcharging": {
+      "post": {
+        "tags": ["Context Management"],
+        "summary": "Startcharging",
+        "operationId": "startcharging_startcharging_post",
+        "parameters": [
+          {
+            "name": "commands",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "sleep 1;iec_wait_pwr_ready;sleep 1;draw_power_regulated 16,3;sleep 36000",
+              "title": "Commands"
+            }
+          },
+          {
+            "name": "connector_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Connector Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": { "application/json": { "schema": {} } }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/startchargingiso15118": {
+      "post": {
+        "tags": ["Context Management"],
+        "summary": "Startchargingiso15118",
+        "operationId": "startchargingiso15118_startchargingiso15118_post",
+        "parameters": [
+          {
+            "name": "commands",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "sleep 1;iso_wait_slac_matched;iso_start_v2g_session contract,AC_three_phase_core;iso_wait_pwr_ready;iso_draw_power_regulated 16,3;sleep 36000",
+              "title": "Commands"
+            }
+          },
+          {
+            "name": "connector_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Connector Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": { "application/json": { "schema": {} } }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/unplug": {
+      "post": {
+        "tags": ["Context Management"],
+        "summary": "Unplug",
+        "operationId": "unplug_unplug_post",
+        "parameters": [
+          {
+            "name": "commands",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "unplug",
+              "title": "Commands"
+            }
+          },
+          {
+            "name": "connector_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Connector Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": { "application/json": { "schema": {} } }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authorize": {
+      "post": {
+        "tags": ["Context Management"],
+        "summary": "Authorize",
+        "operationId": "authorize_authorize_post",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "ABC12345",
+              "title": "Token"
+            }
+          },
+          {
+            "name": "connector_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Connector Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": { "application/json": { "schema": {} } }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": { "$ref": "#/components/schemas/ValidationError" },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": { "anyOf": [{ "type": "string" }, { "type": "integer" }] },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": { "type": "string", "title": "Message" },
+          "type": { "type": "string", "title": "Error Type" }
+        },
+        "type": "object",
+        "required": ["loc", "msg", "type"],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

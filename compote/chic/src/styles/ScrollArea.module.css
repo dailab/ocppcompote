@@ -1,0 +1,6 @@
+.scrollbar {
+  &,
+  &:hover {
+    background-color: transparent;
+  }
+}

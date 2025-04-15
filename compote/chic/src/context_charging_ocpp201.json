@@ -1,0 +1,1819 @@
+{
+  "interval": 3600,
+  "auth": true,
+  "transaction_max_time_delta": "hours = 1",
+  "id": "cp001",
+  "registration_status": "Pending",
+  "seen": "2024-11-15 11:49:55.355229",
+  "auth_id": null,
+  "resets": [],
+  "ocpp_version": "2.0.1",
+  "local_list_version": null,
+  "data_transfer": {
+    "known_vendors": [],
+    "known_message_ids": []
+  },
+  "diagnostic_status_notifications": [],
+  "firmware_status_notifications": [],
+  "data_transfers": [],
+  "connectors": {
+    "0": {
+      "status": [],
+      "transactions": [],
+      "meter_values": []
+    },
+    "1": {
+      "status": [
+        {
+          "timestamp": "2024-11-15 12:53:08.348278",
+          "connector_status": "Available",
+          "evse_id": 1,
+          "connector_id": 1,
+          "kwargs": {}
+        }
+      ],
+      "transactions": [
+        {
+          "id": "caeb1016-1226-48b1-bf1e-c99a06a228f7",
+          "status": "Stopped",
+          "idTag": "ABC12345",
+          "meter_start": [
+            {
+              "sampled_value": [
+                {
+                  "context": "Transaction.Begin",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 0.0
+                },
+                {
+                  "context": "Transaction.Begin",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L1",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 0.0
+                },
+                {
+                  "context": "Transaction.Begin",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L2",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 0.0
+                },
+                {
+                  "context": "Transaction.Begin",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L3",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 0.0
+                },
+                {
+                  "context": "Transaction.Begin",
+                  "location": "Outlet",
+                  "measurand": "Current.Import",
+                  "phase": "L1",
+                  "unit_of_measure": {
+                    "unit": "A"
+                  },
+                  "value": 0.0
+                },
+                {
+                  "context": "Transaction.Begin",
+                  "location": "Outlet",
+                  "measurand": "Current.Import",
+                  "phase": "L2",
+                  "unit_of_measure": {
+                    "unit": "A"
+                  },
+                  "value": 0.0
+                },
+                {
+                  "context": "Transaction.Begin",
+                  "location": "Outlet",
+                  "measurand": "Current.Import",
+                  "phase": "L3",
+                  "unit_of_measure": {
+                    "unit": "A"
+                  },
+                  "value": 0.0
+                },
+                {
+                  "context": "Transaction.Begin",
+                  "location": "Outlet",
+                  "measurand": "Current.Import",
+                  "phase": "N",
+                  "unit_of_measure": {
+                    "unit": "A"
+                  },
+                  "value": 0.0
+                }
+              ],
+              "timestamp": "2024-11-15T11:49:52.651Z"
+            }
+          ],
+          "meter_values": [
+            [
+              {
+                "sampled_value": [
+                  {
+                    "context": "Transaction.Begin",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 0.0
+                  },
+                  {
+                    "context": "Transaction.Begin",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L1",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 0.0
+                  },
+                  {
+                    "context": "Transaction.Begin",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L2",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 0.0
+                  },
+                  {
+                    "context": "Transaction.Begin",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L3",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 0.0
+                  },
+                  {
+                    "context": "Transaction.Begin",
+                    "location": "Outlet",
+                    "measurand": "Current.Import",
+                    "phase": "L1",
+                    "unit_of_measure": {
+                      "unit": "A"
+                    },
+                    "value": 0.0
+                  },
+                  {
+                    "context": "Transaction.Begin",
+                    "location": "Outlet",
+                    "measurand": "Current.Import",
+                    "phase": "L2",
+                    "unit_of_measure": {
+                      "unit": "A"
+                    },
+                    "value": 0.0
+                  },
+                  {
+                    "context": "Transaction.Begin",
+                    "location": "Outlet",
+                    "measurand": "Current.Import",
+                    "phase": "L3",
+                    "unit_of_measure": {
+                      "unit": "A"
+                    },
+                    "value": 0.0
+                  },
+                  {
+                    "context": "Transaction.Begin",
+                    "location": "Outlet",
+                    "measurand": "Current.Import",
+                    "phase": "N",
+                    "unit_of_measure": {
+                      "unit": "A"
+                    },
+                    "value": 0.0
+                  }
+                ],
+                "timestamp": "2024-11-15T11:49:52.651Z"
+              }
+            ],
+            null,
+            [
+              {
+                "sampled_value": [
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 347.0
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L1",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 116.0
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L2",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 116.0
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L3",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 116.0
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Power.Active.Import",
+                    "unit_of_measure": {
+                      "unit": "W"
+                    },
+                    "value": 10686.0
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Power.Active.Import",
+                    "phase": "L1",
+                    "unit_of_measure": {
+                      "unit": "W"
+                    },
+                    "value": 3562.0
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Power.Active.Import",
+                    "phase": "L2",
+                    "unit_of_measure": {
+                      "unit": "W"
+                    },
+                    "value": 3562.0
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Power.Active.Import",
+                    "phase": "L3",
+                    "unit_of_measure": {
+                      "unit": "W"
+                    },
+                    "value": 3562.0
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Current.Import",
+                    "phase": "L1",
+                    "unit_of_measure": {
+                      "unit": "A"
+                    },
+                    "value": 16.023218154907227
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Current.Import",
+                    "phase": "L2",
+                    "unit_of_measure": {
+                      "unit": "A"
+                    },
+                    "value": 16.023218154907227
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Current.Import",
+                    "phase": "L3",
+                    "unit_of_measure": {
+                      "unit": "A"
+                    },
+                    "value": 16.023218154907227
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Current.Import",
+                    "phase": "N",
+                    "unit_of_measure": {
+                      "unit": "A"
+                    },
+                    "value": 0.20029021799564362
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Voltage",
+                    "phase": "L1-N",
+                    "unit_of_measure": {
+                      "unit": "V"
+                    },
+                    "value": 222.3221435546875
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Voltage",
+                    "phase": "L2-N",
+                    "unit_of_measure": {
+                      "unit": "V"
+                    },
+                    "value": 222.3221435546875
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Voltage",
+                    "phase": "L3-N",
+                    "unit_of_measure": {
+                      "unit": "V"
+                    },
+                    "value": 222.3221435546875
+                  }
+                ],
+                "timestamp": "2024-11-15T11:51:52.800Z"
+              }
+            ],
+            [
+              {
+                "sampled_value": [
+                  {
+                    "context": "Transaction.Begin",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 0.0
+                  },
+                  {
+                    "context": "Transaction.Begin",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L1",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 0.0
+                  },
+                  {
+                    "context": "Transaction.Begin",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L2",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 0.0
+                  },
+                  {
+                    "context": "Transaction.Begin",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L3",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 0.0
+                  },
+                  {
+                    "context": "Transaction.Begin",
+                    "location": "Outlet",
+                    "measurand": "Current.Import",
+                    "phase": "L1",
+                    "unit_of_measure": {
+                      "unit": "A"
+                    },
+                    "value": 0.0
+                  },
+                  {
+                    "context": "Transaction.Begin",
+                    "location": "Outlet",
+                    "measurand": "Current.Import",
+                    "phase": "L2",
+                    "unit_of_measure": {
+                      "unit": "A"
+                    },
+                    "value": 0.0
+                  },
+                  {
+                    "context": "Transaction.Begin",
+                    "location": "Outlet",
+                    "measurand": "Current.Import",
+                    "phase": "L3",
+                    "unit_of_measure": {
+                      "unit": "A"
+                    },
+                    "value": 0.0
+                  },
+                  {
+                    "context": "Transaction.Begin",
+                    "location": "Outlet",
+                    "measurand": "Current.Import",
+                    "phase": "N",
+                    "unit_of_measure": {
+                      "unit": "A"
+                    },
+                    "value": 0.0
+                  }
+                ],
+                "timestamp": "2024-11-15T11:49:52.651Z"
+              },
+              {
+                "sampled_value": [
+                  {
+                    "context": "Sample.Clock",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 13.0
+                  },
+                  {
+                    "context": "Sample.Clock",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L1",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 4.0
+                  },
+                  {
+                    "context": "Sample.Clock",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L2",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 4.0
+                  },
+                  {
+                    "context": "Sample.Clock",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L3",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 4.0
+                  },
+                  {
+                    "context": "Sample.Clock",
+                    "location": "Outlet",
+                    "measurand": "Voltage",
+                    "phase": "L1-N",
+                    "unit_of_measure": {
+                      "unit": "V"
+                    },
+                    "value": 224.63121032714844
+                  },
+                  {
+                    "context": "Sample.Clock",
+                    "location": "Outlet",
+                    "measurand": "Voltage",
+                    "phase": "L2-N",
+                    "unit_of_measure": {
+                      "unit": "V"
+                    },
+                    "value": 224.63121032714844
+                  },
+                  {
+                    "context": "Sample.Clock",
+                    "location": "Outlet",
+                    "measurand": "Voltage",
+                    "phase": "L3-N",
+                    "unit_of_measure": {
+                      "unit": "V"
+                    },
+                    "value": 224.63121032714844
+                  }
+                ],
+                "timestamp": "2024-11-15T11:49:59.691Z"
+              },
+              {
+                "sampled_value": [
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 171.0
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L1",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 57.0
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L2",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 57.0
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L3",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 57.0
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Current.Import",
+                    "phase": "L1",
+                    "unit_of_measure": {
+                      "unit": "A"
+                    },
+                    "value": 15.954142570495605
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Current.Import",
+                    "phase": "L2",
+                    "unit_of_measure": {
+                      "unit": "A"
+                    },
+                    "value": 15.954142570495605
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Current.Import",
+                    "phase": "L3",
+                    "unit_of_measure": {
+                      "unit": "A"
+                    },
+                    "value": 15.954142570495605
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Current.Import",
+                    "phase": "N",
+                    "unit_of_measure": {
+                      "unit": "A"
+                    },
+                    "value": 0.1994267851114273
+                  }
+                ],
+                "timestamp": "2024-11-15T11:50:53.231Z"
+              },
+              {
+                "sampled_value": [
+                  {
+                    "context": "Sample.Clock",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 189.0
+                  },
+                  {
+                    "context": "Sample.Clock",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L1",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 63.0
+                  },
+                  {
+                    "context": "Sample.Clock",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L2",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 63.0
+                  },
+                  {
+                    "context": "Sample.Clock",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L3",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 63.0
+                  },
+                  {
+                    "context": "Sample.Clock",
+                    "location": "Outlet",
+                    "measurand": "Voltage",
+                    "phase": "L1-N",
+                    "unit_of_measure": {
+                      "unit": "V"
+                    },
+                    "value": 222.13021850585938
+                  },
+                  {
+                    "context": "Sample.Clock",
+                    "location": "Outlet",
+                    "measurand": "Voltage",
+                    "phase": "L2-N",
+                    "unit_of_measure": {
+                      "unit": "V"
+                    },
+                    "value": 222.13021850585938
+                  },
+                  {
+                    "context": "Sample.Clock",
+                    "location": "Outlet",
+                    "measurand": "Voltage",
+                    "phase": "L3-N",
+                    "unit_of_measure": {
+                      "unit": "V"
+                    },
+                    "value": 222.13021850585938
+                  }
+                ],
+                "timestamp": "2024-11-15T11:50:59.272Z"
+              },
+              {
+                "sampled_value": [
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 347.0
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L1",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 116.0
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L2",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 116.0
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L3",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 116.0
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Current.Import",
+                    "phase": "L1",
+                    "unit_of_measure": {
+                      "unit": "A"
+                    },
+                    "value": 16.023218154907227
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Current.Import",
+                    "phase": "L2",
+                    "unit_of_measure": {
+                      "unit": "A"
+                    },
+                    "value": 16.023218154907227
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Current.Import",
+                    "phase": "L3",
+                    "unit_of_measure": {
+                      "unit": "A"
+                    },
+                    "value": 16.023218154907227
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Current.Import",
+                    "phase": "N",
+                    "unit_of_measure": {
+                      "unit": "A"
+                    },
+                    "value": 0.20029021799564362
+                  }
+                ],
+                "timestamp": "2024-11-15T11:51:52.800Z"
+              },
+              {
+                "sampled_value": [
+                  {
+                    "context": "Sample.Clock",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 368.0
+                  },
+                  {
+                    "context": "Sample.Clock",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L1",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 123.0
+                  },
+                  {
+                    "context": "Sample.Clock",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L2",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 123.0
+                  },
+                  {
+                    "context": "Sample.Clock",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L3",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 123.0
+                  },
+                  {
+                    "context": "Sample.Clock",
+                    "location": "Outlet",
+                    "measurand": "Voltage",
+                    "phase": "L1-N",
+                    "unit_of_measure": {
+                      "unit": "V"
+                    },
+                    "value": 222.1604766845703
+                  },
+                  {
+                    "context": "Sample.Clock",
+                    "location": "Outlet",
+                    "measurand": "Voltage",
+                    "phase": "L2-N",
+                    "unit_of_measure": {
+                      "unit": "V"
+                    },
+                    "value": 222.1604766845703
+                  },
+                  {
+                    "context": "Sample.Clock",
+                    "location": "Outlet",
+                    "measurand": "Voltage",
+                    "phase": "L3-N",
+                    "unit_of_measure": {
+                      "unit": "V"
+                    },
+                    "value": 222.1604766845703
+                  }
+                ],
+                "timestamp": "2024-11-15T11:51:59.850Z"
+              },
+              {
+                "sampled_value": [
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 523.0
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L1",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 174.0
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L2",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 174.0
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L3",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 174.0
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Current.Import",
+                    "phase": "L1",
+                    "unit_of_measure": {
+                      "unit": "A"
+                    },
+                    "value": 15.913901329040527
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Current.Import",
+                    "phase": "L2",
+                    "unit_of_measure": {
+                      "unit": "A"
+                    },
+                    "value": 15.913901329040527
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Current.Import",
+                    "phase": "L3",
+                    "unit_of_measure": {
+                      "unit": "A"
+                    },
+                    "value": 15.913901329040527
+                  },
+                  {
+                    "context": "Sample.Periodic",
+                    "location": "Outlet",
+                    "measurand": "Current.Import",
+                    "phase": "N",
+                    "unit_of_measure": {
+                      "unit": "A"
+                    },
+                    "value": 0.1989237666130066
+                  }
+                ],
+                "timestamp": "2024-11-15T11:52:52.338Z"
+              },
+              {
+                "sampled_value": [
+                  {
+                    "context": "Sample.Clock",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 544.0
+                  },
+                  {
+                    "context": "Sample.Clock",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L1",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 181.0
+                  },
+                  {
+                    "context": "Sample.Clock",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L2",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 181.0
+                  },
+                  {
+                    "context": "Sample.Clock",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L3",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 181.0
+                  },
+                  {
+                    "context": "Sample.Clock",
+                    "location": "Outlet",
+                    "measurand": "Voltage",
+                    "phase": "L1-N",
+                    "unit_of_measure": {
+                      "unit": "V"
+                    },
+                    "value": 222.0228271484375
+                  },
+                  {
+                    "context": "Sample.Clock",
+                    "location": "Outlet",
+                    "measurand": "Voltage",
+                    "phase": "L2-N",
+                    "unit_of_measure": {
+                      "unit": "V"
+                    },
+                    "value": 222.0228271484375
+                  },
+                  {
+                    "context": "Sample.Clock",
+                    "location": "Outlet",
+                    "measurand": "Voltage",
+                    "phase": "L3-N",
+                    "unit_of_measure": {
+                      "unit": "V"
+                    },
+                    "value": 222.0228271484375
+                  }
+                ],
+                "timestamp": "2024-11-15T11:52:59.383Z"
+              },
+              {
+                "sampled_value": [
+                  {
+                    "context": "Transaction.End",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 568.0
+                  },
+                  {
+                    "context": "Transaction.End",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L1",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 189.0
+                  },
+                  {
+                    "context": "Transaction.End",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L2",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 189.0
+                  },
+                  {
+                    "context": "Transaction.End",
+                    "location": "Outlet",
+                    "measurand": "Energy.Active.Import.Register",
+                    "phase": "L3",
+                    "unit_of_measure": {
+                      "unit": "Wh"
+                    },
+                    "value": 189.0
+                  },
+                  {
+                    "context": "Transaction.End",
+                    "location": "Outlet",
+                    "measurand": "Current.Import",
+                    "phase": "L1",
+                    "unit_of_measure": {
+                      "unit": "A"
+                    },
+                    "value": 15.977731704711914
+                  },
+                  {
+                    "context": "Transaction.End",
+                    "location": "Outlet",
+                    "measurand": "Current.Import",
+                    "phase": "L2",
+                    "unit_of_measure": {
+                      "unit": "A"
+                    },
+                    "value": 15.977731704711914
+                  },
+                  {
+                    "context": "Transaction.End",
+                    "location": "Outlet",
+                    "measurand": "Current.Import",
+                    "phase": "L3",
+                    "unit_of_measure": {
+                      "unit": "A"
+                    },
+                    "value": 15.977731704711914
+                  },
+                  {
+                    "context": "Transaction.End",
+                    "location": "Outlet",
+                    "measurand": "Current.Import",
+                    "phase": "N",
+                    "unit_of_measure": {
+                      "unit": "A"
+                    },
+                    "value": 0.19972163438796997
+                  }
+                ],
+                "timestamp": "2024-11-15T11:53:07.455Z"
+              }
+            ]
+          ],
+          "timestamp_start": "2024-11-15T11:49:53.323Z",
+          "timestamp_stop": "2024-11-15T11:53:08.169Z",
+          "meter_stop": [
+            {
+              "sampled_value": [
+                {
+                  "context": "Transaction.Begin",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 0.0
+                },
+                {
+                  "context": "Transaction.Begin",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L1",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 0.0
+                },
+                {
+                  "context": "Transaction.Begin",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L2",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 0.0
+                },
+                {
+                  "context": "Transaction.Begin",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L3",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 0.0
+                },
+                {
+                  "context": "Transaction.Begin",
+                  "location": "Outlet",
+                  "measurand": "Current.Import",
+                  "phase": "L1",
+                  "unit_of_measure": {
+                    "unit": "A"
+                  },
+                  "value": 0.0
+                },
+                {
+                  "context": "Transaction.Begin",
+                  "location": "Outlet",
+                  "measurand": "Current.Import",
+                  "phase": "L2",
+                  "unit_of_measure": {
+                    "unit": "A"
+                  },
+                  "value": 0.0
+                },
+                {
+                  "context": "Transaction.Begin",
+                  "location": "Outlet",
+                  "measurand": "Current.Import",
+                  "phase": "L3",
+                  "unit_of_measure": {
+                    "unit": "A"
+                  },
+                  "value": 0.0
+                },
+                {
+                  "context": "Transaction.Begin",
+                  "location": "Outlet",
+                  "measurand": "Current.Import",
+                  "phase": "N",
+                  "unit_of_measure": {
+                    "unit": "A"
+                  },
+                  "value": 0.0
+                }
+              ],
+              "timestamp": "2024-11-15T11:49:52.651Z"
+            },
+            {
+              "sampled_value": [
+                {
+                  "context": "Sample.Clock",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 13.0
+                },
+                {
+                  "context": "Sample.Clock",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L1",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 4.0
+                },
+                {
+                  "context": "Sample.Clock",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L2",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 4.0
+                },
+                {
+                  "context": "Sample.Clock",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L3",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 4.0
+                },
+                {
+                  "context": "Sample.Clock",
+                  "location": "Outlet",
+                  "measurand": "Voltage",
+                  "phase": "L1-N",
+                  "unit_of_measure": {
+                    "unit": "V"
+                  },
+                  "value": 224.63121032714844
+                },
+                {
+                  "context": "Sample.Clock",
+                  "location": "Outlet",
+                  "measurand": "Voltage",
+                  "phase": "L2-N",
+                  "unit_of_measure": {
+                    "unit": "V"
+                  },
+                  "value": 224.63121032714844
+                },
+                {
+                  "context": "Sample.Clock",
+                  "location": "Outlet",
+                  "measurand": "Voltage",
+                  "phase": "L3-N",
+                  "unit_of_measure": {
+                    "unit": "V"
+                  },
+                  "value": 224.63121032714844
+                }
+              ],
+              "timestamp": "2024-11-15T11:49:59.691Z"
+            },
+            {
+              "sampled_value": [
+                {
+                  "context": "Sample.Periodic",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 171.0
+                },
+                {
+                  "context": "Sample.Periodic",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L1",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 57.0
+                },
+                {
+                  "context": "Sample.Periodic",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L2",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 57.0
+                },
+                {
+                  "context": "Sample.Periodic",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L3",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 57.0
+                },
+                {
+                  "context": "Sample.Periodic",
+                  "location": "Outlet",
+                  "measurand": "Current.Import",
+                  "phase": "L1",
+                  "unit_of_measure": {
+                    "unit": "A"
+                  },
+                  "value": 15.954142570495605
+                },
+                {
+                  "context": "Sample.Periodic",
+                  "location": "Outlet",
+                  "measurand": "Current.Import",
+                  "phase": "L2",
+                  "unit_of_measure": {
+                    "unit": "A"
+                  },
+                  "value": 15.954142570495605
+                },
+                {
+                  "context": "Sample.Periodic",
+                  "location": "Outlet",
+                  "measurand": "Current.Import",
+                  "phase": "L3",
+                  "unit_of_measure": {
+                    "unit": "A"
+                  },
+                  "value": 15.954142570495605
+                },
+                {
+                  "context": "Sample.Periodic",
+                  "location": "Outlet",
+                  "measurand": "Current.Import",
+                  "phase": "N",
+                  "unit_of_measure": {
+                    "unit": "A"
+                  },
+                  "value": 0.1994267851114273
+                }
+              ],
+              "timestamp": "2024-11-15T11:50:53.231Z"
+            },
+            {
+              "sampled_value": [
+                {
+                  "context": "Sample.Clock",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 189.0
+                },
+                {
+                  "context": "Sample.Clock",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L1",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 63.0
+                },
+                {
+                  "context": "Sample.Clock",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L2",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 63.0
+                },
+                {
+                  "context": "Sample.Clock",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L3",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 63.0
+                },
+                {
+                  "context": "Sample.Clock",
+                  "location": "Outlet",
+                  "measurand": "Voltage",
+                  "phase": "L1-N",
+                  "unit_of_measure": {
+                    "unit": "V"
+                  },
+                  "value": 222.13021850585938
+                },
+                {
+                  "context": "Sample.Clock",
+                  "location": "Outlet",
+                  "measurand": "Voltage",
+                  "phase": "L2-N",
+                  "unit_of_measure": {
+                    "unit": "V"
+                  },
+                  "value": 222.13021850585938
+                },
+                {
+                  "context": "Sample.Clock",
+                  "location": "Outlet",
+                  "measurand": "Voltage",
+                  "phase": "L3-N",
+                  "unit_of_measure": {
+                    "unit": "V"
+                  },
+                  "value": 222.13021850585938
+                }
+              ],
+              "timestamp": "2024-11-15T11:50:59.272Z"
+            },
+            {
+              "sampled_value": [
+                {
+                  "context": "Sample.Periodic",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 347.0
+                },
+                {
+                  "context": "Sample.Periodic",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L1",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 116.0
+                },
+                {
+                  "context": "Sample.Periodic",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L2",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 116.0
+                },
+                {
+                  "context": "Sample.Periodic",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L3",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 116.0
+                },
+                {
+                  "context": "Sample.Periodic",
+                  "location": "Outlet",
+                  "measurand": "Current.Import",
+                  "phase": "L1",
+                  "unit_of_measure": {
+                    "unit": "A"
+                  },
+                  "value": 16.023218154907227
+                },
+                {
+                  "context": "Sample.Periodic",
+                  "location": "Outlet",
+                  "measurand": "Current.Import",
+                  "phase": "L2",
+                  "unit_of_measure": {
+                    "unit": "A"
+                  },
+                  "value": 16.023218154907227
+                },
+                {
+                  "context": "Sample.Periodic",
+                  "location": "Outlet",
+                  "measurand": "Current.Import",
+                  "phase": "L3",
+                  "unit_of_measure": {
+                    "unit": "A"
+                  },
+                  "value": 16.023218154907227
+                },
+                {
+                  "context": "Sample.Periodic",
+                  "location": "Outlet",
+                  "measurand": "Current.Import",
+                  "phase": "N",
+                  "unit_of_measure": {
+                    "unit": "A"
+                  },
+                  "value": 0.20029021799564362
+                }
+              ],
+              "timestamp": "2024-11-15T11:51:52.800Z"
+            },
+            {
+              "sampled_value": [
+                {
+                  "context": "Sample.Clock",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 368.0
+                },
+                {
+                  "context": "Sample.Clock",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L1",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 123.0
+                },
+                {
+                  "context": "Sample.Clock",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L2",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 123.0
+                },
+                {
+                  "context": "Sample.Clock",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L3",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 123.0
+                },
+                {
+                  "context": "Sample.Clock",
+                  "location": "Outlet",
+                  "measurand": "Voltage",
+                  "phase": "L1-N",
+                  "unit_of_measure": {
+                    "unit": "V"
+                  },
+                  "value": 222.1604766845703
+                },
+                {
+                  "context": "Sample.Clock",
+                  "location": "Outlet",
+                  "measurand": "Voltage",
+                  "phase": "L2-N",
+                  "unit_of_measure": {
+                    "unit": "V"
+                  },
+                  "value": 222.1604766845703
+                },
+                {
+                  "context": "Sample.Clock",
+                  "location": "Outlet",
+                  "measurand": "Voltage",
+                  "phase": "L3-N",
+                  "unit_of_measure": {
+                    "unit": "V"
+                  },
+                  "value": 222.1604766845703
+                }
+              ],
+              "timestamp": "2024-11-15T11:51:59.850Z"
+            },
+            {
+              "sampled_value": [
+                {
+                  "context": "Sample.Periodic",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 523.0
+                },
+                {
+                  "context": "Sample.Periodic",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L1",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 174.0
+                },
+                {
+                  "context": "Sample.Periodic",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L2",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 174.0
+                },
+                {
+                  "context": "Sample.Periodic",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L3",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 174.0
+                },
+                {
+                  "context": "Sample.Periodic",
+                  "location": "Outlet",
+                  "measurand": "Current.Import",
+                  "phase": "L1",
+                  "unit_of_measure": {
+                    "unit": "A"
+                  },
+                  "value": 15.913901329040527
+                },
+                {
+                  "context": "Sample.Periodic",
+                  "location": "Outlet",
+                  "measurand": "Current.Import",
+                  "phase": "L2",
+                  "unit_of_measure": {
+                    "unit": "A"
+                  },
+                  "value": 15.913901329040527
+                },
+                {
+                  "context": "Sample.Periodic",
+                  "location": "Outlet",
+                  "measurand": "Current.Import",
+                  "phase": "L3",
+                  "unit_of_measure": {
+                    "unit": "A"
+                  },
+                  "value": 15.913901329040527
+                },
+                {
+                  "context": "Sample.Periodic",
+                  "location": "Outlet",
+                  "measurand": "Current.Import",
+                  "phase": "N",
+                  "unit_of_measure": {
+                    "unit": "A"
+                  },
+                  "value": 0.1989237666130066
+                }
+              ],
+              "timestamp": "2024-11-15T11:52:52.338Z"
+            },
+            {
+              "sampled_value": [
+                {
+                  "context": "Sample.Clock",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 544.0
+                },
+                {
+                  "context": "Sample.Clock",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L1",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 181.0
+                },
+                {
+                  "context": "Sample.Clock",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L2",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 181.0
+                },
+                {
+                  "context": "Sample.Clock",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L3",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 181.0
+                },
+                {
+                  "context": "Sample.Clock",
+                  "location": "Outlet",
+                  "measurand": "Voltage",
+                  "phase": "L1-N",
+                  "unit_of_measure": {
+                    "unit": "V"
+                  },
+                  "value": 222.0228271484375
+                },
+                {
+                  "context": "Sample.Clock",
+                  "location": "Outlet",
+                  "measurand": "Voltage",
+                  "phase": "L2-N",
+                  "unit_of_measure": {
+                    "unit": "V"
+                  },
+                  "value": 222.0228271484375
+                },
+                {
+                  "context": "Sample.Clock",
+                  "location": "Outlet",
+                  "measurand": "Voltage",
+                  "phase": "L3-N",
+                  "unit_of_measure": {
+                    "unit": "V"
+                  },
+                  "value": 222.0228271484375
+                }
+              ],
+              "timestamp": "2024-11-15T11:52:59.383Z"
+            },
+            {
+              "sampled_value": [
+                {
+                  "context": "Transaction.End",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 568.0
+                },
+                {
+                  "context": "Transaction.End",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L1",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 189.0
+                },
+                {
+                  "context": "Transaction.End",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L2",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 189.0
+                },
+                {
+                  "context": "Transaction.End",
+                  "location": "Outlet",
+                  "measurand": "Energy.Active.Import.Register",
+                  "phase": "L3",
+                  "unit_of_measure": {
+                    "unit": "Wh"
+                  },
+                  "value": 189.0
+                },
+                {
+                  "context": "Transaction.End",
+                  "location": "Outlet",
+                  "measurand": "Current.Import",
+                  "phase": "L1",
+                  "unit_of_measure": {
+                    "unit": "A"
+                  },
+                  "value": 15.977731704711914
+                },
+                {
+                  "context": "Transaction.End",
+                  "location": "Outlet",
+                  "measurand": "Current.Import",
+                  "phase": "L2",
+                  "unit_of_measure": {
+                    "unit": "A"
+                  },
+                  "value": 15.977731704711914
+                },
+                {
+                  "context": "Transaction.End",
+                  "location": "Outlet",
+                  "measurand": "Current.Import",
+                  "phase": "L3",
+                  "unit_of_measure": {
+                    "unit": "A"
+                  },
+                  "value": 15.977731704711914
+                },
+                {
+                  "context": "Transaction.End",
+                  "location": "Outlet",
+                  "measurand": "Current.Import",
+                  "phase": "N",
+                  "unit_of_measure": {
+                    "unit": "A"
+                  },
+                  "value": 0.19972163438796997
+                }
+              ],
+              "timestamp": "2024-11-15T11:53:07.455Z"
+            }
+          ]
+        }
+      ],
+      "meter_values": []
+    },
+    "2": {
+      "status": [],
+      "transactions": [],
+      "meter_values": []
+    }
+  },
+  "liveness": 3599.199121
+}

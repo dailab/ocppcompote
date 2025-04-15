@@ -1,0 +1,24 @@
+.controls {
+  transition: opacity 150ms ease;
+  opacity: 0;
+}
+
+.control {
+  background: light-dark(
+    var(--mantine-color-gray-3),
+    var(--mantine-color-dark-6)
+  );
+  opacity: 0.95;
+  &[data-inactive] {
+    opacity: 0;
+    cursor: default;
+  }
+}
+
+.root {
+  &:hover {
+    .controls {
+      opacity: 1;
+    }
+  }
+}

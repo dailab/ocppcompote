@@ -1,0 +1,7 @@
+[
+  { "id": "0", "name": "Yoko", "role": "CPO", "password": "yoko123" },
+  { "id": "1", "name": "John", "role": "CPO", "password": "john123" },
+  { "id": "2", "name": "Paul", "role": "EMP", "password": "paul123" },
+  { "id": "3", "name": "George", "role": "EMP", "password": "george123" },
+  { "id": "4", "name": "Ringo", "role": "CPOEMP", "password": "ringo123" }
+]

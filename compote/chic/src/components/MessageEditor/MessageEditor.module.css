@@ -1,0 +1,15 @@
+.pointer {
+  cursor: pointer;
+}
+.paperLabel {
+  display: inline-block;
+  font-weight: 500;
+  word-break: break-word;
+  cursor: default;
+  -webkit-tap-highlight-color: transparent;
+  font-size: var(--input-label-size, var(--mantine-font-size-sm));
+}
+.jsonFormsPaper {
+  border-color: light-dark(var(--mantine-color-blue-6, --mantine-color-blue-8));
+  border-style: dashed;
+}

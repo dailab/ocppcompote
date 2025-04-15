@@ -1,0 +1,5 @@
+.topologyContainer {
+  height: 100%;
+  border-radius: var(--mantine-radius-sm);
+  overflow: hidden;
+}

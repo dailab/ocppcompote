@@ -1,0 +1,2940 @@
+{
+  "openapi": "3.1.0",
+  "info": { "title": "CSMS OICP API", "version": "0.0.1" },
+  "servers": [{ "url": "/oicp_api" }],
+  "paths": {
+    "/pushpricingproductdatav10": {
+      "post": {
+        "tags": ["CPO OICP Client API"],
+        "summary": "Eroamingpushpricingproductdata V10",
+        "description": "__Note:__\n  * To `SEND`\n  * Implementation: `OPTIONAL`\n\n  When a CPO sends an eRoamingPushPricingProductData request, Hubject checks whether there is a valid flexible/dynamic pricing service offer (for the service type Authorization) created by the CPO. If so, the operation allows the upload of pricing product data to Hubject. In addition, it is also possible to update or delete pricing data previously pushed with an upload operation request. How the transferred data is to be processed `MUST` be defined in the â€œActionTypeâ€ field of the request. Four processing options (i.e. Action Types) exist, details of which can be seen in eRoamingPushPricingProductData message\n\n  The pricing product data to be processed `MUST` be provided in the â€œPricingProductDataâ€ field, which consists of â€œPricingProductDataRecordâ€ structures. Hubject keeps a history of all updated and changed data records. Every successful push operation â€“ irrespective of the performed action â€“ leads to a new version of currently valid data records. Furthermore, every operation is logged with the current timestamp. Thus, Hubject can reconstruct the status of pricing data for every point in time in the past.",
+        "operationId": "eRoamingPushPricingProductData_V10_pushpricingproductdatav10_post",
+        "parameters": [
+          {
+            "name": "operatorID",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "title": "Operatorid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ERoamingPushPricingProductData",
+                "default": {
+                  "ActionType": "fullLoad",
+                  "PricingProductData": {
+                    "OperatorID": "DE*ABC",
+                    "OperatorName": "ABC technologies",
+                    "ProviderID": "*",
+                    "PricingDefaultPrice": 0,
+                    "PricingDefaultPriceCurrency": "EUR",
+                    "PricingDefaultReferenceUnit": "HOUR",
+                    "PricingProductDataRecords": [
+                      {
+                        "ProductID": "AC 1",
+                        "ReferenceUnit": "HOUR",
+                        "ProductPriceCurrency": "EUR",
+                        "PricePerReferenceUnit": 1,
+                        "MaximumProductChargingPower": 22,
+                        "IsValid24hours": false,
+                        "ProductAvailabilityTimes": [
+                          {
+                            "Periods": [{ "begin": "09:00", "end": "18:00" }],
+                            "on": "Everyday"
+                          }
+                        ],
+                        "AdditionalReferences": [
+                          {
+                            "AdditionalReference": "PARKING FEE",
+                            "AdditionalReferenceUnit": "HOUR",
+                            "PricePerAdditionalReferenceUnit": 2
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERoamingAcknowledgment"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pushevsepricingv10": {
+      "post": {
+        "tags": ["CPO OICP Client API"],
+        "summary": "Eroamingpushevsepricing V10",
+        "description": "__Note:__\n  * To `SEND`\n  * Implementation: `OPTIONAL`\nWhen a CPO sends an eRoamingPushEVSEPricing request, Hubject checks whether there is a valid flexible/dynamic pricing service offer (for the service type Authorization) created by the CPO. If so, the operation allows the upload of a list containing pricing product assignment to EvseIDs to Hubject. In addition, it is also possible to update or delete EVSE pricing data previously pushed with an upload operation request. How the transferred data is to be processed `MUST` be defined in the â€œActionTypeâ€ field of the request. Four processing options (i.e. Action Types) exist, details of which can be seen in section eRoamingPushEVSEPricing).\n\nThe EVSE pricing data to be processed `MUST` be provided in the â€œEVSEPricingâ€ field, which consists of â€œEvseIDProductListâ€ structures. Hubject keeps a history of all updated and changed data records. Every successful push operation â€“ irrespective of the performed action â€“ leads to a new version of currently valid data records. Furthermore, every operation is logged with the current timestamp. Thus, Hubject can reconstruct the status of EVSE pricing data for every point in time in the past.\n\nEVSE consistency:\n\nEvseIDs contain the ID of the corresponding CPO (With every EVSE pricing data upload operation, Hubject checks whether the given CPOâ€™s OperatorID or Sub-OperatorIDs if necessary) matches every given EvseID sent in the request. If not, Hubject refuses the data upload and responds with the status code 018.\n\nNote\n\nThe eRoamingPushEVSEPricing operation `MUST` always be used sequentially.",
+        "operationId": "eRoamingPushEVSEPricing_V10_pushevsepricingv10_post",
+        "parameters": [
+          {
+            "name": "operatorID",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "title": "Operatorid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ERoamingPushEVSEPricing",
+                "default": {
+                  "ActionType": "fullLoad",
+                  "EVSEPricing": [
+                    {
+                      "EvseID": "DE*XYZ*ETEST1",
+                      "ProviderID": "*",
+                      "EvseIDProductList": ["AC 1"]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERoamingAcknowledgment"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authorizestartv21": {
+      "post": {
+        "tags": ["CPO OICP Client API"],
+        "summary": "Eroamingauthorizestart V21",
+        "description": "__Note:__\n  * To `SEND`\n  * Implementation: `MANDATORY`\n\n__Functional Description:__\n\nScenario:\n\nA customer of an EMP wants to charge a vehicle at a charging point of a CPO. The customer authenticates at the charging point. The CPOâ€™s operator system does not recognize the customerâ€™s authentication data. In order to authorize the charging process, the CPOâ€™s system can send an eRoamingAuthorizeStart request to Hubject. The request MUST contain the OperatorID and the identification data (e.g. UID or EvcoID) and MAY contain the EvseID.\n\nHubject generates a SessionID for the charging process and persists important session data (SessionID, EvseID, identification data).\n\nRegarding the further service processing, there are three different options:\n\na. Hubject first tries to authorize the customer offline by checking authentication master data. Authentication data can be uploaded by EMPs using the eRoamingAuthenticationData service.\n![Authorize Start offline diagram](images/authorizestart_offline.png)\n\nb. In case offline authorization is not possible, Hubject tries to derive the EMP from the provided identification data. QR Code and Plug&amp;Charge identification data contain the EvcoID. Hubject can derive the EMPâ€™s ProviderID from the EvcoID. Hubject will directly forward eRoamingAuthorizeStart requests to the EMP. The EMP provider system checks the requested authentication data and responds accordingly, either by authorizing or not authorizing the request. The response `MUST` contain the ProviderID and the AuthorizationStatus and `MAY` contain a list of identification data that is authorized to stop the charging process. In case that the EMP provider system cannot be addressed (e.g. due to technical problems), the corresponding provider will be dealt with as if responding â€œNotAuthorizedâ€.\n![Authorize evco diagram](images/authorize_evco.png)\n\nc. In case that Hubject cannot derive the EMP from the identification data (e.g. with RFID identification), Hubject identifies all EMPs that are under contract with the CPO (EMPs must be the service subscriber) and forwards the eRoamingAuthorizeStart request to all these EMPs (broadcast). Hubject consolidates all EMP responses and creates an overall response, authorizing the request in case that one EMP authorized the request.\n\n![Authorize Start online diagram](images/authorizestart_online.png)\n\n__Pin Security:__\n\nThe eRoamingAuthorizeStart request contains one of the defined identification types (see IdentificationType). The identification type â€œQRCodeIdentificationTypeâ€ (see QRCodeIdentificationType) contains - besides the â€œEvcoIDâ€ field - a â€œPINâ€ field or a â€œHashedPINâ€ field (only one of the two options must be provided).\n\nFor security reasons and as a general rule, Hubject does not store PINs in clear text, but always as encrypted hash values. In order to prevent hashed PIN values that may have been picked illegally from being used to request the authorization for charging processes, the PIN value `MUST` always be provided in clear text within the eRoamingAuthorizeStart request. This means that this operation `MUST` always provide the â€œPINâ€ field (clear text). Hubject will always generate a hash value of the provided PIN before checking the offline authentication data. So, in case that a PIN is provided by mistake as hashed value, Hubject automatically generates a hash of a hash, which eventually leads to a denial of authorization\n\nIn order to create hash values, Hubject applies the hash algorithm that the EMP has assigned to the QR Code identification record",
+        "operationId": "eRoamingAuthorizeStart_v21_authorizestartv21_post",
+        "parameters": [
+          {
+            "name": "operatorID",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "title": "Operatorid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ERoamingAuthorizeStart",
+                "default": {
+                  "SessionID": "f98efba4-02d8-4fa0-b810-9a9d50d2c527",
+                  "CPOPartnerSessionID": "1234XYZ",
+                  "EMPPartnerSessionID": "2345ABC",
+                  "OperatorID": "DE*ABC",
+                  "EvseID": "DE*XYZ*ETEST1",
+                  "Identification": {
+                    "RFIDMifareFamilyIdentification": { "UID": "1234ABCD" },
+                    "RFIDIdentification": {
+                      "UID": "1234ABCD",
+                      "EvcoID": "DE-DCB-C12345678-X",
+                      "RFID": "mifareCls",
+                      "PrintedNumber": "9876655",
+                      "ExpiryDate": "2021-01-23T14:21:36.954Z"
+                    },
+                    "QRCodeIdentification": {
+                      "EvcoID": "DE-DCB-C12345678-X",
+                      "HashedPIN": {
+                        "Value": "string123456",
+                        "Function": "Bcrypt",
+                        "LegacyHashData": {
+                          "Function": "MD5",
+                          "Salt": "string",
+                          "Value": "string123456"
+                        }
+                      },
+                      "PIN": "1234"
+                    },
+                    "PlugAndChargeIdentification": {
+                      "EvcoID": "DE-DCB-C12345678-X"
+                    },
+                    "RemoteIdentification": { "EvcoID": "DE-DCB-C12345678-X" }
+                  },
+                  "PartnerProductID": "AC 1"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERoamingAuthorizationStart"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authorizestopv21": {
+      "post": {
+        "tags": ["CPO OICP Client API"],
+        "summary": "Eroamingauthorizestop V21",
+        "description": "__Note:__\n  * To `SEND`\n  * Implementation: `OPTIONAL`\n\n![Authorize stop diagram](images/authorizestop.png)\n\neRoamingAuthorizeStop basically works in a similar way to the operation eRoamingAuthorizeStart.\nThe request is sent in order to authorize the stopping of a charging process.\nThe request `MUST` contain the SessionID that was created by Hubject after the initial eRoamingAuthorizeStart request.\nIn most cases, Hubject can derive the EMP that authorized the charging process from the SessionID and can directly and offline authorize the request or forward the request for stopping to the EMP.\nIn case the charging session was originally authorized offline by the HBS, the session `MUST` only be stopped with the same medium, which was used for starting the session",
+        "operationId": "eRoamingAuthorizeStop_v21_authorizestopv21_post",
+        "parameters": [
+          {
+            "name": "operatorID",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string", "title": "Operatorid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ERoamingAuthorizeStop",
+                "default": {
+                  "SessionID": "f98efba4-02d8-4fa0-b810-9a9d50d2c527",
+                  "CPOPartnerSessionID": "1234XYZ",
+                  "EMPPartnerSessionID": "2345ABC",
+                  "OperatorID": "DE*ABC",
+                  "EvseID": "DE*XYZ*ETEST1",
+                  "Identification": {
+                    "RFIDMifareFamilyIdentification": { "UID": "1234ABCD" },
+                    "RFIDIdentification": {
+                      "UID": "1234ABCD",
+                      "EvcoID": "DE-DCB-C12345678-X",
+                      "RFID": "mifareCls",
+                      "PrintedNumber": "9876655",
+                      "ExpiryDate": "2021-01-23T14:21:36.954Z"
+                    },
+                    "QRCodeIdentification": {
+                      "EvcoID": "DE-DCB-C12345678-X",
+                      "HashedPIN": {
+                        "Value": "string123456",
+                        "Function": "Bcrypt",
+                        "LegacyHashData": {
+                          "Function": "MD5",
+                          "Salt": "string",
+                          "Value": "string123456"
+                        }
+                      },
+                      "PIN": "1234"
+                    },
+                    "PlugAndChargeIdentification": {
+                      "EvcoID": "DE-DCB-C12345678-X"
+                    },
+                    "RemoteIdentification": { "EvcoID": "DE-DCB-C12345678-X" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERoamingAuthorizationStop"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chargedetailrecordv22": {
+      "post": {
+        "tags": ["CPO OICP Client API"],
+        "summary": "Eroamingchargedetailrecord V22",
+        "description": "__Note:__\n  * To `SEND`\n  * Implementation: `MANDATORY`\n\n![Charge Detail Record diagram](images/cdr.png)\n\n__Functional Description:__\n\nScenario:\n\nA customer of an EMP has charged a vehicle at a charging station of a CPO. The charging process was started with an eRoamingAuthorizeStart or an eRoamingAuthorizeRemoteStart operation. The process may have been stopped with an eRoamingAuthorizeStop or an eRoamingAuthorizeRemoteStop operation. A preceding stop request is not a necessary precondition for the processing of an eRoamingChargeDetailRecord request. The CPOâ€™s provider system `MUST` send an eRoamingChargeDetailRecord (CDR) after the end of the charging process in order to inform the EMP of the charging session data (e.g. meter values and consumed energy) and further charging process details.\n\nNote:\n\nThe CPO `MUST` provide the same SessionID that was assigned to the corresponding charging process. Based on this information Hubject will be able to assign the session data to the correct process.\n\nHubject will identify the receiving EMP and will forward the CDR to the corresponding EMP. The EMP `MUST` return an eRoamingAcknowledgement message that `MUST` contain the result indicating whether the session data was received successfully and that `MAY` contain a status code for further information.\n\nHubject will accept only one CDR per SessionID.\n\nIn addition to forwarding the CDR to the EMP, Hubject also stores the CDR. In case that the recipient providerâ€™s system cannot be addressed (e.g. due to technical problems), Hubject will nevertheless return to the requestor a positive result provided that storing the CDR was successful.\n\nNote:\n\nPlease note that in case of EMP role this part of the URL '/api/oicp/cdrmgmt/v21/operators/{operatorID}/charge-detail-record' will be added to your URL endpoint when sending the request through our HBS platform.",
+        "operationId": "eRoamingChargeDetailRecord_V22_chargedetailrecordv22_post",
+        "parameters": [
+          {
+            "name": "operatorID",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "title": "Operatorid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ERoamingChargeDetailRecord"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERoamingAcknowledgment"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pushevsedatav23": {
+      "post": {
+        "tags": ["CPO OICP Client API"],
+        "summary": "Eroamingpushevsedata V23",
+        "description": "__Note:__\n  * To `SEND`\n  * Implementation: `MANDATORY`\n\n![Push evse data diagram](images/pushevsedata.png)\n\nWhen a CPO sends an eRoamingPushEvseData request, Hubject checks whether there is a valid contract between Hubject and the CPO for the service type (Hubject must be the subscriber). If so, the operation allows uploading EVSE data to Hubject.\nFurthermore, it is possible to update or delete EVSE data that has been pushed with an earlier operation request.\nHow Hubject handles the transferred data `MUST` be defined in the request field &quot;ActionType&quot;, which offers four options.\n\nThe EvseData that will be inserted or updated `MUST` be provided in the OperatorEvseData field, which consists of EvseDataRecord structures. Hubject keeps a history of all updated and changed data records. Every successful push operation â€“ irrespective of the performed action â€“ leads to a new version of currently valid data records. Furthermore, every operation is logged with the current timestamp. Thus, Hubject can reconstruct the status of EvseData for every point in time in the past.\n\nEVSE consistency:\n\nEvseIDs contain the ID of the corresponding CPO (With every data upload operation Hubject checks whether the given CPOâ€™s OperatorID or Sub-OperatorIDs if necessary) matches every given EvseID. If not, Hubject refuses the data upload and responds with the status code 018.\n\nNote:\n* The eRoamingPushEvseData operation `MUST` always be used sequentially as described in Data Push Operations.",
+        "operationId": "eRoamingPushEvseData_V23_pushevsedatav23_post",
+        "parameters": [
+          {
+            "name": "operatorID",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "title": "Operatorid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ERoamingPushEvseData",
+                "default": {
+                  "ActionType": "fullLoad",
+                  "OperatorEvseData": {
+                    "OperatorID": "DE*ABC",
+                    "OperatorName": "ABC technologies",
+                    "EvseDataRecord": [
+                      {
+                        "deltaType": "insert",
+                        "EvseID": "DE*XYZ*ETEST1",
+                        "ChargingPoolID": "DE*ABC*P1234TEST*1",
+                        "ChargingStationNames": [
+                          {
+                            "lang": "en",
+                            "value": "ABC Charging Station Test"
+                          },
+                          { "lang": "de", "value": "ABC Testladestation" }
+                        ],
+                        "HardwareManufacturer": "Charger Hardware Muster Company",
+                        "ChargingStationImage": "http://www.testlink.com",
+                        "SubOperatorName": "XYZ Technologies",
+                        "Address": {
+                          "Country": "DEU",
+                          "City": "Berlin",
+                          "Street": "EUREF CAMPUS",
+                          "PostalCode": "10829",
+                          "HouseNum": "22",
+                          "Floor": "6OG",
+                          "Region": "Berlin",
+                          "ParkingFacility": true,
+                          "ParkingSpot": "E36",
+                          "TimeZone": "UTC+01:00"
+                        },
+                        "GeoCoordinates": {
+                          "Google": { "Coordinates": "52.480495 13.356465" }
+                        },
+                        "Plugs": ["Type 2 Outlet"],
+                        "DynamicPowerLevel": true,
+                        "ChargingFacilities": [
+                          {
+                            "PowerType": "AC_3_PHASE",
+                            "Voltage": 480,
+                            "Amperage": 32,
+                            "Power": 22,
+                            "ChargingModes": ["Mode_4"]
+                          }
+                        ],
+                        "RenewableEnergy": true,
+                        "EnergySource": [
+                          { "Energy": "Solar", "Percentage": 85 },
+                          { "Energy": "Wind", "Percentage": 15 }
+                        ],
+                        "EnvironmentalImpact": { "CO2Emission": 30.3 },
+                        "CalibrationLawDataAvailability": "Local",
+                        "AuthenticationModes": ["NFC RFID Classic", "REMOTE"],
+                        "MaxCapacity": 50,
+                        "PaymentOptions": ["No Payment"],
+                        "ValueAddedServices": ["Reservation"],
+                        "Accessibility": "Restricted access",
+                        "AccessibilityLocation": "ParkingGarage",
+                        "HotlinePhoneNumber": "+49123123123123",
+                        "AdditionalInfo": [
+                          {
+                            "lang": "en",
+                            "value": "This charging station is for testing purposes"
+                          }
+                        ],
+                        "ChargingStationLocationReference": [
+                          {
+                            "lang": "en",
+                            "value": "Charging station is inside Hubject Office Parking Lot"
+                          }
+                        ],
+                        "GeoChargingPointEntrance": {
+                          "Google": { "Coordinates": "52.480495 13.356465" }
+                        },
+                        "IsOpen24Hours": false,
+                        "OpeningTimes": [
+                          {
+                            "Period": [{ "begin": "09:00", "end": "18:00" }],
+                            "on": "Everyday"
+                          }
+                        ],
+                        "HubOperatorID": "DE*ABC",
+                        "ClearinghouseID": "TEST ID",
+                        "IsHubjectCompatible": true,
+                        "DynamicInfoAvailable": "true"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERoamingAcknowledgment"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pushevsestatusv21": {
+      "post": {
+        "tags": ["CPO OICP Client API"],
+        "summary": "Eroamingpushevsestatus V21",
+        "description": "__Note:__\n  * To `SEND`\n  * Implementation: `Mandatory`\n\n![Push EVSE status](images/pushevsestatus.png)\n\nWhen a CPO sends an eRoamingPushEvseStatus request, Hubject checks whether there is a valid contract between Hubject and the CPO for the service type (Hubject must be the subscriber). If so, the operation allows uploading EVSE status data to Hubject. Furthermore, it is possible to update EVSE status data that has been pushed with an earlier operation request.\n\nThe way how Hubject handles the transferred data `MUST` be defined in the request field &quot;ActionType2, which offers four options. This option works in the same way as the eRoamingAuthenticationData service. The EVSE status data that will be inserted or updated MUST be provided with the field â€œOperatorEvseStatusâ€, which consists of â€œEvseStatusRecordâ€ structures. Hubject keeps a history of all updated and changed data records. Every successful push operation â€“ irrespective of the performed action â€“ leads to a new version of currently valid data records. Furthermore, every operation is logged with the current timestamp. Thus, Hubject can reconstruct the status of EVSE status data for every point in time in the past.\n\nNote:\n\nThe eRoamingPushEvseStatus operation `MUST` always be used sequentiallyas described in Data Push Operations\n\nBest Practices:\n\nPlease try to avoid race conditions by sending multiple status simultaneously. Status should be sent one by one.",
+        "operationId": "eRoamingPushEvseStatus_V21_pushevsestatusv21_post",
+        "parameters": [
+          {
+            "name": "operatorId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "title": "Operatorid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ERoamingPushEvseStatus",
+                "default": {
+                  "ActionType": "fullLoad",
+                  "OperatorEvseStatus": {
+                    "OperatorID": "DE*ABC",
+                    "OperatorName": "ABC technologies",
+                    "EvseStatusRecord": [
+                      { "EvseID": "DE*XYZ*ETEST1", "EvseStatus": "Available" }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERoamingAcknowledgment"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chargingnotificationsv11": {
+      "post": {
+        "tags": ["CPO OICP Client API"],
+        "summary": "Eroamingchargingnotifications V11",
+        "description": "__Note:__\n  * To `SEND`\n  * Implementation: `OPTIONAL`\n\n__Functional Description:__\n\n![Charging notifications diagram](images/chargingnotifications.png)\nThe ChargingNotification feature enables CPOs to notify EMPs about the end of charge\n\nThe ChargingNotification feature basically increases the transparency between CPO - EMP - End Consumer to the level of each charging session.\n\nThis feature enables CPO to send various notifications during a single Charging Session. These notifications give the details like\n\n1. When the charging session has started. The CPO can send ChargingNotification of type â€œStartâ€ to Hubject containing information like ChargingStart, MeterStartValue, EVSEID etc.\n\n2. Consumed Energy values during the charging process or duration of successful charging process that has lapsed. The CPO can send ChargingNotification of type â€œProgressâ€ to Hubject containing information like ChargingStart, EventOccurred, ChargingDuration, ConsumedEnergyProgress, EVSEID etc. The frequency between two progress notifications for one charging session should be at least 5 minutes.\n\n3. When the charging session has ended (because no energy is transmitted anymore). The CPO can send a ChargingNotification of type â€œEndâ€ to Hubject containing information such as ChargingEnd, ConsumedEnergy, EVSEID etc.\n\n4. Error occurred before charging starts or during charging process or abrupt changing end. The CPO can send a ChargingNotification of type â€œErrorâ€ to Hubject containing information such as ErrorClass, ErrorAdditionalInfo, EVSEID etc.\n\nHubject will forward Start, Progress, End and Error notification requests to the EMP. The EMP responds with an eRoamingAcknowledgement. This acknowledgement is then being forwarded to the CPO.\n\nThis feature should cover all the notifications that could happen between Session Start and Session End in future. Each bit of information increases transparency to the customer of EMP.",
+        "operationId": "eRoamingChargingNotifications_V11_chargingnotificationsv11_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/ERoamingChargingNotificationStart"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ERoamingChargingNotificationProgress"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ERoamingChargingNotificationEnd"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ERoamingChargingNotificationError"
+                  }
+                ],
+                "title": "Body",
+                "default": {
+                  "Type": "Start",
+                  "SessionID": "f98efba4-02d8-4fa0-b810-9a9d50d2c527",
+                  "CPOPartnerSessionID": "1234XYZ",
+                  "EMPPartnerSessionID": "2345ABC",
+                  "Identification": {
+                    "RFIDMifareFamilyIdentification": { "UID": "1234ABCD" }
+                  },
+                  "EvseID": "DE*XYZ*ETEST1",
+                  "ChargingStart": "2020-09-23T14:17:53.038000Z",
+                  "SessionStart": "2020-09-23T14:17:53.038000Z",
+                  "MeterValueStart": 0,
+                  "OperatorID": "DE*ABC",
+                  "PartnerProductID": "AC 1"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERoamingAcknowledgment"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authorizeremotereservationstartv11": {
+      "post": {
+        "tags": ["CPO OICP Server API"],
+        "summary": "Eroamingauthorizeremotereservationstart V11",
+        "description": "__Note:__\n  * To `RECEIVE`\n  * Implementation: `OPTIONAL`\n  * This operation is used by EMPs in order to remotely reserve a charging point.\n\n![Reservation start diagram](images/reservationstart.png)\n\n__Functional Description:__\n\nScenario:\n\nA customer of an EMP wants to reserve a charging point of a CPO for a later charging process.\nThe customer informs his EMP of his intention, e.g. via mobile phone or smart phone application.\nThe EMPâ€™s provider system can then initiate a reservation of the CPOâ€™s charging point by sending an eRoamingAuthorizeRemoteReservationStart request to Hubject.\nThe request `MUST` contain the ProviderID and the EvseID.\nThe demanded reservation product can be specified using the field PartnerProductID.\n\nHubject will derive the CPOâ€™s OperatorID from the EvseID.\n\nHubject will check whether there is a valid contract between the two partners for the service Reservation (EMP must be the subscriber). If so, Hubject continues with checking the charging point compatibility. In case that the CPO has uploaded at least one charging point data record, Hubject will check whether the requested EvseID is among the uploaded data. If not, Hubject will respond with the status code 603 â€œUnknown EvseIDâ€. If yes, Hubject will check whether the charging spotâ€™s property â€œIsHubjectCompatibleâ€ is set â€œtrueâ€. If the property is false, Hubject will respond with the status code 604 â€œEvseID is not Hubject compatibleâ€.\n\nIn case that the requested EvseID is compatible or the CPO has not uploaded any EVSE records at all, Hubject generates a SessionID for the reservation process and forwards the request (including the SessionID) to the CPO. The CPO MUST return an eRoamingAcknowledgement message that MUST contain the result indicating whether the reservation was successful and that MAY contain a status code for further information.\n\nIn case that the CPOâ€™s system cannot be addressed (e.g. due to technical problems), Hubject will return to the requestor a â€œfalseâ€ result and a message indicating the connection error.",
+        "operationId": "eRoamingAuthorizeRemoteReservationStart_V11_authorizeremotereservationstartv11_post",
+        "parameters": [
+          {
+            "name": "operatorID",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string", "title": "Operatorid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ERoamingAuthorizeRemoteReservationStart",
+                "default": {
+                  "SessionID": "b2688855-7f00-0002-6d8e-48d883f6abb6",
+                  "CPOPartnerSessionID": "1234XYZ",
+                  "ProviderID": "DE-DCB",
+                  "EvseID": "DE*XYZ*ETEST1",
+                  "Identification": {
+                    "RFIDMifareFamilyIdentification": { "UID": "1234ABCD" },
+                    "RFIDIdentification": {
+                      "UID": "1234ABCD",
+                      "EvcoID": "DE-DCB-C12345678-X",
+                      "RFID": "mifareCls",
+                      "PrintedNumber": "9876655",
+                      "ExpiryDate": "2021-01-23T14:23:54.228Z"
+                    },
+                    "QRCodeIdentification": {
+                      "EvcoID": "DE-DCB-C12345678-X",
+                      "HashedPIN": {
+                        "Value": "a5ghdhf73h",
+                        "Function": "Bcrypt",
+                        "LegacyHashData": {
+                          "Function": "MD5",
+                          "Salt": "a5ghdhf73h",
+                          "Value": "a5ghdhf73h"
+                        }
+                      },
+                      "PIN": "1234"
+                    },
+                    "PlugAndChargeIdentification": {
+                      "EvcoID": "DE-DCB-C12345678-X"
+                    },
+                    "RemoteIdentification": { "EvcoID": "DE-DCB-C12345678-X" }
+                  },
+                  "PartnerProductID": "Reservation",
+                  "Duration": 15
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERoamingAcknowledgment"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authorizeremotereservationstopv1": {
+      "post": {
+        "tags": ["CPO OICP Server API"],
+        "summary": "Eroamingauthorizeremotereservationstop V1",
+        "description": "__Note:__\n  * To `RECEIVE`\n  * Implementation: `OPTIONAL`\n\n![Reservation stop diagram](images/reservationstop.png)\n\neRoamingAuthorizeRemoteReservationStop basically works in the same way as eRoamingAuthorizeRemoteReservationStart.\nThe only difference is that this request is sent in order to end the reservation of a charging spot.\nThe request `MUST` contain the SessionID that was created by Hubject after the initial eRoamingAuthorizeRemoteReservationStart request.\nAfter the eRoamingAuthorizeRemoteReservationStop the CPO `MUST` provide a CDR.",
+        "operationId": "eRoamingAuthorizeRemoteReservationStop_V1_authorizeremotereservationstopv1_post",
+        "parameters": [
+          {
+            "name": "operatorID",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string", "title": "Operatorid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ERoamingAuthorizeRemoteReservationStop",
+                "default": {
+                  "SessionID": "b2688855-7f00-0002-6d8e-48d883f6abb6",
+                  "CPOPartnerSessionID": "1234XYZ",
+                  "ProviderID": "DE-DCB",
+                  "EvseID": "DE*XYZ*ETEST1"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERoamingAcknowledgment"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authorizeremotestartv21": {
+      "post": {
+        "tags": ["CPO OICP Server API"],
+        "summary": "Eroamingauthorizeremotestart V21",
+        "description": "__Note:__\n  * To `RECEIVE`\n  * Implementation: `MANDATORY`\n  * This operation is used by EMPs in order to remotely start a charging process\n\nThe service that is offered by Hubject in order to allow customers to directly start a charging process via mobile app.\n\n![Remote start diagram](images/remotestart.png)\n\n\n__Functional Description:__\n\n__Scenario:__\n\nA customer of an EMP wants to charge a vehicle at a charging station of a CPO. The customer informs his EMP of his intention, e.g. via mobile phone or smart phone application. The EMPâ€™s provider system can then initiate a charging process at the CPOâ€™s charging station by sending an eRoamingAuthorizeRemoteStart request to Hubject. The request `MUST` contain the ProviderID and the EvseID.\n\nHubject will derive the CPOâ€™s OperatorID from the EvseID.\n\nHubject will check whether there is a valid contract between the two partners for the service (EMP must be the subscriber). If so, Hubject continues with checking the charging point compatibility. In case that the CPO has uploaded at least one charging point data record, Hubject will check whether the requested EvseID is among the uploaded data. If not, Hubject will respond with the status code 603 â€œUnknown EvseIDâ€. If yes, Hubject will check whether the charging spotâ€™s property â€œIsHubjectCompatibleâ€ is set â€œtrueâ€. If the property is false, Hubject will respond with the status code 604 â€œEvseID is not Hubject compatibleâ€.\n\nIn case that the requested EvseID is compatible or the CPO has not uploaded any EVSE records at all, Hubject generates a SessionID for the following process and forwards the request (including the SessionID) to the CPO. The CPO `MUST` return an eRoamingAcknowledgement message that `MUST` contain the result indicating whether the charging process will be started and that `MAY` contain a status code for further information.\n\nIn case that the CPOâ€™s system cannot be addressed (e.g. due to technical problems), Hubject will return to the requestor a â€œfalseâ€ result and a message indicating the connection error.\n\nBest Practices:\n  * Please ensure a request run time of under 10 seconds including network roundtrip.",
+        "operationId": "eRoamingAuthorizeRemoteStart_v21_authorizeremotestartv21_post",
+        "parameters": [
+          {
+            "name": "operatorID",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string", "title": "Operatorid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ERoamingAuthorizeRemoteStart",
+                "default": {
+                  "SessionID": "f98efba4-02d8-4fa0-b810-9a9d50d2c527",
+                  "CPOPartnerSessionID": "1234XYZ",
+                  "EMPPartnerSessionID": "2345ABC",
+                  "ProviderID": "DE-DCB",
+                  "EvseID": "DE*XYZ*ETEST1",
+                  "Identification": {
+                    "RFIDMifareFamilyIdentification": { "UID": "1234ABCD" },
+                    "RFIDIdentification": {
+                      "UID": "1234ABCD",
+                      "EvcoID": "DE-DCB-C12345678-X",
+                      "RFID": "mifareCls",
+                      "PrintedNumber": "9876655",
+                      "ExpiryDate": "2021-01-23T14:21:36.954Z"
+                    },
+                    "QRCodeIdentification": {
+                      "EvcoID": "DE-DCB-C12345678-X",
+                      "HashedPIN": {
+                        "Value": "string123456",
+                        "Function": "Bcrypt",
+                        "LegacyHashData": {
+                          "Function": "MD5",
+                          "Salt": "string",
+                          "Value": "string123456"
+                        }
+                      },
+                      "PIN": "1234"
+                    },
+                    "PlugAndChargeIdentification": {
+                      "EvcoID": "DE-DCB-C12345678-X"
+                    },
+                    "RemoteIdentification": { "EvcoID": "DE-DCB-C12345678-X" }
+                  },
+                  "PartnerProductID": "AC 1"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERoamingAcknowledgment"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authorizeremotestopv21": {
+      "post": {
+        "tags": ["CPO OICP Server API"],
+        "summary": "Eroamingauthorizeremotestop V21",
+        "description": "__Note:__\n  * To `RECEIVE`\n  * Implementation: `MANDATORY`\n\n![Remote stop diagram](images/remotestop.png)\n\neRoamingAuthorizeRemoteStop basically works in the same way as eRoamingAuthorizeRemoteStart. The only difference is that this request is sent in order to initiate the stopping of a charging process. The request `MUST` contain the SessionID that was created by Hubject after the initial eRoamingAuthorizeRemoteStart request.",
+        "operationId": "eRoamingAuthorizeRemoteStop_v21_authorizeremotestopv21_post",
+        "parameters": [
+          {
+            "name": "externalID",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string", "title": "Externalid" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ERoamingAuthorizeRemoteStop",
+                "default": {
+                  "SessionID": "f98efba4-02d8-4fa0-b810-9a9d50d2c527",
+                  "CPOPartnerSessionID": "1234XYZ",
+                  "EMPPartnerSessionID": "2345ABC",
+                  "ProviderID": "DE-DCB",
+                  "EvseID": "DE*XYZ*ETEST1"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ERoamingAcknowledgment"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Accessibility": {
+        "type": "string",
+        "enum": [
+          "Free publicly accessible",
+          "Restricted access",
+          "Paying publicly accessible",
+          "Test Station"
+        ],
+        "title": "Accessibility",
+        "description": "Specifies how the charging station can be accessed.  | Option | Description | | ------ | ----------- | | Free publicly accessible | EV Driver can reach the charging point without paying a fee, e.g. street, free public place, free parking lot, etc. | | Restricted access | EV Driver needs permission to reach the charging point, e.g. Campus, building complex, etc. | | Paying publicly accessible | EV Driver needs to pay a fee in order to reach the charging point, e.g. payable parking garage, etc. | | Test Station | Station is just for testing purposes. Access may be restricted. | "
+      },
+      "AddressIso19773": {
+        "properties": {
+          "Country": {
+            "type": "string",
+            "title": "Country",
+            "description": "The CountryCodeType allows for Alpha-3 country codes only as of OICP 2.2 and OICP 2.3  For Alpha-3 (three-letter) country codes as defined in ISO 3166-1.  __Examples:__  | Option | Description | | ------ | ----------- | | AUT | Austria | | DEU | Germany | | FRA | France | | USA | United States | "
+          },
+          "City": { "type": "string", "title": "City" },
+          "Street": { "type": "string", "title": "Street" },
+          "PostalCode": { "type": "string", "title": "Postalcode" },
+          "HouseNum": { "type": "string", "title": "Housenum" },
+          "Floor": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Floor"
+          },
+          "Region": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Region"
+          },
+          "ParkingFacility": {
+            "anyOf": [{ "type": "boolean" }, { "type": "null" }],
+            "title": "Parkingfacility"
+          },
+          "ParkingSpot": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Parkingspot"
+          },
+          "TimeZone": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Timezone",
+            "description": "`[U][T][C][+,-][0-9][0-9][:][0-9][0-9]` The expression validates a string as a Time zone with UTC offset.  Examples:  UTC+01:00  UTC-05:00 "
+          }
+        },
+        "type": "object",
+        "required": ["Country", "City", "Street", "PostalCode", "HouseNum"],
+        "title": "AddressIso19773",
+        "description": "AddressIso19773"
+      },
+      "AuthenticationMode": {
+        "type": "string",
+        "enum": [
+          "NFC RFID Classic",
+          "NFC RFID DESFire",
+          "PnC",
+          "REMOTE",
+          "Direct Payment",
+          "No Authentication Required"
+        ],
+        "title": "AuthenticationMode",
+        "description": "| Option | Description | | NFC RFID Classic | Defined authentication. | | NFC RFID DESFire | Defined authentication. | | PnC | ISO/IEC 15118. | | REMOTE | App, QR-Code, Phone. | | Direct Payment | Remote use via direct payment. E.g. intercharge direct | | No Authentication Required | Not Authentication Method Required | "
+      },
+      "ChargingFacility": {
+        "properties": {
+          "PowerType": {
+            "type": "string",
+            "title": "Powertype",
+            "description": "Charging Facility power type (e.g. AC or DC)"
+          },
+          "Voltage": {
+            "anyOf": [
+              { "type": "integer", "maximum": 999.0, "minimum": 0.0 },
+              { "type": "null" }
+            ],
+            "title": "Voltage",
+            "description": "Voltage (Line to Neutral) of the Charging Facility"
+          },
+          "Amperage": {
+            "anyOf": [
+              { "type": "integer", "maximum": 99.0, "minimum": 0.0 },
+              { "type": "null" }
+            ],
+            "title": "Amperage",
+            "description": "Amperage of the Charging Facility"
+          },
+          "Power": {
+            "type": "integer",
+            "maximum": 999.0,
+            "minimum": 0.0,
+            "title": "Power",
+            "description": "Charging Facility power in kW"
+          },
+          "ChargingModes": {
+            "anyOf": [
+              { "items": { "type": "string" }, "type": "array" },
+              { "type": "null" }
+            ],
+            "title": "Chargingmodes",
+            "description": "List of charging modes that are supported."
+          }
+        },
+        "type": "object",
+        "required": ["PowerType", "Power"],
+        "title": "ChargingFacility",
+        "description": "ChargingFacility"
+      },
+      "ChargingNotificationType": {
+        "type": "string",
+        "enum": ["Start", "Progress", "End", "Error"],
+        "title": "ChargingNotificationType",
+        "description": "The type of ChargingNotification"
+      },
+      "ERoamingAcknowledgment": {
+        "properties": {
+          "Result": {
+            "type": "boolean",
+            "title": "Result",
+            "description": "If result is true, the message was received and the respective operation was performed successfully.  If result is false, the message was received and the respective operation was not performed successfully. "
+          },
+          "StatusCode": { "$ref": "#/components/schemas/StatusCode" },
+          "SessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Sessionid",
+            "description": "The Hubject SessionID that identifies the process  A string that `MUST` be valid with respect to the following regular expression:  `^[A-Za-z0-9]{8}(-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12}$`  The expression validates the string as a GUID.  Example: â€œb2688855-7f00-0002-6d8e-48d883f6abb6â€ "
+          },
+          "CPOPartnerSessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Cpopartnersessionid",
+            "description": "Optional field containing the session id assigned by the CPO to the related operation."
+          },
+          "EMPPartnerSessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Emppartnersessionid",
+            "description": "Optional field containing the session id assigned by an EMP to the related operation."
+          }
+        },
+        "type": "object",
+        "required": ["Result", "StatusCode"],
+        "title": "ERoamingAcknowledgment",
+        "description": "The acknowledgement is a message that is sent in response to several requests.  * To `SEND` and `RECEIVE` * Implementation: `MANDATORY` "
+      },
+      "ERoamingAuthorizationStart": {
+        "properties": {
+          "SessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Sessionid",
+            "description": "The Hubject SessionID that identifies the process  A string that `MUST` be valid with respect to the following regular expression:  `^[A-Za-z0-9]{8}(-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12}$`  The expression validates the string as a GUID.  Example: â€œb2688855-7f00-0002-6d8e-48d883f6abb6â€ "
+          },
+          "CPOPartnerSessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Cpopartnersessionid",
+            "description": "Optional field containing the session id assigned by the CPO to the related operation."
+          },
+          "EMPPartnerSessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Emppartnersessionid",
+            "description": "Optional field containing the session id assigned by an EMP to the related operation."
+          },
+          "ProviderID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Providerid",
+            "description": "The ProviderID is defined by Hubject and is used to identify the EMP  A string that `MUST` be valid with respect to the following regular expression: ISO | DIN  `^([A-Za-z]{2}\\-?[A-Za-z0-9]{3}|[A-Za-z]{2}[\\*|-]?[A-Za-z0-9]{3})$`  The expression validates the string as ProviderID including the preceding country code, which is part of EvcoID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118-1.  In case the ProviderID is provided corresponding to ISO, the country code `MUST` be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ-â€ is optional.  Examples ISO: â€œDE8EOâ€, â€œDE-8EOâ€  Examples DIN: â€œDE8EOâ€, â€œDE*8EOâ€, â€œDE-8EOâ€ "
+          },
+          "AuthorizationStatus": {
+            "type": "string",
+            "title": "Authorizationstatus",
+            "description": "Information specifying whether the user is authorized to charge or not.  | Option | Description | | ------ | ----------- | | Authorized | User is authorized | | NotAuthorized | User is not authorized | "
+          },
+          "StatusCode": { "$ref": "#/components/schemas/StatusCode" },
+          "AuthorizationStopIdentifications": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ERoamingAuthorizationStartAuthorizationStopIdentificationsInner"
+                },
+                "type": "array"
+              },
+              { "type": "null" }
+            ],
+            "title": "Authorizationstopidentifications",
+            "description": "A list of Identification data that is authorized to stop the charging process."
+          }
+        },
+        "type": "object",
+        "required": ["AuthorizationStatus", "StatusCode"],
+        "title": "ERoamingAuthorizationStart",
+        "description": "Note:   * To `RECEIVE`   * Implementation: `MANDATORY`  eRoamingAuthorizationStart is a message that authorizes a user to charge a car. NOTE: This message describes the response which has to be receive in response to the eRoamingAuthorizeStart. "
+      },
+      "ERoamingAuthorizationStartAuthorizationStopIdentificationsInner": {
+        "properties": {
+          "RFIDMifareFamilyIdentification": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/RFIDMifareFamilyIdentification" },
+              { "type": "null" }
+            ]
+          },
+          "RFIDIdentification": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/RFIDIdentification" },
+              { "type": "null" }
+            ]
+          },
+          "QRCodeIdentification": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/QRCodeIdentification-Output" },
+              { "type": "null" }
+            ]
+          },
+          "PlugAndChargeIdentification": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/PlugAndChargeIdentification" },
+              { "type": "null" }
+            ]
+          },
+          "RemoteIdentification": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/RemoteIdentification" },
+              { "type": "null" }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "ERoamingAuthorizationStartAuthorizationStopIdentificationsInner",
+        "description": "ERoamingAuthorizationStartAuthorizationStopIdentificationsInner"
+      },
+      "ERoamingAuthorizationStop": {
+        "properties": {
+          "SessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Sessionid",
+            "description": "The Hubject SessionID that identifies the process  A string that `MUST` be valid with respect to the following regular expression:  `^[A-Za-z0-9]{8}(-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12}$`  The expression validates the string as a GUID.  Example: â€œb2688855-7f00-0002-6d8e-48d883f6abb6â€ "
+          },
+          "CPOPartnerSessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Cpopartnersessionid",
+            "description": "Optional field containing the session id assigned by the CPO to the related operation."
+          },
+          "EMPPartnerSessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Emppartnersessionid",
+            "description": "Optional field containing the session id assigned by an EMP to the related operation."
+          },
+          "ProviderID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Providerid",
+            "description": "The ProviderID is defined by Hubject and is used to identify the EMP  A string that `MUST` be valid with respect to the following regular expression: ISO | DIN  `^([A-Za-z]{2}\\-?[A-Za-z0-9]{3}|[A-Za-z]{2}[\\*|-]?[A-Za-z0-9]{3})$`  The expression validates the string as ProviderID including the preceding country code, which is part of EvcoID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118-1.  In case the ProviderID is provided corresponding to ISO, the country code `MUST` be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ-â€ is optional.  Examples ISO: â€œDE8EOâ€, â€œDE-8EOâ€  Examples DIN: â€œDE8EOâ€, â€œDE*8EOâ€, â€œDE-8EOâ€ "
+          },
+          "AuthorizationStatus": {
+            "type": "string",
+            "title": "Authorizationstatus",
+            "description": "Information specifying whether the user is authorized to charge or not.  | Option | Description | | ------ | ----------- | | Authorized | User is authorized | | NotAuthorized | User is not authorized | "
+          },
+          "StatusCode": { "$ref": "#/components/schemas/StatusCode" }
+        },
+        "type": "object",
+        "required": ["AuthorizationStatus", "StatusCode"],
+        "title": "ERoamingAuthorizationStop",
+        "description": "Note:   * To `RECEIVE`   * Implementation: `OPTIONAL`  eRoamingAuthorizeStop is a message to request an authorization for stopping a charging process.  Note:  This message describes the response which has to be received in return to the eRoamingAuthorizeStop request. "
+      },
+      "ERoamingAuthorizeRemoteReservationStart": {
+        "properties": {
+          "SessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Sessionid",
+            "description": "The Hubject SessionID that identifies the process  A string that `MUST` be valid with respect to the following regular expression:  `^[A-Za-z0-9]{8}(-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12}$`  The expression validates the string as a GUID.  Example: â€œb2688855-7f00-0002-6d8e-48d883f6abb6â€ "
+          },
+          "CPOPartnerSessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Cpopartnersessionid",
+            "description": "Optional field containing the session id assigned by the CPO to the related operation. Partner systems can use this field to link their own session handling to HBS processes."
+          },
+          "EMPPartnerSessionId": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Emppartnersessionid",
+            "description": "Optional field containing the session id assigned by an EMP to the related operation. Partner systems can use this field to link their own session handling to HBS processes."
+          },
+          "ProviderID": {
+            "type": "string",
+            "title": "Providerid",
+            "description": "The ProviderID is defined by Hubject and is used to identify the EMP  A string that `MUST` be valid with respect to the following regular expression: ISO | DIN  `^([A-Za-z]{2}\\-?[A-Za-z0-9]{3}|[A-Za-z]{2}[\\*|-]?[A-Za-z0-9]{3})$`  The expression validates the string as ProviderID including the preceding country code, which is part of EvcoID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118-1.  In case the ProviderID is provided corresponding to ISO, the country code `MUST` be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ-â€ is optional.  Examples ISO: â€œDE8EOâ€, â€œDE-8EOâ€  Examples DIN: â€œDE8EOâ€, â€œDE*8EOâ€, â€œDE-8EOâ€ "
+          },
+          "EvseID": {
+            "type": "string",
+            "title": "Evseid",
+            "description": "The ID that identifies the charging spot.  A string that `MUST` be valid with respect to the following regular expression: ISO | DIN.  `^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3}\\*?E[A-Za-z0-9\\*]{1,30})|(\\+?[0-9]{1,3}\\*[0-9]{3}\\*[0-9\\*]{1,32}))$` The expression validates the string as EvseID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118-1.  In case the EvseID is provided corresponding to ISO, the country code MUST be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ*â€ is optional. Furthermore the ID MUST provide an â€œEâ€ after the OperatorID in order to identify the ID as ISO EvseID without doubt.  In case the EvseID is provided corresponding to DIN, the country code MUST be provided according to the international telecommunication numbering plan (ITU-T E.164:11/2010) and the separator character â€œ*â€ is mandatory.  Examples ISO: â€œDE*AB7*E840*6487â€, â€œDEAB7E8406487â€  Example DIN: â€œ+49*810*000*438â€ "
+          },
+          "Identification": { "$ref": "#/components/schemas/Identification" },
+          "PartnerProductID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Partnerproductid",
+            "description": "The ProductIDType defines some standard values (see below). The type however also supports custom ProductIDs that can be specified by partners (as a string of 50 characters maximum length). | Option | Description | |--------|-------------| | Standard Price | Standard Price | | AC1 | Product for AC 1 Phase charging | | AC3 | Product for AC 3 Phase charging | | DC | Product for DC charging | | CustomProductID | There is no option â€œCustomProductIDâ€, this sample option is meant to indicates that custom product ID specifications by partners (as a string of 50 characters maximum length) are allowed as well.| "
+          },
+          "Duration": {
+            "anyOf": [
+              { "type": "integer", "maximum": 99.0, "minimum": 1.0 },
+              { "type": "null" }
+            ],
+            "title": "Duration",
+            "description": "Duration of reservation in minutes"
+          }
+        },
+        "type": "object",
+        "required": ["ProviderID", "EvseID", "Identification"],
+        "title": "ERoamingAuthorizeRemoteReservationStart",
+        "description": "ERoamingAuthorizeRemoteReservationStart"
+      },
+      "ERoamingAuthorizeRemoteReservationStop": {
+        "properties": {
+          "SessionID": {
+            "type": "string",
+            "title": "Sessionid",
+            "description": "The Hubject SessionID that identifies the process  A string that `MUST` be valid with respect to the following regular expression:  `^[A-Za-z0-9]{8}(-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12}$`  The expression validates the string as a GUID.  Example: â€œb2688855-7f00-0002-6d8e-48d883f6abb6â€ "
+          },
+          "CPOPartnerSessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Cpopartnersessionid",
+            "description": "Optional field containing the session id assigned by the CPO to the related operation. Partner systems can use this field to link their own session handling to HBS processes."
+          },
+          "EMPPartnerSessionId": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Emppartnersessionid",
+            "description": "Optional field containing the session id assigned by an EMP to the related operation. Partner systems can use this field to link their own session handling to HBS processes."
+          },
+          "ProviderID": {
+            "type": "string",
+            "title": "Providerid",
+            "description": "The ProviderID is defined by Hubject and is used to identify the EMP  A string that `MUST` be valid with respect to the following regular expression: ISO | DIN  `^([A-Za-z]{2}\\-?[A-Za-z0-9]{3}|[A-Za-z]{2}[\\*|-]?[A-Za-z0-9]{3})$`  The expression validates the string as ProviderID including the preceding country code, which is part of EvcoID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118-1.  In case the ProviderID is provided corresponding to ISO, the country code `MUST` be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ-â€ is optional.  Examples ISO: â€œDE8EOâ€, â€œDE-8EOâ€  Examples DIN: â€œDE8EOâ€, â€œDE*8EOâ€, â€œDE-8EOâ€ "
+          },
+          "EvseID": {
+            "type": "string",
+            "title": "Evseid",
+            "description": "The ID that identifies the charging spot.  A string that `MUST` be valid with respect to the following regular expression: ISO | DIN.  `^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3}\\*?E[A-Za-z0-9\\*]{1,30})|(\\+?[0-9]{1,3}\\*[0-9]{3}\\*[0-9\\*]{1,32}))$` The expression validates the string as EvseID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118-1.  In case the EvseID is provided corresponding to ISO, the country code MUST be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ*â€ is optional. Furthermore the ID MUST provide an â€œEâ€ after the OperatorID in order to identify the ID as ISO EvseID without doubt.  In case the EvseID is provided corresponding to DIN, the country code MUST be provided according to the international telecommunication numbering plan (ITU-T E.164:11/2010) and the separator character â€œ*â€ is mandatory.  Examples ISO: â€œDE*AB7*E840*6487â€, â€œDEAB7E8406487â€  Example DIN: â€œ+49*810*000*438â€ "
+          }
+        },
+        "type": "object",
+        "required": ["SessionID", "ProviderID", "EvseID"],
+        "title": "ERoamingAuthorizeRemoteReservationStop",
+        "description": "ERoamingAuthorizeRemoteReservationStop"
+      },
+      "ERoamingAuthorizeRemoteStart": {
+        "properties": {
+          "SessionID": {
+            "type": "string",
+            "title": "Sessionid",
+            "description": "The Hubject SessionID that identifies the process  A string that `MUST` be valid with respect to the following regular expression:  `^[A-Za-z0-9]{8}(-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12}$`  The expression validates the string as a GUID.  Example: â€œb2688855-7f00-0002-6d8e-48d883f6abb6â€ "
+          },
+          "CPOPartnerSessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Cpopartnersessionid",
+            "description": "Optional field containing the session id assigned by the CPO to the related operation."
+          },
+          "EMPPartnerSessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Emppartnersessionid",
+            "description": "Optional field containing the session id assigned by an EMP to the related operation."
+          },
+          "ProviderID": {
+            "type": "string",
+            "title": "Providerid",
+            "description": "The ProviderID is defined by Hubject and is used to identify the EMP  A string that `MUST` be valid with respect to the following regular expression: ISO | DIN  `^([A-Za-z]{2}\\-?[A-Za-z0-9]{3}|[A-Za-z]{2}[\\*|-]?[A-Za-z0-9]{3})$`  The expression validates the string as ProviderID including the preceding country code, which is part of EvcoID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118-1.  In case the ProviderID is provided corresponding to ISO, the country code `MUST` be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ-â€ is optional.  Examples ISO: â€œDE8EOâ€, â€œDE-8EOâ€  Examples DIN: â€œDE8EOâ€, â€œDE*8EOâ€, â€œDE-8EOâ€ "
+          },
+          "EvseID": {
+            "type": "string",
+            "title": "Evseid",
+            "description": "The ID that identifies the charging spot.  A string that `MUST` be valid with respect to the following regular expression: ISO | DIN.  `^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3}\\*?E[A-Za-z0-9\\*]{1,30})|(\\+?[0-9]{1,3}\\*[0-9]{3}\\*[0-9\\*]{1,32}))$` The expression validates the string as EvseID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118-1.  In case the EvseID is provided corresponding to ISO, the country code MUST be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ*â€ is optional. Furthermore the ID MUST provide an â€œEâ€ after the OperatorID in order to identify the ID as ISO EvseID without doubt.  In case the EvseID is provided corresponding to DIN, the country code MUST be provided according to the international telecommunication numbering plan (ITU-T E.164:11/2010) and the separator character â€œ*â€ is mandatory.  Examples ISO: â€œDE*AB7*E840*6487â€, â€œDEAB7E8406487â€  Example DIN: â€œ+49*810*000*438â€ "
+          },
+          "Identification": { "$ref": "#/components/schemas/Identification" },
+          "PartnerProductID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Partnerproductid",
+            "description": "The ProductIDType defines some standard values (see below). The type however also supports custom ProductIDs that can be specified by partners (as a string of 50 characters maximum length). | Option | Description | |--------|-------------| | Standard Price | Standard Price | | AC1 | Product for AC 1 Phase charging | | AC3 | Product for AC 3 Phase charging | | DC | Product for DC charging | | CustomProductID | There is no option â€œCustomProductIDâ€, this sample option is meant to indicates that custom product ID specifications by partners (as a string of 50 characters maximum length) are allowed as well.| "
+          }
+        },
+        "type": "object",
+        "required": ["SessionID", "ProviderID", "EvseID", "Identification"],
+        "title": "ERoamingAuthorizeRemoteStart",
+        "description": "ERoamingAuthorizeRemoteStart"
+      },
+      "ERoamingAuthorizeRemoteStop": {
+        "properties": {
+          "SessionID": {
+            "type": "string",
+            "title": "Sessionid",
+            "description": "The Hubject SessionID that identifies the process  A string that `MUST` be valid with respect to the following regular expression:  `^[A-Za-z0-9]{8}(-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12}$`  The expression validates the string as a GUID.  Example: â€œb2688855-7f00-0002-6d8e-48d883f6abb6â€ "
+          },
+          "CPOPartnerSessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Cpopartnersessionid",
+            "description": "Optional field containing the session id assigned by the CPO to the related operation."
+          },
+          "EMPPartnerSessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Emppartnersessionid",
+            "description": "Optional field containing the session id assigned by an EMP to the related operation."
+          },
+          "ProviderID": {
+            "type": "string",
+            "title": "Providerid",
+            "description": "The ProviderID is defined by Hubject and is used to identify the EMP  A string that `MUST` be valid with respect to the following regular expression: ISO | DIN  `^([A-Za-z]{2}\\-?[A-Za-z0-9]{3}|[A-Za-z]{2}[\\*|-]?[A-Za-z0-9]{3})$`  The expression validates the string as ProviderID including the preceding country code, which is part of EvcoID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118-1.  In case the ProviderID is provided corresponding to ISO, the country code `MUST` be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ-â€ is optional.  Examples ISO: â€œDE8EOâ€, â€œDE-8EOâ€  Examples DIN: â€œDE8EOâ€, â€œDE*8EOâ€, â€œDE-8EOâ€ "
+          },
+          "EvseID": {
+            "type": "string",
+            "title": "Evseid",
+            "description": "The ID that identifies the charging spot.  A string that `MUST` be valid with respect to the following regular expression: ISO | DIN.  `^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3}\\*?E[A-Za-z0-9\\*]{1,30})|(\\+?[0-9]{1,3}\\*[0-9]{3}\\*[0-9\\*]{1,32}))$` The expression validates the string as EvseID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118-1.  In case the EvseID is provided corresponding to ISO, the country code MUST be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ*â€ is optional. Furthermore the ID MUST provide an â€œEâ€ after the OperatorID in order to identify the ID as ISO EvseID without doubt.  In case the EvseID is provided corresponding to DIN, the country code MUST be provided according to the international telecommunication numbering plan (ITU-T E.164:11/2010) and the separator character â€œ*â€ is mandatory.  Examples ISO: â€œDE*AB7*E840*6487â€, â€œDEAB7E8406487â€  Example DIN: â€œ+49*810*000*438â€ "
+          }
+        },
+        "type": "object",
+        "required": ["SessionID", "ProviderID", "EvseID"],
+        "title": "ERoamingAuthorizeRemoteStop",
+        "description": "ERoamingAuthorizeRemoteStop"
+      },
+      "ERoamingAuthorizeStart": {
+        "properties": {
+          "SessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Sessionid",
+            "description": "The Hubject SessionID that identifies the process  A string that `MUST` be valid with respect to the following regular expression:  `^[A-Za-z0-9]{8}(-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12}$`  The expression validates the string as a GUID.  Example: â€œb2688855-7f00-0002-6d8e-48d883f6abb6â€ "
+          },
+          "CPOPartnerSessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Cpopartnersessionid",
+            "description": "Optional field containing the session id assigned by the CPO to the related operation."
+          },
+          "EMPPartnerSessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Emppartnersessionid",
+            "description": "Optional field containing the session id assigned by an EMP to the related operation."
+          },
+          "OperatorID": {
+            "type": "string",
+            "title": "Operatorid",
+            "description": "A string that MUST be valid with respect to the following regular expression: ISO | DIN  ^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3})|(\\+?[0-9]{1,3}\\*[0-9]{3}))$ The expression validates the string as OperatorID including the preceding country code, which is part of EvseID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118. In case the OperatorID is provided corresponding to ISO, the country code MUST be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ*â€ is optional.  In case the OperatorID is provided corresponding to DIN, the country code MUST be provided according to the international telecommunication numbering plan (ITU-T E.164:11/2010) and the separator character â€œ*â€ is mandatory.  Examples ISO: â€œDE*A36â€, â€œDEA36â€  Example DIN: â€œ+49*536â€ "
+          },
+          "EvseID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Evseid",
+            "description": "The ID that identifies the charging spot.  A string that `MUST` be valid with respect to the following regular expression: ISO | DIN.  `^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3}\\*?E[A-Za-z0-9\\*]{1,30})|(\\+?[0-9]{1,3}\\*[0-9]{3}\\*[0-9\\*]{1,32}))$` The expression validates the string as EvseID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118-1.  In case the EvseID is provided corresponding to ISO, the country code MUST be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ*â€ is optional. Furthermore the ID MUST provide an â€œEâ€ after the OperatorID in order to identify the ID as ISO EvseID without doubt.  In case the EvseID is provided corresponding to DIN, the country code MUST be provided according to the international telecommunication numbering plan (ITU-T E.164:11/2010) and the separator character â€œ*â€ is mandatory.  Examples ISO: â€œDE*AB7*E840*6487â€, â€œDEAB7E8406487â€  Example DIN: â€œ+49*810*000*438â€ "
+          },
+          "Identification": { "$ref": "#/components/schemas/Identification" },
+          "PartnerProductID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Partnerproductid",
+            "description": "The ProductIDType defines some standard values (see below). The type however also supports custom ProductIDs that can be specified by partners (as a string of 50 characters maximum length). | Option | Description | |--------|-------------| | Standard Price | Standard Price | | AC1 | Product for AC 1 Phase charging | | AC3 | Product for AC 3 Phase charging | | DC | Product for DC charging | | CustomProductID | There is no option â€œCustomProductIDâ€, this sample option is meant to indicates that custom product ID specifications by partners (as a string of 50 characters maximum length) are allowed as well.| "
+          }
+        },
+        "type": "object",
+        "required": ["OperatorID", "Identification"],
+        "title": "ERoamingAuthorizeStart",
+        "description": "Best Practices: * The EVSE ID is optional for this message which is e.g. defined after the RFID authorization at a charge point. If the Evse ID can be provided, we recommend to include the EVSE ID in this message; it will help for support matters. * If an authorization process could not successfully be executed, please set an error code by refering to the error code list mentioned in the OICP document. "
+      },
+      "ERoamingAuthorizeStop": {
+        "properties": {
+          "SessionID": {
+            "type": "string",
+            "title": "Sessionid",
+            "description": "The Hubject SessionID that identifies the process  A string that `MUST` be valid with respect to the following regular expression:  `^[A-Za-z0-9]{8}(-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12}$`  The expression validates the string as a GUID.  Example: â€œb2688855-7f00-0002-6d8e-48d883f6abb6â€ "
+          },
+          "CPOPartnerSessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Cpopartnersessionid",
+            "description": "Optional field containing the session id assigned by the CPO to the related operation."
+          },
+          "EMPPartnerSessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Emppartnersessionid",
+            "description": "Optional field containing the session id assigned by an EMP to the related operation."
+          },
+          "OperatorID": {
+            "type": "string",
+            "title": "Operatorid",
+            "description": "A string that MUST be valid with respect to the following regular expression: ISO | DIN  ^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3})|(\\+?[0-9]{1,3}\\*[0-9]{3}))$ The expression validates the string as OperatorID including the preceding country code, which is part of EvseID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118. In case the OperatorID is provided corresponding to ISO, the country code MUST be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ*â€ is optional.  In case the OperatorID is provided corresponding to DIN, the country code MUST be provided according to the international telecommunication numbering plan (ITU-T E.164:11/2010) and the separator character â€œ*â€ is mandatory.  Examples ISO: â€œDE*A36â€, â€œDEA36â€  Example DIN: â€œ+49*536â€ "
+          },
+          "EvseID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Evseid",
+            "description": "The ID that identifies the charging spot.  A string that `MUST` be valid with respect to the following regular expression: ISO | DIN.  `^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3}\\*?E[A-Za-z0-9\\*]{1,30})|(\\+?[0-9]{1,3}\\*[0-9]{3}\\*[0-9\\*]{1,32}))$` The expression validates the string as EvseID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118-1.  In case the EvseID is provided corresponding to ISO, the country code MUST be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ*â€ is optional. Furthermore the ID MUST provide an â€œEâ€ after the OperatorID in order to identify the ID as ISO EvseID without doubt.  In case the EvseID is provided corresponding to DIN, the country code MUST be provided according to the international telecommunication numbering plan (ITU-T E.164:11/2010) and the separator character â€œ*â€ is mandatory.  Examples ISO: â€œDE*AB7*E840*6487â€, â€œDEAB7E8406487â€  Example DIN: â€œ+49*810*000*438â€ "
+          },
+          "Identification": { "$ref": "#/components/schemas/Identification" }
+        },
+        "type": "object",
+        "required": ["SessionID", "OperatorID", "Identification"],
+        "title": "ERoamingAuthorizeStop",
+        "description": "ERoamingAuthorizeStop"
+      },
+      "ERoamingChargeDetailRecord": {
+        "properties": {
+          "SessionID": {
+            "type": "string",
+            "title": "Sessionid",
+            "description": "The Hubject SessionID that identifies the process  A string that `MUST` be valid with respect to the following regular expression:  `^[A-Za-z0-9]{8}(-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12}$`  The expression validates the string as a GUID.  Example: â€œb2688855-7f00-0002-6d8e-48d883f6abb6â€ "
+          },
+          "CPOPartnerSessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Cpopartnersessionid",
+            "description": "Optional field containing the session id assigned by the CPO to the related operation."
+          },
+          "EMPPartnerSessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Emppartnersessionid",
+            "description": "Optional field containing the session id assigned by an EMP to the related operation."
+          },
+          "PartnerProductID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Partnerproductid",
+            "description": "The ProductIDType defines some standard values (see below). The type however also supports custom ProductIDs that can be specified by partners (as a string of 50 characters maximum length). | Option | Description | |--------|-------------| | Standard Price | Standard Price | | AC1 | Product for AC 1 Phase charging | | AC3 | Product for AC 3 Phase charging | | DC | Product for DC charging | | CustomProductID | There is no option â€œCustomProductIDâ€, this sample option is meant to indicates that custom product ID specifications by partners (as a string of 50 characters maximum length) are allowed as well.| "
+          },
+          "EvseID": {
+            "type": "string",
+            "title": "Evseid",
+            "description": "The ID that identifies the charging spot.  A string that `MUST` be valid with respect to the following regular expression: ISO | DIN.  `^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3}\\*?E[A-Za-z0-9\\*]{1,30})|(\\+?[0-9]{1,3}\\*[0-9]{3}\\*[0-9\\*]{1,32}))$` The expression validates the string as EvseID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118-1.  In case the EvseID is provided corresponding to ISO, the country code MUST be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ*â€ is optional. Furthermore the ID MUST provide an â€œEâ€ after the OperatorID in order to identify the ID as ISO EvseID without doubt.  In case the EvseID is provided corresponding to DIN, the country code MUST be provided according to the international telecommunication numbering plan (ITU-T E.164:11/2010) and the separator character â€œ*â€ is mandatory.  Examples ISO: â€œDE*AB7*E840*6487â€, â€œDEAB7E8406487â€  Example DIN: â€œ+49*810*000*438â€ "
+          },
+          "Identification": { "$ref": "#/components/schemas/Identification" },
+          "ChargingStart": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Chargingstart",
+            "description": "The date and time at which the charging process started."
+          },
+          "ChargingEnd": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Chargingend",
+            "description": "The date and time at which the charging process stoped."
+          },
+          "SessionStart": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Sessionstart",
+            "description": "The date and time at which the session started, e.g. swipe of RFID or cable connected."
+          },
+          "SessionEnd": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Sessionend",
+            "description": "The date and time at which the session started, e.g. swipe of RFID or cable connected."
+          },
+          "MeterValueStart": {
+            "anyOf": [
+              { "type": "number" },
+              { "type": "integer" },
+              { "type": "null" }
+            ],
+            "title": "Metervaluestart",
+            "description": "The starting meter value in kWh."
+          },
+          "MeterValueEnd": {
+            "anyOf": [
+              { "type": "number" },
+              { "type": "integer" },
+              { "type": "null" }
+            ],
+            "title": "Metervalueend",
+            "description": "The ending meter value in kWh."
+          },
+          "MeterValueInBetween": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ERoamingChargeDetailRecordMeterValueInBetween"
+              },
+              { "type": "null" }
+            ]
+          },
+          "ConsumedEnergy": {
+            "anyOf": [{ "type": "number" }, { "type": "integer" }],
+            "title": "Consumedenergy",
+            "description": "The difference between MeterValueEnd and MeterValueStart in kWh."
+          },
+          "SignedMeteringValues": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ERoamingChargeDetailRecordSignedMeteringValuesInner"
+                },
+                "type": "array"
+              },
+              { "type": "null" }
+            ],
+            "title": "Signedmeteringvalues",
+            "description": "Metering Signature basically contains all metering signature values (these values should be in Transparency software format) for different status of charging session for eg start, end or progress. In total you can provide maximum 10 metering signature values"
+          },
+          "CalibrationLawVerificationInfo": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ERoamingChargeDetailRecordCalibrationLawVerificationInfo"
+              },
+              { "type": "null" }
+            ]
+          },
+          "HubOperatorID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Huboperatorid",
+            "description": "A string that MUST be valid with respect to the following regular expression: ISO | DIN  ^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3})|(\\+?[0-9]{1,3}\\*[0-9]{3}))$ The expression validates the string as OperatorID including the preceding country code, which is part of EvseID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118. In case the OperatorID is provided corresponding to ISO, the country code MUST be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ*â€ is optional.  In case the OperatorID is provided corresponding to DIN, the country code MUST be provided according to the international telecommunication numbering plan (ITU-T E.164:11/2010) and the separator character â€œ*â€ is mandatory.  Examples ISO: â€œDE*A36â€, â€œDEA36â€  Example DIN: â€œ+49*536â€ "
+          },
+          "HubProviderId": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Hubproviderid",
+            "description": "The ProviderID is defined by Hubject and is used to identify the EMP  A string that `MUST` be valid with respect to the following regular expression: ISO | DIN  `^([A-Za-z]{2}\\-?[A-Za-z0-9]{3}|[A-Za-z]{2}[\\*|-]?[A-Za-z0-9]{3})$`  The expression validates the string as ProviderID including the preceding country code, which is part of EvcoID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118-1.  In case the ProviderID is provided corresponding to ISO, the country code `MUST` be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ-â€ is optional.  Examples ISO: â€œDE8EOâ€, â€œDE-8EOâ€  Examples DIN: â€œDE8EOâ€, â€œDE*8EOâ€, â€œDE-8EOâ€ "
+          }
+        },
+        "type": "object",
+        "required": [
+          "SessionID",
+          "EvseID",
+          "Identification",
+          "ChargingStart",
+          "ChargingEnd",
+          "SessionStart",
+          "SessionEnd",
+          "ConsumedEnergy"
+        ],
+        "title": "ERoamingChargeDetailRecord",
+        "description": "eRoamingChargeDetailRecord is a message that contains charging process details (e.g. meter values)."
+      },
+      "ERoamingChargeDetailRecordCalibrationLawVerificationInfo": {
+        "properties": {
+          "CalibrationLawCertificateID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Calibrationlawcertificateid",
+            "description": "The Calibration Law Compliance ID from respective authority along with the revision and issueing date (Compliance ID : Revision : Date) For eg PTB - X-X-XXXX : V1 : 01Jan2020"
+          },
+          "PublicKey": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Publickey",
+            "description": "Unique PublicKey for EVSEID can be provided here"
+          },
+          "MeteringSignatureUrl": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Meteringsignatureurl",
+            "description": "In this field CPO can also provide a url for xml file. This xml file can give the compiled Calibration Law Data information which can be simply added to invoices for Customer of EMP.  The information can contain for eg Charging Station Details, Charging Session Date/Time, SignedMeteringValues (Transparency Software format), SignedMeterValuesVerificationInstruction etc. "
+          },
+          "MeteringSignatureEncodingFormat": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Meteringsignatureencodingformat",
+            "description": "Encoding format of the metering signature data as well as the version (e.g. EDL40 Mennekes: V1)"
+          },
+          "SignedMeteringValuesVerificationInstruction": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Signedmeteringvaluesverificationinstruction",
+            "description": "Additional information (e.g. instruction on how to use the transparency software)"
+          }
+        },
+        "type": "object",
+        "title": "ERoamingChargeDetailRecordCalibrationLawVerificationInfo",
+        "description": "This field provides additional information which could help directly or indirectly to verify the signed metering value by using respective Transparency Software"
+      },
+      "ERoamingChargeDetailRecordMeterValueInBetween": {
+        "properties": {
+          "meterValues": {
+            "anyOf": [
+              {
+                "items": {
+                  "anyOf": [{ "type": "number" }, { "type": "integer" }]
+                },
+                "type": "array"
+              },
+              { "type": "null" }
+            ],
+            "title": "Metervalues"
+          }
+        },
+        "type": "object",
+        "title": "ERoamingChargeDetailRecordMeterValueInBetween",
+        "description": "List of meter values that may have been taken in between (kWh)."
+      },
+      "ERoamingChargeDetailRecordSignedMeteringValuesInner": {
+        "properties": {
+          "SignedMeteringValue": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Signedmeteringvalue",
+            "description": "Metering signature value (in the Transparency software format)  SignedMeteringValue `SHOULD` be always sent in following order 1. SignedMeteringValue for Metering Status â€œStartâ€ 2. SignedMeteringValue for Metering Status â€œProgress1â€ 3. SignedMeteringValue for Metering Status â€œProgress2â€ 4. â€¦ 5. SignedMeteringValue for Metering Status â€œProgress8â€ 6. SignedMeteringValue for Metering Status â€œEndâ€  Note:  1. This field `MUST` be provided when the EVSEID in the ChargeDetailRecord contains the \"External\" value in the CalibrationLawDataAvailability field. 2. The MeteringSignatureValue format provided `MUST` be supported by the Transparency Software used by the CPO "
+          },
+          "MeteringStatus": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Meteringstatus",
+            "description": "| Option | Description | | ------ | ----------- | | Start | Metering signature value of the beginning of charging process. | | Progress | An intermediate metering signature value of the charging process. | | End | Metering Signature Value of the end of the charging process. | "
+          }
+        },
+        "type": "object",
+        "title": "ERoamingChargeDetailRecordSignedMeteringValuesInner",
+        "description": "ERoamingChargeDetailRecordSignedMeteringValuesInner"
+      },
+      "ERoamingChargingNotificationEnd": {
+        "properties": {
+          "Type": { "$ref": "#/components/schemas/ChargingNotificationType" },
+          "SessionID": {
+            "type": "string",
+            "title": "Sessionid",
+            "description": "The Hubject SessionID that identifies the process  A string that `MUST` be valid with respect to the following regular expression:  `^[A-Za-z0-9]{8}(-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12}$`  The expression validates the string as a GUID.  Example: â€œb2688855-7f00-0002-6d8e-48d883f6abb6â€ "
+          },
+          "CPOPartnerSessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Cpopartnersessionid",
+            "description": "Optional field containing the session ID assigned by the CPO to the related operation.  Partner systems can use this field to link their own session handling to HBS processes. "
+          },
+          "EMPPartnerSessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Emppartnersessionid",
+            "description": "Optional field containing the session ID assigned by an EMP to the related operation.  Partner systems can use this field to link their own session handling to HBS processes. "
+          },
+          "Identification": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/Identification" },
+              { "type": "null" }
+            ]
+          },
+          "EvseID": {
+            "type": "string",
+            "title": "Evseid",
+            "description": "The ID that identifies the charging spot.  A string that `MUST` be valid with respect to the following regular expression: ISO | DIN.  `^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3}\\*?E[A-Za-z0-9\\*]{1,30})|(\\+?[0-9]{1,3}\\*[0-9]{3}\\*[0-9\\*]{1,32}))$` The expression validates the string as EvseID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118-1.  In case the EvseID is provided corresponding to ISO, the country code MUST be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ*â€ is optional. Furthermore the ID MUST provide an â€œEâ€ after the OperatorID in order to identify the ID as ISO EvseID without doubt.  In case the EvseID is provided corresponding to DIN, the country code MUST be provided according to the international telecommunication numbering plan (ITU-T E.164:11/2010) and the separator character â€œ*â€ is mandatory.  Examples ISO: â€œDE*AB7*E840*6487â€, â€œDEAB7E8406487â€  Example DIN: â€œ+49*810*000*438â€ "
+          },
+          "ChargingStart": {
+            "anyOf": [
+              { "type": "string", "format": "date-time" },
+              { "type": "null" }
+            ],
+            "title": "Chargingstart",
+            "description": "The date and time at which the charging process started."
+          },
+          "ChargingEnd": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Chargingend",
+            "description": "The date and time at which the charging process stoped."
+          },
+          "SessionStart": {
+            "anyOf": [
+              { "type": "string", "format": "date-time" },
+              { "type": "null" }
+            ],
+            "title": "Sessionstart",
+            "description": "The date and time at which the session started, e.g. swipe of RFID or cable connected."
+          },
+          "SessionEnd": {
+            "anyOf": [
+              { "type": "string", "format": "date-time" },
+              { "type": "null" }
+            ],
+            "title": "Sessionend",
+            "description": "The date and time at which the session started, e.g. swipe of RFID or cable connected."
+          },
+          "ConsumedEnergy": {
+            "anyOf": [
+              { "type": "number" },
+              { "type": "integer" },
+              { "type": "null" }
+            ],
+            "title": "Consumedenergy",
+            "description": "The difference between MeterValueEnd and MeterValueStart in kWh."
+          },
+          "MeterValueStart": {
+            "anyOf": [
+              { "type": "number" },
+              { "type": "integer" },
+              { "type": "null" }
+            ],
+            "title": "Metervaluestart",
+            "description": "The starting meter value in kWh."
+          },
+          "MeterValueEnd": {
+            "anyOf": [
+              { "type": "number" },
+              { "type": "integer" },
+              { "type": "null" }
+            ],
+            "title": "Metervalueend",
+            "description": "The ending meter value in kWh."
+          },
+          "MeterValueInBetween": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ERoamingChargeDetailRecordMeterValueInBetween"
+              },
+              { "type": "null" }
+            ]
+          },
+          "OperatorID": {
+            "type": "string",
+            "title": "Operatorid",
+            "description": "A string that MUST be valid with respect to the following regular expression: ISO | DIN  ^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3})|(\\+?[0-9]{1,3}\\*[0-9]{3}))$ The expression validates the string as OperatorID including the preceding country code, which is part of EvseID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118. In case the OperatorID is provided corresponding to ISO, the country code MUST be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ*â€ is optional.  In case the OperatorID is provided corresponding to DIN, the country code MUST be provided according to the international telecommunication numbering plan (ITU-T E.164:11/2010) and the separator character â€œ*â€ is mandatory.  Examples ISO: â€œDE*A36â€, â€œDEA36â€  Example DIN: â€œ+49*536â€ "
+          },
+          "PartnerProductID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Partnerproductid",
+            "description": "The ProductIDType defines some standard values (see below). The type however also supports custom ProductIDs that can be specified by partners (as a string of 50 characters maximum length). | Option | Description | |--------|-------------| | Standard Price | Standard Price | | AC1 | Product for AC 1 Phase charging | | AC3 | Product for AC 3 Phase charging | | DC | Product for DC charging | | CustomProductID | There is no option â€œCustomProductIDâ€, this sample option is meant to indicates that custom product ID specifications by partners (as a string of 50 characters maximum length) are allowed as well.| "
+          },
+          "PenaltyTimeStart": {
+            "anyOf": [
+              { "type": "string", "format": "date-time" },
+              { "type": "null" }
+            ],
+            "title": "Penaltytimestart",
+            "description": "The date and time at which the penalty time start after the grace period."
+          }
+        },
+        "type": "object",
+        "required": [
+          "Type",
+          "SessionID",
+          "EvseID",
+          "ChargingEnd",
+          "OperatorID"
+        ],
+        "title": "ERoamingChargingNotificationEnd",
+        "description": "A customer of an EMP has fully charged a vehicle at a charging station of a CPO. The charging process was started with an eRoamingAuthorizeStart or an eRoamingAuthorizeRemoteStart operation. The energy flow has ended, but the process has not yet been stopped and the vehicle is blocking the charging station.  The CPOâ€™s backend system MAY send a ChargingNotification of type â€œEndâ€ after the CPO considers the charging of an EV concluded (because no energy is transmitted anymore) in order to inform the EMP that the actual charging (the energy flow) of the vehicle has stopped. The charging process has not yet been stopped by the customer and the session is still active.  The ChargingNotification of type â€œEndâ€ is a message that contains information about the charging end of a session (e.g. ConsumedEnergy, ChargingEnd). "
+      },
+      "ERoamingChargingNotificationError": {
+        "properties": {
+          "Type": { "$ref": "#/components/schemas/ChargingNotificationType" },
+          "SessionID": {
+            "type": "string",
+            "title": "Sessionid",
+            "description": "The Hubject SessionID that identifies the process  A string that `MUST` be valid with respect to the following regular expression:  `^[A-Za-z0-9]{8}(-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12}$`  The expression validates the string as a GUID.  Example: â€œb2688855-7f00-0002-6d8e-48d883f6abb6â€ "
+          },
+          "CPOPartnerSessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Cpopartnersessionid",
+            "description": "Optional field containing the session ID assigned by the CPO to the related operation.  Partner systems can use this field to link their own session handling to HBS processes. "
+          },
+          "EMPPartnerSessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Emppartnersessionid",
+            "description": "Optional field containing the session ID assigned by an EMP to the related operation.  Partner systems can use this field to link their own session handling to HBS processes. "
+          },
+          "Identification": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/Identification" },
+              { "type": "null" }
+            ]
+          },
+          "OperatorID": {
+            "type": "string",
+            "title": "Operatorid",
+            "description": "A string that MUST be valid with respect to the following regular expression: ISO | DIN  ^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3})|(\\+?[0-9]{1,3}\\*[0-9]{3}))$ The expression validates the string as OperatorID including the preceding country code, which is part of EvseID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118. In case the OperatorID is provided corresponding to ISO, the country code MUST be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ*â€ is optional.  In case the OperatorID is provided corresponding to DIN, the country code MUST be provided according to the international telecommunication numbering plan (ITU-T E.164:11/2010) and the separator character â€œ*â€ is mandatory.  Examples ISO: â€œDE*A36â€, â€œDEA36â€  Example DIN: â€œ+49*536â€ "
+          },
+          "EvseID": {
+            "type": "string",
+            "title": "Evseid",
+            "description": "The ID that identifies the charging spot.  A string that `MUST` be valid with respect to the following regular expression: ISO | DIN.  `^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3}\\*?E[A-Za-z0-9\\*]{1,30})|(\\+?[0-9]{1,3}\\*[0-9]{3}\\*[0-9\\*]{1,32}))$` The expression validates the string as EvseID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118-1.  In case the EvseID is provided corresponding to ISO, the country code MUST be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ*â€ is optional. Furthermore the ID MUST provide an â€œEâ€ after the OperatorID in order to identify the ID as ISO EvseID without doubt.  In case the EvseID is provided corresponding to DIN, the country code MUST be provided according to the international telecommunication numbering plan (ITU-T E.164:11/2010) and the separator character â€œ*â€ is mandatory.  Examples ISO: â€œDE*AB7*E840*6487â€, â€œDEAB7E8406487â€  Example DIN: â€œ+49*810*000*438â€ "
+          },
+          "ErrorType": {
+            "type": "string",
+            "title": "Errortype",
+            "description": "| Option | Description | | ------ | ----------- | | ConnectorError | Charging process cannot be started or stopped. EV driver needs to check if the the Plug is properly inserted or taken out from socket. | | CriticalError | Charging process stopped abruptly. Reason: Physical check at the station is required. Station cannot be reset online. <br /> Or <br /> Error with the software or hardware of the station locally. <br /> Or <br /> Communication failure with the vehicle. <br /> Or <br /> The error needs to be investigated <br /> Or <br /> Ground Failure | "
+          },
+          "ErrorAdditionalInfo": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Erroradditionalinfo",
+            "description": "The CPO can put in the additional information about the error"
+          }
+        },
+        "type": "object",
+        "required": ["Type", "SessionID", "OperatorID", "EvseID", "ErrorType"],
+        "title": "ERoamingChargingNotificationError",
+        "description": "A customer of EMP Authorizes the charging session at particular charging station (via any means for eg REFID card, Mobile etc). Due to some errors sometime, it is possible that charging does not start or charging process is abruptly stopped or fluctuations in the charging process. It is really important for Customer as well as EMP to know what exactly is happening at the charging process. This notification eventually helps EMPs well informed about the problem occurred with the charging process. This information can be easily passed onto Customer so that he/she can take appropriate action.  The CPOâ€™s backend system MAY send a ChargingNotification of type â€œErrorâ€ after the CPO gets an information about the error at the charging station. The CPO can transmit one of the ErrorClass defined by Hubject along with the additional information which elaborated the Error. The customer has to take one of the three action EV needs to be charged at some different station, Cables is properly attached or the error is for information only no action required by customer.  The ChargingNotification of type â€œErrorâ€ is a message that contains information about the charging end of a session (e.g. ErrorClass, ErrorAdditionalInfo). "
+      },
+      "ERoamingChargingNotificationProgress": {
+        "properties": {
+          "Type": { "$ref": "#/components/schemas/ChargingNotificationType" },
+          "SessionID": {
+            "type": "string",
+            "title": "Sessionid",
+            "description": "The Hubject SessionID that identifies the process  A string that `MUST` be valid with respect to the following regular expression:  `^[A-Za-z0-9]{8}(-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12}$`  The expression validates the string as a GUID.  Example: â€œb2688855-7f00-0002-6d8e-48d883f6abb6â€ "
+          },
+          "CPOPartnerSessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Cpopartnersessionid",
+            "description": "Optional field containing the session ID assigned by the CPO to the related operation.  Partner systems can use this field to link their own session handling to HBS processes. "
+          },
+          "EMPPartnerSessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Emppartnersessionid",
+            "description": "Optional field containing the session ID assigned by an EMP to the related operation.  Partner systems can use this field to link their own session handling to HBS processes. "
+          },
+          "Identification": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/Identification" },
+              { "type": "null" }
+            ]
+          },
+          "EvseID": {
+            "type": "string",
+            "title": "Evseid",
+            "description": "The ID that identifies the charging spot.  A string that `MUST` be valid with respect to the following regular expression: ISO | DIN.  `^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3}\\*?E[A-Za-z0-9\\*]{1,30})|(\\+?[0-9]{1,3}\\*[0-9]{3}\\*[0-9\\*]{1,32}))$` The expression validates the string as EvseID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118-1.  In case the EvseID is provided corresponding to ISO, the country code MUST be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ*â€ is optional. Furthermore the ID MUST provide an â€œEâ€ after the OperatorID in order to identify the ID as ISO EvseID without doubt.  In case the EvseID is provided corresponding to DIN, the country code MUST be provided according to the international telecommunication numbering plan (ITU-T E.164:11/2010) and the separator character â€œ*â€ is mandatory.  Examples ISO: â€œDE*AB7*E840*6487â€, â€œDEAB7E8406487â€  Example DIN: â€œ+49*810*000*438â€ "
+          },
+          "ChargingStart": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Chargingstart",
+            "description": "The date and time at which the charging process started."
+          },
+          "EventOccurred": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Eventoccurred",
+            "description": "The date and time at which the charging progress parameters are captured."
+          },
+          "ChargingDuration": {
+            "anyOf": [{ "type": "integer" }, { "type": "null" }],
+            "title": "Chargingduration",
+            "description": "Charging Duration = EventOccurred - Charging Duration. It is a time in millisecond.  Either ChargingDuration or ConsumedEnergyProgress should be provided. Both can also be provided with each progress notification. "
+          },
+          "SessionStart": {
+            "anyOf": [
+              { "type": "string", "format": "date-time" },
+              { "type": "null" }
+            ],
+            "title": "Sessionstart",
+            "description": "The date and time at which the session started, e.g. swipe of RFID or cable connected."
+          },
+          "ConsumedEnergyProgress": {
+            "anyOf": [
+              { "type": "number" },
+              { "type": "integer" },
+              { "type": "null" }
+            ],
+            "title": "Consumedenergyprogress",
+            "description": "This is consumed energy when from Start of charging process till the charging progress notification generated (EventOccurred)  Either ChargingDuration or ConsumedEnergyProgress should be provided. Both can also be provided with each progress notification. "
+          },
+          "MeterValueStart": {
+            "anyOf": [
+              { "type": "number" },
+              { "type": "integer" },
+              { "type": "null" }
+            ],
+            "title": "Metervaluestart",
+            "description": "The starting meter value in kWh."
+          },
+          "MeterValueInBetween": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ERoamingChargeDetailRecordMeterValueInBetween"
+              },
+              { "type": "null" }
+            ]
+          },
+          "OperatorID": {
+            "type": "string",
+            "title": "Operatorid",
+            "description": "A string that MUST be valid with respect to the following regular expression: ISO | DIN  ^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3})|(\\+?[0-9]{1,3}\\*[0-9]{3}))$ The expression validates the string as OperatorID including the preceding country code, which is part of EvseID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118. In case the OperatorID is provided corresponding to ISO, the country code MUST be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ*â€ is optional.  In case the OperatorID is provided corresponding to DIN, the country code MUST be provided according to the international telecommunication numbering plan (ITU-T E.164:11/2010) and the separator character â€œ*â€ is mandatory.  Examples ISO: â€œDE*A36â€, â€œDEA36â€  Example DIN: â€œ+49*536â€ "
+          },
+          "PartnerProductID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Partnerproductid",
+            "description": "The ProductIDType defines some standard values (see below). The type however also supports custom ProductIDs that can be specified by partners (as a string of 50 characters maximum length). | Option | Description | |--------|-------------| | Standard Price | Standard Price | | AC1 | Product for AC 1 Phase charging | | AC3 | Product for AC 3 Phase charging | | DC | Product for DC charging | | CustomProductID | There is no option â€œCustomProductIDâ€, this sample option is meant to indicates that custom product ID specifications by partners (as a string of 50 characters maximum length) are allowed as well.| "
+          }
+        },
+        "type": "object",
+        "required": [
+          "Type",
+          "SessionID",
+          "EvseID",
+          "ChargingStart",
+          "EventOccurred",
+          "OperatorID"
+        ],
+        "title": "ERoamingChargingNotificationProgress",
+        "description": "A customer of EMP has started the charging session. Just like as that of regular gasoline stations customer would like to know either how much charging Duration have passed or how much energy is consumed by the EV so far. This information will help Customer to decide if he/she wants to stop the charging session as per their affordability or journey planning.  The CPOâ€™s backend system MAY send a ChargingNotification of type â€œProgessâ€ after the CPO gets the charging energy or time information from EVSEID. This is required in order to inform the EMP that the progress energy or chargingduration for a perticular charging session.  The ChargingNotification of type â€œProgressâ€ is a message that contains information about the charging Duration or energy consumed during charging process (e.g. EventOccurred, ChargingDuration, ConsumedEnergyProgress). "
+      },
+      "ERoamingChargingNotificationStart": {
+        "properties": {
+          "Type": { "$ref": "#/components/schemas/ChargingNotificationType" },
+          "SessionID": {
+            "type": "string",
+            "title": "Sessionid",
+            "description": "The Hubject SessionID that identifies the process  A string that `MUST` be valid with respect to the following regular expression:  `^[A-Za-z0-9]{8}(-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12}$`  The expression validates the string as a GUID.  Example: â€œb2688855-7f00-0002-6d8e-48d883f6abb6â€ "
+          },
+          "CPOPartnerSessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Cpopartnersessionid",
+            "description": "Optional field containing the session ID assigned by the CPO to the related operation.  Partner systems can use this field to link their own session handling to HBS processes. "
+          },
+          "EMPPartnerSessionID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Emppartnersessionid",
+            "description": "Optional field containing the session ID assigned by an EMP to the related operation.  Partner systems can use this field to link their own session handling to HBS processes. "
+          },
+          "Identification": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/Identification" },
+              { "type": "null" }
+            ]
+          },
+          "EvseID": {
+            "type": "string",
+            "title": "Evseid",
+            "description": "The ID that identifies the charging spot.  A string that `MUST` be valid with respect to the following regular expression: ISO | DIN.  `^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3}\\*?E[A-Za-z0-9\\*]{1,30})|(\\+?[0-9]{1,3}\\*[0-9]{3}\\*[0-9\\*]{1,32}))$` The expression validates the string as EvseID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118-1.  In case the EvseID is provided corresponding to ISO, the country code MUST be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ*â€ is optional. Furthermore the ID MUST provide an â€œEâ€ after the OperatorID in order to identify the ID as ISO EvseID without doubt.  In case the EvseID is provided corresponding to DIN, the country code MUST be provided according to the international telecommunication numbering plan (ITU-T E.164:11/2010) and the separator character â€œ*â€ is mandatory.  Examples ISO: â€œDE*AB7*E840*6487â€, â€œDEAB7E8406487â€  Example DIN: â€œ+49*810*000*438â€ "
+          },
+          "ChargingStart": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Chargingstart",
+            "description": "The date and time at which the charging process started."
+          },
+          "SessionStart": {
+            "anyOf": [
+              { "type": "string", "format": "date-time" },
+              { "type": "null" }
+            ],
+            "title": "Sessionstart",
+            "description": "The date and time at which the session started, e.g. swipe of RFID or cable connected."
+          },
+          "MeterValueStart": {
+            "anyOf": [
+              { "type": "number" },
+              { "type": "integer" },
+              { "type": "null" }
+            ],
+            "title": "Metervaluestart",
+            "description": "The starting meter value in kWh."
+          },
+          "OperatorID": {
+            "type": "string",
+            "title": "Operatorid",
+            "description": "A string that MUST be valid with respect to the following regular expression: ISO | DIN  ^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3})|(\\+?[0-9]{1,3}\\*[0-9]{3}))$ The expression validates the string as OperatorID including the preceding country code, which is part of EvseID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118. In case the OperatorID is provided corresponding to ISO, the country code MUST be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ*â€ is optional.  In case the OperatorID is provided corresponding to DIN, the country code MUST be provided according to the international telecommunication numbering plan (ITU-T E.164:11/2010) and the separator character â€œ*â€ is mandatory.  Examples ISO: â€œDE*A36â€, â€œDEA36â€  Example DIN: â€œ+49*536â€ "
+          },
+          "PartnerProductID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Partnerproductid",
+            "description": "The ProductIDType defines some standard values (see below). The type however also supports custom ProductIDs that can be specified by partners (as a string of 50 characters maximum length). | Option | Description | |--------|-------------| | Standard Price | Standard Price | | AC1 | Product for AC 1 Phase charging | | AC3 | Product for AC 3 Phase charging | | DC | Product for DC charging | | CustomProductID | There is no option â€œCustomProductIDâ€, this sample option is meant to indicates that custom product ID specifications by partners (as a string of 50 characters maximum length) are allowed as well.| "
+          }
+        },
+        "type": "object",
+        "required": [
+          "Type",
+          "SessionID",
+          "EvseID",
+          "ChargingStart",
+          "OperatorID"
+        ],
+        "title": "ERoamingChargingNotificationStart",
+        "description": "A customer of EMP Authorizes the charging session at particular charging station (via any means for eg REFID card, Mobile etc). The charging session is authorized by Hubject / CPO system. The authorization of charging process and plugging the cable in EV does not guarantee that energy flow into the Vehicle is initiated. It is really important for for EMP and its end consumer to know if the charging has started.  The CPOâ€™s backend system MAY send a ChargingNotification of type â€œStartâ€ after the CPO considers the charging of an EV is started (since energy flow have started) in order to inform the EMP that the actual charging (the energy flow) of the vehicle has started.  The ChargingNotification of type â€œStartâ€ is a message that contains information about the charging start of a session (e.g. ChargingStart). "
+      },
+      "ERoamingPushEVSEPricing": {
+        "properties": {
+          "ActionType": {
+            "type": "string",
+            "title": "Actiontype",
+            "description": "Describes the action that has to be performed by Hubject with the provided data."
+          },
+          "EVSEPricing": {
+            "items": {
+              "$ref": "#/components/schemas/ERoamingPushEVSEPricingEVSEPricingInner"
+            },
+            "type": "array",
+            "title": "Evsepricing",
+            "description": "A list of EVSEs and their respective pricing product relation"
+          }
+        },
+        "type": "object",
+        "required": ["ActionType", "EVSEPricing"],
+        "title": "ERoamingPushEVSEPricing",
+        "description": "eRoamingPushEVSEPricing is a message that is sent in order to upload a list of EVSEs and the pricing products (i.e. tarrifs) applicable for (charging or reservation) sessions at these EVSEs."
+      },
+      "ERoamingPushEVSEPricingEVSEPricingInner": {
+        "properties": {
+          "EvseID": {
+            "type": "string",
+            "title": "Evseid",
+            "description": "The ID that identifies the charging spot.  A string that `MUST` be valid with respect to the following regular expression: ISO | DIN.  `^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3}\\*?E[A-Za-z0-9\\*]{1,30})|(\\+?[0-9]{1,3}\\*[0-9]{3}\\*[0-9\\*]{1,32}))$` The expression validates the string as EvseID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118-1.  In case the EvseID is provided corresponding to ISO, the country code MUST be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ*â€ is optional. Furthermore the ID MUST provide an â€œEâ€ after the OperatorID in order to identify the ID as ISO EvseID without doubt.  In case the EvseID is provided corresponding to DIN, the country code MUST be provided according to the international telecommunication numbering plan (ITU-T E.164:11/2010) and the separator character â€œ*â€ is mandatory.  Examples ISO: â€œDE*AB7*E840*6487â€, â€œDEAB7E8406487â€  Example DIN: â€œ+49*810*000*438â€ "
+          },
+          "ProviderID": {
+            "type": "string",
+            "title": "Providerid",
+            "description": "The ProviderID is defined by Hubject and is used to identify the EMP  A string that `MUST` be valid with respect to the following regular expression: ISO | DIN  `^([A-Za-z]{2}\\-?[A-Za-z0-9]{3}|[A-Za-z]{2}[\\*|-]?[A-Za-z0-9]{3})$`  The expression validates the string as ProviderID including the preceding country code, which is part of EvcoID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118-1.  In case the ProviderID is provided corresponding to ISO, the country code `MUST` be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ-â€ is optional.  Examples ISO: â€œDE8EOâ€, â€œDE-8EOâ€  Examples DIN: â€œDE8EOâ€, â€œDE*8EOâ€, â€œDE-8EOâ€   In case the data is to be made available for all EMPs (e.g. for Offer-to-All prices), the asterix character (*) can be set as the value in this field.   "
+          },
+          "EvseIDProductList": {
+            "items": { "type": "string" },
+            "type": "array",
+            "title": "Evseidproductlist",
+            "description": "A list of pricing products applicable per EvseID"
+          }
+        },
+        "type": "object",
+        "required": ["EvseID", "ProviderID", "EvseIDProductList"],
+        "title": "ERoamingPushEVSEPricingEVSEPricingInner",
+        "description": "ERoamingPushEVSEPricingEVSEPricingInner"
+      },
+      "ERoamingPushEvseData": {
+        "properties": {
+          "ActionType": {
+            "type": "string",
+            "title": "Actiontype",
+            "description": "Describes the action that has to be performed by Hubject with the provided data."
+          },
+          "OperatorEvseData": {
+            "$ref": "#/components/schemas/ERoamingPushEvseDataOperatorEvseData"
+          }
+        },
+        "type": "object",
+        "required": ["ActionType", "OperatorEvseData"],
+        "title": "ERoamingPushEvseData",
+        "description": "ERoamingPushEvseData"
+      },
+      "ERoamingPushEvseDataOperatorEvseData": {
+        "properties": {
+          "OperatorID": {
+            "type": "string",
+            "title": "Operatorid",
+            "description": "A string that MUST be valid with respect to the following regular expression: ISO | DIN  ^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3})|(\\+?[0-9]{1,3}\\*[0-9]{3}))$ The expression validates the string as OperatorID including the preceding country code, which is part of EvseID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118. In case the OperatorID is provided corresponding to ISO, the country code MUST be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ*â€ is optional.  In case the OperatorID is provided corresponding to DIN, the country code MUST be provided according to the international telecommunication numbering plan (ITU-T E.164:11/2010) and the separator character â€œ*â€ is mandatory.  Examples ISO: â€œDE*A36â€, â€œDEA36â€  Example DIN: â€œ+49*536â€ "
+          },
+          "OperatorName": {
+            "type": "string",
+            "title": "Operatorname",
+            "description": "Free text for operator"
+          },
+          "EvseDataRecord": {
+            "items": { "$ref": "#/components/schemas/EvseDataRecord" },
+            "type": "array",
+            "title": "Evsedatarecord",
+            "description": "EVSE entries"
+          }
+        },
+        "type": "object",
+        "required": ["OperatorID", "OperatorName", "EvseDataRecord"],
+        "title": "ERoamingPushEvseDataOperatorEvseData",
+        "description": "ERoamingPushEvseDataOperatorEvseData"
+      },
+      "ERoamingPushEvseStatus": {
+        "properties": {
+          "ActionType": {
+            "type": "string",
+            "title": "Actiontype",
+            "description": "Describes the action that has to be performed by Hubject with the provided data."
+          },
+          "OperatorEvseStatus": {
+            "$ref": "#/components/schemas/ERoamingPushEvseStatusOperatorEvseStatus"
+          }
+        },
+        "type": "object",
+        "required": ["ActionType", "OperatorEvseStatus"],
+        "title": "ERoamingPushEvseStatus",
+        "description": "eRoamingPushEvseStatus is a message that is sent in order to upload EVSE status data to Hubject."
+      },
+      "ERoamingPushEvseStatusOperatorEvseStatus": {
+        "properties": {
+          "OperatorID": {
+            "type": "string",
+            "title": "Operatorid",
+            "description": "A string that MUST be valid with respect to the following regular expression: ISO | DIN  ^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3})|(\\+?[0-9]{1,3}\\*[0-9]{3}))$ The expression validates the string as OperatorID including the preceding country code, which is part of EvseID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118. In case the OperatorID is provided corresponding to ISO, the country code MUST be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ*â€ is optional.  In case the OperatorID is provided corresponding to DIN, the country code MUST be provided according to the international telecommunication numbering plan (ITU-T E.164:11/2010) and the separator character â€œ*â€ is mandatory.  Examples ISO: â€œDE*A36â€, â€œDEA36â€  Example DIN: â€œ+49*536â€ "
+          },
+          "OperatorName": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Operatorname",
+            "description": "Free text for operator"
+          },
+          "EvseStatusRecord": {
+            "items": {
+              "$ref": "#/components/schemas/ERoamingPushEvseStatusOperatorEvseStatusEvseStatusRecordInner"
+            },
+            "type": "array",
+            "title": "Evsestatusrecord",
+            "description": "EvseStatus list"
+          }
+        },
+        "type": "object",
+        "required": ["OperatorID", "EvseStatusRecord"],
+        "title": "ERoamingPushEvseStatusOperatorEvseStatus",
+        "description": "Indicates the Eves status"
+      },
+      "ERoamingPushEvseStatusOperatorEvseStatusEvseStatusRecordInner": {
+        "properties": {
+          "EvseID": {
+            "type": "string",
+            "title": "Evseid",
+            "description": "The ID that identifies the charging spot.  A string that `MUST` be valid with respect to the following regular expression: ISO | DIN.  `^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3}\\*?E[A-Za-z0-9\\*]{1,30})|(\\+?[0-9]{1,3}\\*[0-9]{3}\\*[0-9\\*]{1,32}))$` The expression validates the string as EvseID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118-1.  In case the EvseID is provided corresponding to ISO, the country code MUST be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ*â€ is optional. Furthermore the ID MUST provide an â€œEâ€ after the OperatorID in order to identify the ID as ISO EvseID without doubt.  In case the EvseID is provided corresponding to DIN, the country code MUST be provided according to the international telecommunication numbering plan (ITU-T E.164:11/2010) and the separator character â€œ*â€ is mandatory.  Examples ISO: â€œDE*AB7*E840*6487â€, â€œDEAB7E8406487â€  Example DIN: â€œ+49*810*000*438â€ "
+          },
+          "EvseStatus": {
+            "type": "string",
+            "title": "Evsestatus",
+            "description": "| Option | Description |                 | ------ | ----------- | | Available | Charging Spot is available for charging. | | Reserved | Charging Spot is reserved and not available for charging. | | Occupied | Charging Spot is busy. | | OutOfService | Charging Spot is out of service and not available for charging. | | EvseNotFound | The requested EvseID and EVSE status does not exist within the Hubject database. | | Unknown | No status information available. | "
+          }
+        },
+        "type": "object",
+        "required": ["EvseID", "EvseStatus"],
+        "title": "ERoamingPushEvseStatusOperatorEvseStatusEvseStatusRecordInner",
+        "description": "ERoamingPushEvseStatusOperatorEvseStatusEvseStatusRecordInner"
+      },
+      "ERoamingPushPricingProductData": {
+        "properties": {
+          "ActionType": {
+            "type": "string",
+            "title": "Actiontype",
+            "description": "Describes the action that has to be performed by Hubject with the provided data."
+          },
+          "PricingProductData": {
+            "$ref": "#/components/schemas/ERoamingPushPricingProductDataPricingProductData"
+          }
+        },
+        "type": "object",
+        "required": ["ActionType", "PricingProductData"],
+        "title": "ERoamingPushPricingProductData",
+        "description": "eRoamingPushPricingProductData is a message that is sent in order to upload data pertaining to a CPOâ€™s pricing products (i.e. tarrifs) to the Hubject system."
+      },
+      "ERoamingPushPricingProductDataPricingProductData": {
+        "properties": {
+          "OperatorID": {
+            "type": "string",
+            "title": "Operatorid",
+            "description": "A string that MUST be valid with respect to the following regular expression: ISO | DIN  ^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3})|(\\+?[0-9]{1,3}\\*[0-9]{3}))$ The expression validates the string as OperatorID including the preceding country code, which is part of EvseID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118. In case the OperatorID is provided corresponding to ISO, the country code MUST be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ*â€ is optional.  In case the OperatorID is provided corresponding to DIN, the country code MUST be provided according to the international telecommunication numbering plan (ITU-T E.164:11/2010) and the separator character â€œ*â€ is mandatory.  Examples ISO: â€œDE*A36â€, â€œDEA36â€  Example DIN: â€œ+49*536â€ "
+          },
+          "OperatorName": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Operatorname",
+            "description": "Free text for operator"
+          },
+          "ProviderID": {
+            "type": "string",
+            "title": "Providerid",
+            "description": "The ProviderID is defined by Hubject and is used to identify the EMP  A string that `MUST` be valid with respect to the following regular expression: ISO | DIN  `^([A-Za-z]{2}\\-?[A-Za-z0-9]{3}|[A-Za-z]{2}[\\*|-]?[A-Za-z0-9]{3})$`  The expression validates the string as ProviderID including the preceding country code, which is part of EvcoID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118-1.  In case the ProviderID is provided corresponding to ISO, the country code `MUST` be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ-â€ is optional.  Examples ISO: â€œDE8EOâ€, â€œDE-8EOâ€  Examples DIN: â€œDE8EOâ€, â€œDE*8EOâ€, â€œDE-8EOâ€   In case the data is to be made available for all EMPs (e.g. for Offer-to-All prices), the asterix character (*) can be set as the value in this field.   "
+          },
+          "PricingDefaultPrice": {
+            "anyOf": [{ "type": "number" }, { "type": "integer" }],
+            "title": "Pricingdefaultprice",
+            "description": "A default price for pricing sessions at undefined EVSEs"
+          },
+          "PricingDefaultPriceCurrency": {
+            "type": "string",
+            "title": "Pricingdefaultpricecurrency",
+            "description": "The ProductPriceCurrencyType allows for the list of active codes of the official ISO 4217 currency names.  For the full list of active codes of the official ISO 4217 currencies, see: [https://www.iso.org/iso-4217-currency-codes.html](https://www.iso.org/iso-4217-currency-codes.html)  Examples:  | Option | Description | | ------ | ----------- | | EUR | Euro | | CHF | Swiss franc | | CAD | Canadian Dollar | | GBP | Pound sterling "
+          },
+          "PricingDefaultReferenceUnit": {
+            "type": "string",
+            "title": "Pricingdefaultreferenceunit",
+            "description": "Default Reference Unit in time or kWh  | Option | Description | | ------ | ----------- | | HOUR | Defined Reference Unit Type | | KILOWATT_HOUR | Defined Reference Unit Type | | MINUTE | Defined Reference Unit Type | "
+          },
+          "PricingProductDataRecords": {
+            "items": {
+              "$ref": "#/components/schemas/PricingProductDataRecord"
+            },
+            "type": "array",
+            "title": "Pricingproductdatarecords",
+            "description": "A list of pricing products"
+          }
+        },
+        "type": "object",
+        "required": [
+          "OperatorID",
+          "ProviderID",
+          "PricingDefaultPrice",
+          "PricingDefaultPriceCurrency",
+          "PricingDefaultReferenceUnit",
+          "PricingProductDataRecords"
+        ],
+        "title": "ERoamingPushPricingProductDataPricingProductData",
+        "description": "Details of pricing products offered by a particular operator for a specific provider"
+      },
+      "EnergySource": {
+        "properties": {
+          "Energy": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Energy",
+            "description": "| Option | Description | | Solar | Energy coming from Solar radiation | | Wind | Energy produced by wind | | HydroPower | Energy produced by the movement of water | | GeothermalEnergy | Energy coming from the sub-surface of the earth | | Biomass | Energy produced using plant or animal material as fuel | | Coal | Energy produced using coal as fuel | | NuclearEnergy | Energy being produced by nuclear fission | | Petroleum | Energy produced by using Petroleum as fuel | | NaturalGas | Energy produced using Natural Gas as fuel | "
+          },
+          "Percentage": {
+            "anyOf": [
+              { "type": "integer", "maximum": 99.0, "minimum": 0.0 },
+              { "type": "null" }
+            ],
+            "title": "Percentage",
+            "description": "Percentage of EnergyType being used by the charging stations"
+          }
+        },
+        "type": "object",
+        "title": "EnergySource",
+        "description": "energy source that the charging station uses to supply electric energy"
+      },
+      "EvseDataRecord": {
+        "properties": {
+          "deltaType": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Deltatype",
+            "description": "In case that the operation â€œPullEvseDataâ€ is performed with the parameter â€œLastCallâ€, Hubject assigns this attribute to every response EVSE record in order to return the changes compared to the last call."
+          },
+          "lastUpdate": {
+            "anyOf": [
+              { "type": "string", "format": "date-time" },
+              { "type": "null" }
+            ],
+            "title": "Lastupdate",
+            "description": "The attribute indicates the date and time of the last update of the record. Hubject assigns this attribute to every response EVSE record."
+          },
+          "EvseID": {
+            "type": "string",
+            "title": "Evseid",
+            "description": "The ID that identifies the charging spot.  A string that `MUST` be valid with respect to the following regular expression: ISO | DIN.  `^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3}\\*?E[A-Za-z0-9\\*]{1,30})|(\\+?[0-9]{1,3}\\*[0-9]{3}\\*[0-9\\*]{1,32}))$` The expression validates the string as EvseID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118-1.  In case the EvseID is provided corresponding to ISO, the country code MUST be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ*â€ is optional. Furthermore the ID MUST provide an â€œEâ€ after the OperatorID in order to identify the ID as ISO EvseID without doubt.  In case the EvseID is provided corresponding to DIN, the country code MUST be provided according to the international telecommunication numbering plan (ITU-T E.164:11/2010) and the separator character â€œ*â€ is mandatory.  Examples ISO: â€œDE*AB7*E840*6487â€, â€œDEAB7E8406487â€  Example DIN: â€œ+49*810*000*438â€ "
+          },
+          "ChargingPoolID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Chargingpoolid",
+            "description": "VSEs may be grouped by using a charging pool id according to emiÂ³ standard definition. The Evse Pool ID MUST match the following structure (the notation corresponds to the augmented Backus-Naur Form (ABNF) as defined in RFC5234): <Evse Pool ID> = <Country Code> <S> <Spot Operator ID> <S> <ID Type> <Pool ID>  with:  <Country Code> = 2 ALPHA ; two character country code according to ISO-3166-1 (Alpha-2-Code).  <Spot Operator ID> = 3 (ALPHA / DIGIT); three alphanumeric characters.  <ID Type> = â€œPâ€; one character â€œPâ€ indicating that this ID represents a â€œPoolâ€.  <Pool Instance> = (ALPHA / DIGIT) 1 * 30 ( 1*(ALPHA / DIGIT) [/ <S>] ); between 1 and 31sequence of alphanumeric characters, including additional optional separators. Starts with alphanumeric character referring to a specific Pool in EVSE Operator data system.  ALPHA = %x41-5A / %x61-7A; according to RFC 5234 (7-Bit ASCII).  DIGIT = %x30-39; according to RFC 5234 (7-Bit ASCII).  <S> = *1 ( â€œ*â€ ); optional separator  An example for a valid Evse Pool ID is â€œIT*123*P456*AB789â€ with :  â€œITâ€ indicating Italy,  â€œ123â€ representing a particular Spot Operator,  â€œPâ€ indicating the Pool, and  â€œ456*AB789â€ representing one of its POOL.  Note  In contrast to the eMA ID, no check digit is specified for the Evse Pool ID in this document. Alpha characters SHALL be interpreted case insensitively. emiÂ³ strongly recommends that implementations SHOULD - use the separator between Country Code and Spot Operator ID - use the separator between Spot Operator ID and ID type This leads to the following regular expression:  `([A-Za-z]{2}\\*?[A-Za-z0-9]{3}\\*?P[A-Za-z0-9\\*]{1,30})`  This regular expression is similar to that of the ISO EvseIDType but E is replaced with P to indicate a pool. "
+          },
+          "ChargingStationId": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Chargingstationid",
+            "description": "The ID that identifies the charging station."
+          },
+          "ChargingStationNames": {
+            "items": { "$ref": "#/components/schemas/InfoTextType" },
+            "type": "array",
+            "title": "Chargingstationnames",
+            "description": "Name of the charging station"
+          },
+          "HardwareManufacturer": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Hardwaremanufacturer",
+            "description": "Name of the charging point manufacturer"
+          },
+          "ChargingStationImage": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Chargingstationimage",
+            "description": "URL that redirect to an online image of the related EVSEID"
+          },
+          "SubOperatorName": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Suboperatorname",
+            "description": "Name of the Sub Operator owning the Charging Station"
+          },
+          "Address": { "$ref": "#/components/schemas/AddressIso19773" },
+          "GeoCoordinates": { "$ref": "#/components/schemas/GeoCoordinates" },
+          "Plugs": {
+            "items": { "$ref": "#/components/schemas/Plug" },
+            "type": "array",
+            "title": "Plugs",
+            "description": "List of plugs that are supported."
+          },
+          "DynamicPowerLevel": {
+            "anyOf": [{ "type": "boolean" }, { "type": "null" }],
+            "title": "Dynamicpowerlevel",
+            "description": "Informs is able to deliver different power outputs."
+          },
+          "ChargingFacilities": {
+            "items": { "$ref": "#/components/schemas/ChargingFacility" },
+            "type": "array",
+            "title": "Chargingfacilities",
+            "description": "List of facilities that are supported."
+          },
+          "RenewableEnergy": {
+            "type": "boolean",
+            "title": "Renewableenergy",
+            "description": "If the Charging Station provides only renewable energy then the value `MUST` be â€trueâ€, if it use grey energy then value `MUST` be â€œfalseâ€. "
+          },
+          "EnergySource": {
+            "anyOf": [
+              {
+                "items": { "$ref": "#/components/schemas/EnergySource" },
+                "type": "array"
+              },
+              { "type": "null" }
+            ],
+            "title": "Energysource",
+            "description": "List of energy source that the charging station uses to supply electric energy."
+          },
+          "EnvironmentalImpact": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PullEvseDataRecordEnvironmentalImpact"
+              },
+              { "type": "null" }
+            ]
+          },
+          "CalibrationLawDataAvailability": {
+            "type": "string",
+            "title": "Calibrationlawdataavailability",
+            "description": "| Option | Description | | Local | Calibration law data is shown at the charging station. | | External | Calibration law data is provided externaly. | | Not Available | Calibration law data is not provided. | "
+          },
+          "AuthenticationModes": {
+            "items": { "$ref": "#/components/schemas/AuthenticationMode" },
+            "type": "array",
+            "title": "Authenticationmodes",
+            "description": "List of authentication modes that are supported."
+          },
+          "MaxCapacity": {
+            "anyOf": [{ "type": "integer" }, { "type": "null" }],
+            "title": "Maxcapacity",
+            "description": "This field is used if the EVSE has a limited capacity (e.g. built-in battery). Values must be given in kWh."
+          },
+          "PaymentOptions": {
+            "items": { "$ref": "#/components/schemas/PaymentOption" },
+            "type": "array",
+            "title": "Paymentoptions",
+            "description": "List of payment options that are supported."
+          },
+          "ValueAddedServices": {
+            "items": { "$ref": "#/components/schemas/ValueAddedService" },
+            "type": "array",
+            "title": "Valueaddedservices",
+            "description": "List of value added services that are supported."
+          },
+          "Accessibility": { "$ref": "#/components/schemas/Accessibility" },
+          "AccessibilityLocation": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Accessibilitylocation",
+            "description": "| Option | Description | | ------ | ----------- | | OnStreet | The charging station is located on the street| | ParkingLot | The Charging Point is located inside a Parking Lot| | ParkingGarage | The Charging Point is located inside a Parking Garage| | UndergroundParkingGarage | The Charging Point is located inside an Underground Parking Garage | "
+          },
+          "HotlinePhoneNumber": {
+            "type": "string",
+            "title": "Hotlinephonenumber",
+            "description": "`^\\+[0-9]{5,15}$` The expression validates the string as a telephone number starting with â€œ+â€ and containing only numbers.  Example: â€œ+0305132787â€ "
+          },
+          "AdditionalInfo": {
+            "anyOf": [
+              {
+                "items": { "$ref": "#/components/schemas/InfoTextType" },
+                "type": "array"
+              },
+              { "type": "null" }
+            ],
+            "title": "Additionalinfo",
+            "description": "Optional information."
+          },
+          "ChargingStationLocationReference": {
+            "anyOf": [
+              {
+                "items": { "$ref": "#/components/schemas/InfoTextType" },
+                "type": "array"
+              },
+              { "type": "null" }
+            ],
+            "title": "Chargingstationlocationreference",
+            "description": "Inform the EV driver where the ChargingPoint could be accessed."
+          },
+          "GeoChargingPointEntrance": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/GeoCoordinates" },
+              { "type": "null" }
+            ]
+          },
+          "IsOpen24Hours": {
+            "type": "boolean",
+            "title": "Isopen24Hours",
+            "description": "Set in case the charging spot is open 24 hours."
+          },
+          "OpeningTimes": {
+            "anyOf": [
+              {
+                "items": { "$ref": "#/components/schemas/OpeningTimes" },
+                "type": "array"
+              },
+              { "type": "null" }
+            ],
+            "title": "Openingtimes",
+            "description": "Opening time in case that the charging station cannot be accessed around the clock."
+          },
+          "HubOperatorID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Huboperatorid",
+            "description": "A string that MUST be valid with respect to the following regular expression: ISO | DIN  ^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3})|(\\+?[0-9]{1,3}\\*[0-9]{3}))$ The expression validates the string as OperatorID including the preceding country code, which is part of EvseID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118. In case the OperatorID is provided corresponding to ISO, the country code MUST be provided as Alpha-2-Code (DIN EN ISO-3166-1) and the separator character â€œ*â€ is optional.  In case the OperatorID is provided corresponding to DIN, the country code MUST be provided according to the international telecommunication numbering plan (ITU-T E.164:11/2010) and the separator character â€œ*â€ is mandatory.  Examples ISO: â€œDE*A36â€, â€œDEA36â€  Example DIN: â€œ+49*536â€ "
+          },
+          "ClearinghouseID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Clearinghouseid",
+            "description": "Identification of the corresponding clearing house in the event that roaming between different clearing houses `MUST` be processed in the future. "
+          },
+          "IsHubjectCompatible": {
+            "type": "boolean",
+            "title": "Ishubjectcompatible",
+            "description": "Is eRoaming via intercharge at this charging station possible? If set to \"false\" the charge spot will not be started/stopped remotely via Hubject."
+          },
+          "DynamicInfoAvailable": {
+            "type": "string",
+            "title": "Dynamicinfoavailable",
+            "description": "Values: true / false / auto This attribute indicates whether a CPO provides (dynamic) EVSE Status info in addition to the (static) EVSE Data for this EVSERecord. Value auto is set to true by Hubject if the operator offers Hubject EVSEStatus data."
+          }
+        },
+        "type": "object",
+        "required": [
+          "EvseID",
+          "ChargingStationNames",
+          "Address",
+          "GeoCoordinates",
+          "Plugs",
+          "ChargingFacilities",
+          "RenewableEnergy",
+          "CalibrationLawDataAvailability",
+          "AuthenticationModes",
+          "PaymentOptions",
+          "ValueAddedServices",
+          "Accessibility",
+          "HotlinePhoneNumber",
+          "IsOpen24Hours",
+          "IsHubjectCompatible",
+          "DynamicInfoAvailable"
+        ],
+        "title": "EvseDataRecord",
+        "description": "EvseDataRecord"
+      },
+      "GeoCoordinates": {
+        "properties": {
+          "Google": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/GeoCoordinatesGoogle" },
+              { "type": "null" }
+            ]
+          },
+          "DecimalDegree": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/GeoCoordinatesDecimalDegree" },
+              { "type": "null" }
+            ]
+          },
+          "DegreeMinuteSeconds": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GeoCoordinatesDegreeMinuteSeconds"
+              },
+              { "type": "null" }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "GeoCoordinates",
+        "description": "Important  __One of the following three options `MUST` be provided__ "
+      },
+      "GeoCoordinatesDecimalDegree": {
+        "properties": {
+          "Longitude": {
+            "type": "string",
+            "title": "Longitude",
+            "description": "A string that `MUST` be valid with respect to the following regular expression:  `^-?1?\\d{1,2}\\.\\d{1,6}$` The expression validates the string as a geo coordinate (longitude or latitude) with decimal degree syntax.  Examples: â€œ9.360922â€, â€œ-21.568201â€ "
+          },
+          "Latitude": {
+            "type": "string",
+            "title": "Latitude",
+            "description": "A string that `MUST` be valid with respect to the following regular expression:  `^-?1?\\d{1,2}\\.\\d{1,6}$` The expression validates the string as a geo coordinate (longitude or latitude) with decimal degree syntax.  Examples: â€œ9.360922â€, â€œ-21.568201â€ "
+          }
+        },
+        "type": "object",
+        "required": ["Longitude", "Latitude"],
+        "title": "GeoCoordinatesDecimalDegree",
+        "description": "Geocoordinates using DecimalDegree Structure"
+      },
+      "GeoCoordinatesDegreeMinuteSeconds": {
+        "properties": {
+          "Longitude": {
+            "type": "string",
+            "title": "Longitude",
+            "description": "A string that `MUST` be valid with respect to the following regular expression:  `^-?1?\\d{1,2}Â°[ ]?\\d{1,2}'[ ]?\\d{1,2}\\.\\d+''$` The expression validates the string as a geo coordinate (longitude or latitude) consisting of degree, minutes, and seconds  Examples: â€œ9Â°21'39.32''â€, â€œ-21Â°34'23.16'' "
+          },
+          "Latitude": {
+            "type": "string",
+            "title": "Latitude",
+            "description": "A string that `MUST` be valid with respect to the following regular expression:  `^-?1?\\d{1,2}Â°[ ]?\\d{1,2}'[ ]?\\d{1,2}\\.\\d+''$` The expression validates the string as a geo coordinate (longitude or latitude) consisting of degree, minutes, and seconds  Examples: â€œ9Â°21'39.32''â€, â€œ-21Â°34'23.16'' "
+          }
+        },
+        "type": "object",
+        "required": ["Longitude", "Latitude"],
+        "title": "GeoCoordinatesDegreeMinuteSeconds",
+        "description": "Geocoordinates using DegreeMinutesSeconds Structure"
+      },
+      "GeoCoordinatesGoogle": {
+        "properties": {
+          "Coordinates": {
+            "type": "string",
+            "title": "Coordinates",
+            "description": "A string that `MUST` be valid with respect to the following regular expression:  `^-?1?\\d{1,2}\\.\\d{1,6}\\s*\\,?\\s*-?1?\\d{1,2}\\.\\d{1,6}$` The expression validates the string as geo coordinates with respect to the Google standard. The string contains latitude and longitude (in this sequence) separated by a space.  Example: â€œ47.662249 9.360922â€ "
+          }
+        },
+        "type": "object",
+        "required": ["Coordinates"],
+        "title": "GeoCoordinatesGoogle",
+        "description": "Geocoordinates using Google Structure Based on WGS84 "
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": { "$ref": "#/components/schemas/ValidationError" },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Identification": {
+        "properties": {
+          "RFIDMifareFamilyIdentification": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/RFIDMifareFamilyIdentification" },
+              { "type": "null" }
+            ]
+          },
+          "RFIDIdentification": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/RFIDIdentification" },
+              { "type": "null" }
+            ]
+          },
+          "QRCodeIdentification": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/QRCodeIdentification-Input" },
+              { "type": "null" }
+            ]
+          },
+          "PlugAndChargeIdentification": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/PlugAndChargeIdentification" },
+              { "type": "null" }
+            ]
+          },
+          "RemoteIdentification": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/RemoteIdentification" },
+              { "type": "null" }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "Identification",
+        "description": "Authentication data  1. The option RFIDIdentification `MUST` not be used in the eRoamingAuthorization process. For RFID Authorization, only the option RFIDMifareFamilyIdentification `SHOULD` be used in the respective eRoamingAuthorization messages. 2. For the Remote Authorization process, only the option RemoteIdentification MUST be used in the respective messages. "
+      },
+      "InfoTextType": {
+        "properties": {
+          "lang": {
+            "type": "string",
+            "title": "Lang",
+            "description": "`^[a-z]{2,3}(?:-[A-Z]{2,3}(?:-[a-zA-Z]{4})?)?(?:-x-[a-zA-Z0-9]{1,8})?$`  The language in which the additional info text is provided  The expression validates the string as a language code as per ISO-639-1 or ISO-639-2/T  The LanguageCodeType is used in the AdditionalInfo field, which is part of the EvseDataRecordType. "
+          },
+          "value": {
+            "type": "string",
+            "title": "Value",
+            "description": "The Additional Info text"
+          }
+        },
+        "type": "object",
+        "required": ["lang", "value"],
+        "title": "InfoTextType",
+        "description": "InfoTextType"
+      },
+      "OpeningTimes": {
+        "properties": {
+          "Period": {
+            "items": { "$ref": "#/components/schemas/OpeningTimesPeriodInner" },
+            "type": "array",
+            "title": "Period",
+            "description": "The starting and end time for pricing product applicability in the specified period "
+          },
+          "on": {
+            "type": "string",
+            "title": "On",
+            "description": "Day values to be used in specifying periods on which the product is available. Workdays = Monday â€“ Friday, Weekend = Saturday â€“ Sunday"
+          }
+        },
+        "type": "object",
+        "required": ["Period", "on"],
+        "title": "OpeningTimes",
+        "description": "OpeningTimes"
+      },
+      "OpeningTimesPeriodInner": {
+        "properties": {
+          "begin": {
+            "type": "string",
+            "title": "Begin",
+            "description": "The opening time"
+          },
+          "end": {
+            "type": "string",
+            "title": "End",
+            "description": "The closing time"
+          }
+        },
+        "type": "object",
+        "required": ["begin", "end"],
+        "title": "OpeningTimesPeriodInner",
+        "description": "OpeningTimesPeriodInner"
+      },
+      "PaymentOption": {
+        "type": "string",
+        "enum": ["No Payment", "Direct", "Contract"],
+        "title": "PaymentOption",
+        "description": "| Option | Description | | ------ | ----------- | | No payment | Free. | | Direct | e. g. Cash, Card, SMS, ... | | Contract | i. e. Subscription  |  Note  `No Payment` can not be combined with other payment option "
+      },
+      "Plug": {
+        "type": "string",
+        "enum": [
+          "Small Paddle Inductive",
+          "Large Paddle Inductive",
+          "AVCON Connector",
+          "Tesla Connector",
+          "NEMA 5-20",
+          "Type E French Standard",
+          "Type F Schuko",
+          "Type G British Standard",
+          "Type J Swiss Standard",
+          "Type 1 Connector (Cable Attached)",
+          "Type 2 Outlet",
+          "Type 2 Connector (Cable Attached)",
+          "Type 3 Outlet",
+          "IEC 60309 Single Phase",
+          "IEC 60309 Three Phase",
+          "CCS Combo 2 Plug (Cable Attached)",
+          "CCS Combo 1 Plug (Cable Attached)",
+          "CHAdeMO"
+        ],
+        "title": "Plug",
+        "description": "| Option | Description | |Small Paddle Inductive | Defined plug type. | | Large Paddle Inductive | Defined plug type.| | AVCON Connector | Defined plug type.| | Tesla Connector | Defined plug type.| | NEMA 5-20 | Defined plug type.| | Type E French Standard | CEE 7/5. | | Type F Schuko | CEE 7/4. | | Type G British Standard | BS 1363. | | Type J Swiss Standard | SEV 1011. | | Type 1 Connector (Cable Attached) | Cable attached to IEC 62196-1 type 1, SAE J1772 connector. | | Type 2 Outlet | IEC 62196-1 type 2. | | Type 2 Connector (Cable Attached) | Cable attached to IEC 62196-1 type 2 connector. | | Type 3 Outlet | IEC 62196-1 type 3. | | IEC 60309 Single Phase | IEC 60309. | | IEC 60309 Three Phase | IEC 60309. | | CCS Combo 2 Plug (Cable Attached) | IEC 62196-3 CDV DC Combined Charging Connector DIN SPEC 70121 refers to ISO / IEC 15118-1 DIS, -2 DIS and 15118-3. | | CCS Combo 1 Plug (Cable Attached) | IEC 62196-3 CDV DC Combined Charging Connector with IEC 62196-1 type 2 SAE J1772 connector. | | CHAdeMO | DC CHAdeMO Connector. | "
+      },
+      "PlugAndChargeIdentification": {
+        "properties": {
+          "EvcoID": {
+            "type": "string",
+            "title": "Evcoid",
+            "description": "A string that `MUST` be valid with respect to the following regular expression: ISO | DIN.  ^(([A-Za-z]{2}\\-?[A-Za-z0-9]{3}\\-?C[A-Za-z0-9]{8}\\-?[\\d|A-Za-z])|([A-Za-z]{2}[\\*|\\-]?[A-Za-z0-9]{3}[\\*|\\-]?[A-Za-z0-9]{6}[\\*|\\-]?[\\d|X]))$ The expression validates the string as EvcoID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118-1.  In case the EvcoID is provided corresponding to ISO, the instance part MUST be eight characters long and MUST be provided with a prepended â€œCâ€. The optional separating character MUST be â€œ-â€œ.  In case the EvcoID is provided corresponding to DIN, the instance part MUST be six characters long. The optional separating character can either be â€œ*â€ or â€œ-â€œ.  Examples ISO: â€œDE-8EO-CAet5e4XY-3â€, â€œDE8EOCAet5e43X1â€  Examples DIN: â€œDE*8EO*Aet5e4*3â€, â€œDE-8EO-Aet5e4-3â€, â€œDE8EOAet5e43â€ "
+          }
+        },
+        "type": "object",
+        "required": ["EvcoID"],
+        "title": "PlugAndChargeIdentification",
+        "description": "Authentication required for Plug&Charge (EMAID/EVCOID) "
+      },
+      "PricingProductDataRecord": {
+        "properties": {
+          "ProductID": {
+            "type": "string",
+            "title": "Productid",
+            "description": "The ProductIDType defines some standard values (see below). The type however also supports custom ProductIDs that can be specified by partners (as a string of 50 characters maximum length). | Option | Description | |--------|-------------| | Standard Price | Standard Price | | AC1 | Product for AC 1 Phase charging | | AC3 | Product for AC 3 Phase charging | | DC | Product for DC charging | | CustomProductID | There is no option â€œCustomProductIDâ€, this sample option is meant to indicates that custom product ID specifications by partners (as a string of 50 characters maximum length) are allowed as well.| "
+          },
+          "ReferenceUnit": {
+            "type": "string",
+            "title": "Referenceunit",
+            "description": "Default Reference Unit in time or kWh  | Option | Description | | ------ | ----------- | | HOUR | Defined Reference Unit Type | | KILOWATT_HOUR | Defined Reference Unit Type | | MINUTE | Defined Reference Unit Type | "
+          },
+          "ProductPriceCurrency": {
+            "type": "string",
+            "title": "Productpricecurrency",
+            "description": "The ProductPriceCurrencyType allows for the list of active codes of the official ISO 4217 currency names.  For the full list of active codes of the official ISO 4217 currencies, see: [https://www.iso.org/iso-4217-currency-codes.html](https://www.iso.org/iso-4217-currency-codes.html)  Examples:  | Option | Description | | ------ | ----------- | | EUR | Euro | | CHF | Swiss franc | | CAD | Canadian Dollar | | GBP | Pound sterling "
+          },
+          "PricePerReferenceUnit": {
+            "anyOf": [{ "type": "number" }, { "type": "integer" }],
+            "title": "Priceperreferenceunit",
+            "description": "A price per reference unit"
+          },
+          "MaximumProductChargingPower": {
+            "anyOf": [{ "type": "number" }, { "type": "integer" }],
+            "title": "Maximumproductchargingpower",
+            "description": "A value in kWh"
+          },
+          "IsValid24hours": {
+            "type": "boolean",
+            "title": "Isvalid24Hours",
+            "description": "Set to TRUE if the respective pricing product is applicable 24 hours a day. If FALSE, the respective applicability times `SHOULD` be provided in the field â€œProductAvailabilityTimesâ€. "
+          },
+          "ProductAvailabilityTimes": {
+            "items": {
+              "$ref": "#/components/schemas/PricingProductDataRecordProductAvailabilityTimesInner"
+            },
+            "type": "array",
+            "title": "Productavailabilitytimes",
+            "description": "A list indicating when the pricing product is applicable"
+          },
+          "AdditionalReferences": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PricingProductDataRecordAdditionalReferencesInner"
+                },
+                "type": "array"
+              },
+              { "type": "null" }
+            ],
+            "title": "Additionalreferences",
+            "description": "A list of additional reference units and their respective prices"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ProductID",
+          "ReferenceUnit",
+          "ProductPriceCurrency",
+          "PricePerReferenceUnit",
+          "MaximumProductChargingPower",
+          "IsValid24hours",
+          "ProductAvailabilityTimes"
+        ],
+        "title": "PricingProductDataRecord",
+        "description": "PricingProductDataRecord"
+      },
+      "PricingProductDataRecordAdditionalReferencesInner": {
+        "properties": {
+          "AdditionalReference": {
+            "type": "string",
+            "title": "Additionalreference",
+            "description": "Additional pricing components to be considered in addition to the base pricing  | Option | Description | | ------ | ----------- | | START FEE | Can be used in case a fixed fee is charged for the initiation of the charging session. This is a fee charged on top of the main base price defined in the field \"PricePerReferenceUnit\" for any particular pricing product. | | FIXED FEE | Can be used if a single price is charged irrespective of charging duration or energy consumption (for instance if all sessions are to be charged a single fixed fee). When used, the value set in the field \"PricePerReferenceUnit\" for the main base price of respective pricing product SHOULD be set to zero. | | PARKING FEE | Can be used in case sessions are to be charged for both parking and charging. When used, it needs to be specified in the corresponding service offer on the HBS Portal when parking applies (e.g. from session start to charging start and charging end to session end or for the entire session duration, or x-minutes after charging end, etc) | | MINIMUM FEE | Can be used in case there is a minimum fee to be paid for all charging sessions. When used, this implies that the eventual price to be paid cannot be less than this minimum fee but can however be a price above/greater than the minimum fee. | | MAXIMUM FEE | Can be used in case there is a maximum fee to be charged for all charging sessions. When used, this implies that the eventual price to be paid cannot be more than this maximum fee but can however be a price below/lower than the maximum fee. | "
+          },
+          "AdditionalReferenceUnit": {
+            "type": "string",
+            "title": "Additionalreferenceunit",
+            "description": "Default Reference Unit in time or kWh  | Option | Description | | ------ | ----------- | | HOUR | Defined Reference Unit Type | | KILOWATT_HOUR | Defined Reference Unit Type | | MINUTE | Defined Reference Unit Type | "
+          },
+          "PricePerAdditionalReferenceUnit": {
+            "anyOf": [{ "type": "number" }, { "type": "integer" }],
+            "title": "Priceperadditionalreferenceunit",
+            "description": "A price in the given currency"
+          }
+        },
+        "type": "object",
+        "required": [
+          "AdditionalReference",
+          "AdditionalReferenceUnit",
+          "PricePerAdditionalReferenceUnit"
+        ],
+        "title": "PricingProductDataRecordAdditionalReferencesInner",
+        "description": "PricingProductDataRecordAdditionalReferencesInner"
+      },
+      "PricingProductDataRecordProductAvailabilityTimesInner": {
+        "properties": {
+          "Periods": {
+            "items": {
+              "$ref": "#/components/schemas/PricingProductDataRecordProductAvailabilityTimesInnerPeriodsInner"
+            },
+            "type": "array",
+            "title": "Periods"
+          },
+          "on": {
+            "type": "string",
+            "title": "On",
+            "description": "Day values to be used in specifying periods on which the product is available. Workdays = Monday â€“ Friday, Weekend = Saturday â€“ Sunday"
+          }
+        },
+        "type": "object",
+        "required": ["Periods", "on"],
+        "title": "PricingProductDataRecordProductAvailabilityTimesInner",
+        "description": "PricingProductDataRecordProductAvailabilityTimesInner"
+      },
+      "PricingProductDataRecordProductAvailabilityTimesInnerPeriodsInner": {
+        "properties": {
+          "begin": {
+            "type": "string",
+            "title": "Begin",
+            "description": "The opening time"
+          },
+          "end": {
+            "type": "string",
+            "title": "End",
+            "description": "The closing time"
+          }
+        },
+        "type": "object",
+        "required": ["begin", "end"],
+        "title": "PricingProductDataRecordProductAvailabilityTimesInnerPeriodsInner",
+        "description": "The starting and end time for pricing product applicability in the specified period "
+      },
+      "PullEvseDataRecordEnvironmentalImpact": {
+        "properties": {
+          "CO2Emission": {
+            "anyOf": [
+              { "type": "number", "maximum": 99999.0 },
+              { "type": "integer", "maximum": 99999.0 },
+              { "type": "null" }
+            ],
+            "title": "Co2Emission",
+            "description": "Total CO2 emited by the energy source being used by this charging station to supply energy to EV. Units are in g/kWh"
+          },
+          "NuclearWaste": {
+            "anyOf": [
+              { "type": "number", "maximum": 99999.0 },
+              { "type": "integer", "maximum": 99999.0 },
+              { "type": "null" }
+            ],
+            "title": "Nuclearwaste",
+            "description": "Total NuclearWaste emited by the energy source being used by this charging station to supply energy to EV. Units are in g/kWh"
+          }
+        },
+        "type": "object",
+        "title": "PullEvseDataRecordEnvironmentalImpact",
+        "description": "PullEvseDataRecordEnvironmentalImpact"
+      },
+      "QRCodeIdentification-Input": {
+        "properties": {
+          "EvcoID": {
+            "type": "string",
+            "title": "Evcoid",
+            "description": "A string that `MUST` be valid with respect to the following regular expression: ISO | DIN.  ^(([A-Za-z]{2}\\-?[A-Za-z0-9]{3}\\-?C[A-Za-z0-9]{8}\\-?[\\d|A-Za-z])|([A-Za-z]{2}[\\*|\\-]?[A-Za-z0-9]{3}[\\*|\\-]?[A-Za-z0-9]{6}[\\*|\\-]?[\\d|X]))$ The expression validates the string as EvcoID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118-1.  In case the EvcoID is provided corresponding to ISO, the instance part MUST be eight characters long and MUST be provided with a prepended â€œCâ€. The optional separating character MUST be â€œ-â€œ.  In case the EvcoID is provided corresponding to DIN, the instance part MUST be six characters long. The optional separating character can either be â€œ*â€ or â€œ-â€œ.  Examples ISO: â€œDE-8EO-CAet5e4XY-3â€, â€œDE8EOCAet5e43X1â€  Examples DIN: â€œDE*8EO*Aet5e4*3â€, â€œDE-8EO-Aet5e4-3â€, â€œDE8EOAet5e43â€ "
+          },
+          "HashedPIN": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/QRCodeIdentificationHashedPIN" },
+              { "type": "null" }
+            ]
+          },
+          "PIN": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Pin"
+          }
+        },
+        "type": "object",
+        "required": ["EvcoID"],
+        "title": "QRCodeIdentification",
+        "description": "QRCodeIdentification"
+      },
+      "QRCodeIdentification-Output": {
+        "properties": {
+          "EvcoID": {
+            "type": "string",
+            "title": "Evcoid",
+            "description": "A string that `MUST` be valid with respect to the following regular expression: ISO | DIN.  ^(([A-Za-z]{2}\\-?[A-Za-z0-9]{3}\\-?C[A-Za-z0-9]{8}\\-?[\\d|A-Za-z])|([A-Za-z]{2}[\\*|\\-]?[A-Za-z0-9]{3}[\\*|\\-]?[A-Za-z0-9]{6}[\\*|\\-]?[\\d|X]))$ The expression validates the string as EvcoID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118-1.  In case the EvcoID is provided corresponding to ISO, the instance part MUST be eight characters long and MUST be provided with a prepended â€œCâ€. The optional separating character MUST be â€œ-â€œ.  In case the EvcoID is provided corresponding to DIN, the instance part MUST be six characters long. The optional separating character can either be â€œ*â€ or â€œ-â€œ.  Examples ISO: â€œDE-8EO-CAet5e4XY-3â€, â€œDE8EOCAet5e43X1â€  Examples DIN: â€œDE*8EO*Aet5e4*3â€, â€œDE-8EO-Aet5e4-3â€, â€œDE8EOAet5e43â€ "
+          },
+          "HashedPIN": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/QRCodeIdentificationHashedPIN" },
+              { "type": "null" }
+            ]
+          },
+          "PIN": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Pin"
+          }
+        },
+        "type": "object",
+        "required": ["EvcoID"],
+        "title": "QRCodeIdentification",
+        "description": "QRCodeIdentification"
+      },
+      "QRCodeIdentificationHashedPIN": {
+        "properties": {
+          "Value": {
+            "type": "string",
+            "title": "Value",
+            "description": "Hash value created by partner  The expression validates the string as a hash function result value with a length between 10 and 100 characters  Example: â€œa5ghdhf73hâ€ "
+          },
+          "Function": {
+            "type": "string",
+            "title": "Function",
+            "description": "Function that was used to generate the hash value."
+          },
+          "LegacyHashData": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/QRCodeIdentificationHashedPINLegacyHashData"
+              },
+              { "type": "null" }
+            ]
+          }
+        },
+        "type": "object",
+        "required": ["Value", "Function"],
+        "title": "QRCodeIdentificationHashedPIN",
+        "description": "QRCodeIdentificationHashedPIN"
+      },
+      "QRCodeIdentificationHashedPINLegacyHashData": {
+        "properties": {
+          "Function": {
+            "type": "string",
+            "title": "Function",
+            "description": "Function used for hashing of the PIN at the partner."
+          },
+          "Salt": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Salt",
+            "description": "The salt value used by the partner for hashing the PIN."
+          },
+          "Value": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Value",
+            "description": "PIN hash at the partner."
+          }
+        },
+        "type": "object",
+        "required": ["Function"],
+        "title": "QRCodeIdentificationHashedPINLegacyHashData",
+        "description": "QRCodeIdentificationHashedPINLegacyHashData"
+      },
+      "RFIDIdentification": {
+        "properties": {
+          "UID": {
+            "type": "string",
+            "title": "Uid",
+            "description": "Authentication data details. The data structure differs depending on the authentication technology  The expression validates the string as a unique RFID with a length of 8, 14 or 20 characters.  Examples: â€œ7568290FFF765Fâ€ "
+          },
+          "EvcoID": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Evcoid",
+            "description": "A string that `MUST` be valid with respect to the following regular expression: ISO | DIN.  ^(([A-Za-z]{2}\\-?[A-Za-z0-9]{3}\\-?C[A-Za-z0-9]{8}\\-?[\\d|A-Za-z])|([A-Za-z]{2}[\\*|\\-]?[A-Za-z0-9]{3}[\\*|\\-]?[A-Za-z0-9]{6}[\\*|\\-]?[\\d|X]))$ The expression validates the string as EvcoID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118-1.  In case the EvcoID is provided corresponding to ISO, the instance part MUST be eight characters long and MUST be provided with a prepended â€œCâ€. The optional separating character MUST be â€œ-â€œ.  In case the EvcoID is provided corresponding to DIN, the instance part MUST be six characters long. The optional separating character can either be â€œ*â€ or â€œ-â€œ.  Examples ISO: â€œDE-8EO-CAet5e4XY-3â€, â€œDE8EOCAet5e43X1â€  Examples DIN: â€œDE*8EO*Aet5e4*3â€, â€œDE-8EO-Aet5e4-3â€, â€œDE8EOAet5e43â€ "
+          },
+          "RFID": {
+            "type": "string",
+            "title": "Rfid",
+            "description": "Defined RFID Type "
+          },
+          "PrintedNumber": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Printednumber",
+            "description": "A number printed on a customerâ€™s card for manual authorization (e.q. via a call center)"
+          },
+          "ExpiryDate": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Expirydate",
+            "description": "Until when this card is valid. Should not be set if card does not have an expiration"
+          }
+        },
+        "type": "object",
+        "required": ["UID", "RFID"],
+        "title": "RFIDIdentification",
+        "description": "Authentication data details. The data structure differs depending on the authentication technology "
+      },
+      "RFIDMifareFamilyIdentification": {
+        "properties": {
+          "UID": {
+            "type": "string",
+            "title": "Uid",
+            "description": "Authentication data details. The data structure differs depending on the authentication technology  The expression validates the string as a unique RFID with a length of 8, 14 or 20 characters.  Examples: â€œ7568290FFF765Fâ€ "
+          }
+        },
+        "type": "object",
+        "required": ["UID"],
+        "title": "RFIDMifareFamilyIdentification",
+        "description": "Authentication data details. The data structure differs depending on the authentication technology "
+      },
+      "RemoteIdentification": {
+        "properties": {
+          "EvcoID": {
+            "type": "string",
+            "title": "Evcoid",
+            "description": "A string that `MUST` be valid with respect to the following regular expression: ISO | DIN.  ^(([A-Za-z]{2}\\-?[A-Za-z0-9]{3}\\-?C[A-Za-z0-9]{8}\\-?[\\d|A-Za-z])|([A-Za-z]{2}[\\*|\\-]?[A-Za-z0-9]{3}[\\*|\\-]?[A-Za-z0-9]{6}[\\*|\\-]?[\\d|X]))$ The expression validates the string as EvcoID. It supports both definitions DIN SPEC 91286:2011-11 as well as ISO 15118-1.  In case the EvcoID is provided corresponding to ISO, the instance part MUST be eight characters long and MUST be provided with a prepended â€œCâ€. The optional separating character MUST be â€œ-â€œ.  In case the EvcoID is provided corresponding to DIN, the instance part MUST be six characters long. The optional separating character can either be â€œ*â€ or â€œ-â€œ.  Examples ISO: â€œDE-8EO-CAet5e4XY-3â€, â€œDE8EOCAet5e43X1â€  Examples DIN: â€œDE*8EO*Aet5e4*3â€, â€œDE-8EO-Aet5e4-3â€, â€œDE8EOAet5e43â€ "
+          }
+        },
+        "type": "object",
+        "required": ["EvcoID"],
+        "title": "RemoteIdentification",
+        "description": "Authentication data details. The data structure differs depending on the authentication technology "
+      },
+      "StatusCode": {
+        "properties": {
+          "Code": {
+            "type": "string",
+            "title": "Code",
+            "description": "| Option | Description | Area of Usage | | -------|-------------|---------------| | 000 | Success. | General codes | | 001 | Hubject system error. | Internal system codes | | 002 | Hubject database error. |Internal system codes| | 009 |Data transaction error. | Internal system codes| |017 |Unauthorized Access. |Internal system codes | |018 |Inconsistent EvseID. |Internal system codes | |019 |Inconsistent EvcoID. |Internal system codes | |021 |System error. |General codes | |022 |Data error. |General codes | |101 |QR Code Authentication failed â€“ Invalid Credentials. |Authentication codes | |102 |RFID Authentication failed â€“ invalid UID. |Authentication codes | |103 |RFID Authentication failed â€“ card not readable. |Authentication codes | |105 |PLC Authentication failed - invalid EvcoID. |Authentication codes | |106 |No positive authentication response. |Authentication codes / Internal system codes | |110 |QR Code App Authentication failed â€“ time out error. |Authentication codes | |120 |PLC (ISO/ IEC 15118) Authentication failed â€“ invalid underlying EvcoID. |Authentication codes | |121 |PLC (ISO/ IEC 15118) Authentication failed â€“ invalid certificate. |Authentication codes | |122 |PLC (ISO/ IEC 15118) Authentication failed â€“ time out error. |Authentication codes | |200 |EvcoID locked. |Authentication codes | |210 |No valid contract. |Session codes | |300 |Partner not found. |Session codes | |310 |Partner did not respond. |Session codes | |320 |Service not available. |Session codes | |400 |Session is invalid. |Session codes | |501 |Communication to EVSE failed. |EVSE codes | |510 |No EV connected to EVSE. |EVSE codes | |601 |EVSE already reserved. |EVSE codes | |602 |EVSE already in use/ wrong token. |EVSE codes | |603 |Unknown EVSE ID. |EVSE codes | |604 |EVSE ID is not Hubject compatible. |EVSE codes | |700 |EVSE out of service. |EVSE codes | "
+          },
+          "Description": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Description",
+            "description": "description"
+          },
+          "AdditionalInfo": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Additionalinfo",
+            "description": "More information can be provided here"
+          }
+        },
+        "type": "object",
+        "required": ["Code"],
+        "title": "StatusCode",
+        "description": "The structure consists of a defined code, an optional functional description of the status, and optional additional information. It can be used e.g. to send error details or detailed reasons for a certain process or system behavior. The optional AdditionalInfo field can be used in order to provide further individual (non-standardized) information. "
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": { "anyOf": [{ "type": "string" }, { "type": "integer" }] },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": { "type": "string", "title": "Message" },
+          "type": { "type": "string", "title": "Error Type" }
+        },
+        "type": "object",
+        "required": ["loc", "msg", "type"],
+        "title": "ValidationError"
+      },
+      "ValueAddedService": {
+        "type": "string",
+        "enum": [
+          "Reservation",
+          "DynamicPricing",
+          "ParkingSensors",
+          "MaximumPowerCharging",
+          "PredictiveChargePointUsage",
+          "ChargingPlans",
+          "RoofProvided",
+          "None"
+        ],
+        "title": "ValueAddedService",
+        "description": "| Option | Description | | ------ | ----------- | | Reservation | Can an EV driver reserve the charging sport via remote services? | | DynamicPricing | Does the EVSE ID support dynamic pricing? | | ParkingSensors | Is dynamic status info on the parking area in front of the EVSE-ID available? | | MaximumPowerCharging | Does the EVSE-ID offer a dynamic maximum power charging? | | PredictiveChargePointUsage | Is predictive charge Point usage info available for the EVSE-ID? | | ChargingPlans | Does the EVSE-ID offer charging plans, e.g. As described in ISO15118-2? | | RoofProvided | Indicates if the charging station is under a roof | | None | There are no value-added services available. | "
+      }
+    }
+  }
+}

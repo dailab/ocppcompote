@@ -1,0 +1,20 @@
+.sequenceDiagram {
+  width: 100%;
+  text-align: center;
+  line-height: 0;
+}
+
+.sequenceDiagram svg text {
+  font-size: var(--mantine-font-size-md) !important;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.detailsIcon {
+  position: absolute;
+  top: var(--mantine-spacing-md);
+  left: var(--mantine-spacing-md);
+  color: var(--mantine-color-default-border);
+}
